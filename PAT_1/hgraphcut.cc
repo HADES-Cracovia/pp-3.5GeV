@@ -54,7 +54,6 @@ void HGraphCut::graphCut(HHypCandidate *pHyp)
 	     pHyp->setActive( false );
 	  }
    }
-   //cout << " - - - " << endl;
 }
 
 
@@ -69,32 +68,27 @@ bool HGraphCut::graphCut(HParticle *pPart)
 
    switch ( id )
    {
-       case 2: //if ( beta > 0.8 )
-	           return true; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! always ok
-               //else return false;
+       case 2: return true; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! always ok
                if (ep_cut) return ep_cut->IsInside( beta, mom );
 	           break;
-       case 3: //if ( beta > 0.8 )
-               return true; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! always ok
-               //else return false;
+       case 3: return true; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! always ok
                if (em_cut) return em_cut->IsInside( beta, mom );
 	           break;
-       case 8: return true;
-               if (pip_cut) return pip_cut->IsInside( mom, mass );
-               //cout << "8 masa: " << mass << "    ";
-               //if ( mass > 5000. && mass < 30000. ) cout << " 8 OK "; else cout << "8 NO!!! ";
-               //if ( mass > 5000. && mass < 30000. ) return true; else return false;
+       case 8: // return true;
+               if ( mass < 200.e3 && mass > -100.e3 ) return true;
+               else return false;
+               //if (pip_cut) return pip_cut->IsInside( mom, mass );
 	           break;
-       case 9: return true;
-               if (pip_cut) return ( mass > 4000. && pip_cut->IsInside( mom, mass ) ); // same for pi-
-               //cout << "9 masa: " << mass << "    ";
-               //if ( mass > 5000. && mass < 30000. ) cout << " 9 OK "; else cout << " 9 NO!!! ";
-               //if ( mass > 5000. && mass < 30000. ) return true; else return false;
+       case 9: //return true;
+               if ( mass < 200.e3 && mass > -100.e3 ) return true;
+               else return false;
+               //if (pip_cut) return pip_cut->IsInside( mom, mass ); // same for pi-
                //if (pim_cut) return pim_cut->IsInside( mom, mass ); 
 	           break;
-       case 14: if ( sqrt(mass) > 750 ) return true; else return false;
-                return true; 
-                if (p_cut) return p_cut->IsInside( mom, mass );
+       case 14: // return true; 
+                //if (p_cut) return p_cut->IsInside( mom, mass );
+	       if (sqrt(mass)>750 ) return true;
+                else return false;
 	            break;
        case 45: return true; // !!!! always ok
                 //if (d_cut) return d_cut->IsInside( mom, mass );

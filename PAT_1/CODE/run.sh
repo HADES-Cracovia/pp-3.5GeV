@@ -1,0 +1,22 @@
+./anapp be07130140231_dst_may07.root
+./anapp be07130140623_dst_may07.root
+./anapp be07130140922_dst_may07.root
+./anapp be07130141201_dst_may07.root
+./anapp be07130141445_dst_may07.root
+./anapp be07130141737_dst_may07.root
+./anapp be07130142031_dst_may07.root
+./anapp be07130142311_dst_may07.root
+./anapp be07130142602_dst_may07.root
+./anapp be07130142847_dst_may07.root
+./anapp be07130143232_dst_may07.root
+./anapp be07130143519_dst_may07.root
+./anapp be07130143810_dst_may07.root
+./anapp be07130144053_dst_may07.root
+./anapp be07130144329_dst_may07.root
+./anapp be07130144605_dst_may07.root
+./anapp be07130144835_dst_may07.root
+./anapp be07130145154_dst_may07.root
+./anapp be07130145432_dst_may07.root
+./anapp be07130145706_dst_may07.root
+./anapp be07130145943_dst_may07.root
+

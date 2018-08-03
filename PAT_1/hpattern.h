@@ -2,6 +2,7 @@
 #define HPATTERN_H
 
 #include <string>
+#include <iostream>
 #include "hcommondef.h"
 #include "houtput.h"
 
@@ -11,15 +12,35 @@ using namespace CommonDefinitions;
    class HPattern 
    {
       public:
-         HPattern(HOutputFile *ptr = 0) : sId(""), prongNumber(0), ptrOut(0) { out(ptr); }
+         HPattern(HOutputFile *ptr = 0) : number(0), sId(""), prongNumber(0), ptrOut(0) { out(ptr); }
          HPattern(std::string name, EParticle p1, HOutputFile *ptr = 0) : 
-                           sId(name), prongNumber(1), ptrOut(0) { add(p1); out(ptr, &name); }
+                           number(0), sId(name), prongNumber(1), ptrOut(0) { 
+#ifdef DEBUG
+                               std::cout << "[DEBUG] HPattern 1: " << name << " particle: " << p1 << std::endl;
+#endif
+                               add(p1); out(ptr, &name); 
+                           }
          HPattern(std::string name, EParticle p1, EParticle p2, HOutputFile *ptr = 0) : 
-                           sId(name), prongNumber(2), ptrOut(0) { add(p1); add(p2); out(ptr, &name); }
+                           number(0), sId(name), prongNumber(2), ptrOut(0) { 
+#ifdef DEBUG
+                               std::cout << "[DEBUG] HPattern 2: " << name << " particle: " << p1 << ", " << p2 << std::endl;
+#endif
+                               add(p1); add(p2); out(ptr, &name); 
+                           }
          HPattern(std::string name, EParticle p1, EParticle p2, EParticle p3, HOutputFile *ptr = 0) : 
-                           sId(name), prongNumber(3), ptrOut(0) { add(p1); add(p2); add(p3); out(ptr, &name); }
+                           number(0), sId(name), prongNumber(3), ptrOut(0) { 
+#ifdef DEBUG
+                               std::cout << "[DEBUG] HPattern 3: " << name << " particle: " << p1 << ", " << p2 << ", " << p3 << std::endl;
+#endif
+                               add(p1); add(p2); add(p3); out(ptr, &name); 
+                           }
          HPattern(std::string name, EParticle p1, EParticle p2, EParticle p3, EParticle p4, HOutputFile *ptr = 0) : 
-                           sId(name), prongNumber(4), ptrOut(0) { add(p1); add(p2); add(p3); add(p4); out(ptr, &name); }
+                           number(0), sId(name), prongNumber(4), ptrOut(0) { 
+#ifdef DEBUG
+                               std::cout << "[DEBUG] HPattern 4: " << name << " particle: " << p1 << ", " << p2 << ", " << p3 << ", " << p4 << std::endl;
+#endif
+                               add(p1); add(p2); add(p3); add(p4); out(ptr, &name); 
+                           }
          ~HPattern() { if (ptrOut) delete ptrOut; }
 
          std::string getName() const { return sId; }

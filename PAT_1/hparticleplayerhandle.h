@@ -3,8 +3,6 @@
 
 #include <map>
 #include <vector>
-#include <iostream>
-#include <iomanip>
 
 
 class HParticlePlayerHandle {
@@ -13,25 +11,14 @@ class HParticlePlayerHandle {
 
 HParticlePlayerHandle() 
 {
-    std::cout << "################### MAX NUMBER OF PARTICLES of a GIVEN SPECIES IS 30 ###########################" << std::endl;
-    std::cout << "******* WAITING NOW at the start is a CONSEQUENCE that the upper limit is 30 !!!!!!!!!!!! *******" << std::endl;
-    std::cout << "Initialization for " << std::flush; 
-   for (int n=1; n<32; ++n)
+   for (int n=1; n<31; ++n)
    {
       chooseMfromN(1, n);
-#if MAX_PARTICLES_IN_COMB > 1
       chooseMfromN(2, n);
-#endif
-#if MAX_PARTICLES_IN_COMB > 2
       chooseMfromN(3, n);
-#endif
-#if MAX_PARTICLES_IN_COMB > 3
       chooseMfromN(4, n);
-#endif
-      std::cout << n << " .. " << std::flush;
       // here we decide that no more that 4 particles of the same type can be combined
    }
-   std::cout << " done! " << std::endl;
 }
 
 std::map< int, std::vector< std::vector<int> > > map1; 
@@ -43,12 +30,12 @@ std::map< int, std::vector< std::vector<int> > > map4;
 
 void chooseMfromN(int m, int n)
 {
-    std::vector<std::vector<int> > tempVectVect;
+   vector<vector<int> > tempVectVect;
    if (m == 1)
    {
       for (int i=0; i<n; ++i)
       {
-          std::vector<int> temp;
+          vector<int> temp;
           temp.push_back(i);
           tempVectVect.push_back( temp );
       }
@@ -64,7 +51,7 @@ void chooseMfromN(int m, int n)
       for (int j=i+1; j<n; ++j)
 #endif
       {
-          std::vector<int> temp;
+          vector<int> temp;
           temp.push_back(i);
           temp.push_back(j);
           tempVectVect.push_back( temp );
@@ -83,7 +70,7 @@ void chooseMfromN(int m, int n)
       for (int k=j+1; k<n; ++k)
 #endif
       {
-          std::vector<int> temp;
+          vector<int> temp;
           temp.push_back(i);
           temp.push_back(j);
           temp.push_back(k);
@@ -105,7 +92,7 @@ void chooseMfromN(int m, int n)
       for (int l=k+1; l<n; ++l)
 #endif
       {
-          std::vector<int> temp;
+          vector<int> temp;
           temp.push_back(i);
           temp.push_back(j);
           temp.push_back(k);

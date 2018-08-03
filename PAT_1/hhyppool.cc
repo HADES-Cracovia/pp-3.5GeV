@@ -135,7 +135,7 @@ int HHypPool::count(HPattern *ptrC, HParticlePool& refPPool)
       if (refPPool.isPart( ptrC->partNumIter->first ) == true)
       {
          // ROOT changed convention !!! of what Binomial returns
-         ptrC->partComb[ ptrC->partNumIter->first ] = ( refPPool.getNum( ptrC->partNumIter->first ) < ptrC->partNumIter->second ) ? 0 :
+         ptrC->partComb[ ptrC->partNumIter->first ] = ( refPPool.getNum( ptrC->partNumIter->first ) < ptrC->partNumIter->second ) ? 0 : 
 #if COMB_REPETITION == 1
               static_cast<int>( TMath::Binomial( refPPool.getNum( ptrC->partNumIter->first ), ptrC->partNumIter->second )*TMath::Factorial(ptrC->partNumIter->second) );
 #else
@@ -169,7 +169,6 @@ void HHypPool::combine(HPattern *ptrC, HParticlePool& refPPool)
    }
    // here all HParticleCandidate objects from HParticlePool should be combined according to pattern from mapN
 
-   i1 = i2 = i3 = i4 = 0; // this is to avoid warning about unused variables
    MultiParticleIter mpIter;
    MultiParticleIter mpBeginIter;
    for (ptrC->partNumIter = ptrC->partComb.begin(); ptrC->partNumIter != ptrC->partComb.end(); ++ptrC->partNumIter)
@@ -192,7 +191,6 @@ void HHypPool::combine(HPattern *ptrC, HParticlePool& refPPool)
                               *hypSet [ k + j*combinitaionNr ] += mpIter->second;
                            break;
 
-#if MAX_PARTICLES_IN_COMB > 1
                    case 2: i1 = ptrFH->map2[ 20 + refPPool.getNum( pid ) ][ k ][0];
                            i2 = ptrFH->map2[ 20 + refPPool.getNum( pid ) ][ k ][1];
                            mpBeginIter = refPPool.lower_bound( pid );
@@ -207,9 +205,7 @@ void HHypPool::combine(HPattern *ptrC, HParticlePool& refPPool)
                            for (int j=0; j < repetitionNr; ++j) // number of repetitions of combinations
                               *hypSet [ k + j*combinitaionNr ] += mpIter->second;
                            break;
-#endif
 
-#if MAX_PARTICLES_IN_COMB > 2
                    case 3: i1 = ptrFH->map3[ 30 + refPPool.getNum( pid ) ][ k ][0];
                            i2 = ptrFH->map3[ 30 + refPPool.getNum( pid ) ][ k ][1];
                            i3 = ptrFH->map3[ 30 + refPPool.getNum( pid ) ][ k ][2];
@@ -227,9 +223,7 @@ void HHypPool::combine(HPattern *ptrC, HParticlePool& refPPool)
                            for (int j=0; j < repetitionNr; ++j) // number of repetitions of combinations
                               *hypSet [ k + j*combinitaionNr ] += mpIter->second;
                            break;
-#endif
 
-#if MAX_PARTICLES_IN_COMB > 3
                    case 4: i1 = ptrFH->map4[ 40 + refPPool.getNum( pid ) ][ k ][0];
                            i2 = ptrFH->map4[ 40 + refPPool.getNum( pid ) ][ k ][1];
                            i3 = ptrFH->map4[ 40 + refPPool.getNum( pid ) ][ k ][2];
@@ -252,7 +246,6 @@ void HHypPool::combine(HPattern *ptrC, HParticlePool& refPPool)
                            for (int j=0; j < repetitionNr; ++j) // number of repetitions of combinations
                               *hypSet [ k + j*combinitaionNr ] += mpIter->second;
                            break;
-#endif
 
                }
             }
