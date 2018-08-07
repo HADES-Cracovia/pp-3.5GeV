@@ -224,7 +224,7 @@ void PEpEp::Loop()
 			    //&& ep1_btMaxima>=2
 			    && ep1_btPadsRing>=2
 			    );
-      bool bt_condition=(bt_ep2_condition && bt_ep1_condition);
+      bool bt_condition=1;//(bt_ep2_condition && bt_ep1_condition);
       bool pre_shower= (ep1_system==0?(ep1_shw_sum1+ep1_shw_sum2-ep1_shw_sum0) > (parametrization(ep1_p)):true)
 	             &&(ep2_system==0?(ep2_shw_sum1+ep2_shw_sum2-ep2_shw_sum0) > (parametrization(ep2_p)):true);
       //bool flanch=!(ep1_theta>65 && eVert_z<-55) && !(ep2_theta>65 && eVert_z<-55); 
@@ -293,22 +293,34 @@ void PEpEp::Loop()
 // -------------------------------------------------------------------------------------------------
 PEpEp::PEpEp(TTree *tree) 
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
 
-   ep2_acc = ep2_acc_err = ep1_acc = ep1_acc_err = 0.;
-   ep2_eff = ep2_eff_err = ep1_eff = ep1_eff_err = 0.;
+  ep2_acc = ep2_acc_err = ep1_acc = ep1_acc_err = 0.;
+  ep2_eff = ep2_eff_err = ep1_eff = ep1_eff_err = 0.;
 
-   if (tree == 0) {
+  if (tree == 0) {
 	  
-      TChain * chain = new TChain("PEpEp_ID","");
+    TChain * chain = new TChain("PEpEp_ID","");
 
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/hadron.root/PEpEp_ID");
-      
-	  tree = chain; 
-   }
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/hadron.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton00.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton01.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton02.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton03.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton04.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton05.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton06.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton07.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton08.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton09.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton10.root/PEpEp_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton11.root/PEpEp_ID");
+   
+    tree = chain; 
+  }
 
-   Init(tree);
+  Init(tree);
 }
 
 

@@ -135,8 +135,8 @@ void EpEm::Loop()
 	  double oa = R2D * openingangle(*e1, *e2);
 	  double oa_rich = R2D * openingangle(r1, r2);
 
-      double e1_mass = ep_p*ep_p * (  1. / (ep_beta_new*ep_beta_new)  - 1. ) ;
-      double e2_mass = em_p*em_p * (  1. / (em_beta_new*em_beta_new)  - 1. ) ;
+      double e1_mass = ep_p*ep_p * (  1. / (ep_beta*ep_beta)  - 1. ) ;
+      double e2_mass = em_p*em_p * (  1. / (em_beta*em_beta)  - 1. ) ;
 
 //	  cout << "opening angle = " << oa << endl;
 
@@ -156,7 +156,7 @@ void EpEm::Loop()
       //double ang_cut = 0.;
       double ang_cut = 9.;
 
-      double close_cut = 4.;
+      double close_cut = 9.;
       double nonfit_close_cut = -4.;
       //double close_cut = 0.;
       //double nonfit_close_cut = 0.;
@@ -191,10 +191,10 @@ void EpEm::Loop()
 //#endif
 
 
-      NoLeptonE1 = !((ep_oa_lept < close_cut && ep_oa_lept>0.0) && ep_oa_lept>nonfit_close_cut );
-      NoHadronE1 = //(ep_oa_hadr< close_cut &&ep_oa_hadr>nonfit_close_cut );
-      NoLeptonE2 = !((em_oa_lept < close_cut && em_oa_lept>0.0) && em_oa_lept>nonfit_close_cut );
-      NoHadronE2 = //(em_oa_hadr< close_cut &&em_oa_hadr>nonfit_close_cut );
+      NoLeptonE1 = !((ep_oa_lept< close_cut&&ep_oa_lept>0.0) &&ep_oa_lept>nonfit_close_cut );
+      NoHadronE1 = !(ep_oa_hadr< close_cut &&ep_oa_hadr>nonfit_close_cut );
+      NoLeptonE2 = !((em_oa_lept< close_cut&&em_oa_lept>0.0) &&em_oa_lept>nonfit_close_cut );
+      NoHadronE2 = !(em_oa_hadr< close_cut &&em_oa_hadr>nonfit_close_cut );
       NoHadronE1 = 1;
       NoHadronE2 = 1;
 
@@ -270,15 +270,13 @@ void EpEm::Loop()
 			    );
       bool bt_condition=(bt_em_condition && bt_ep_condition);
       bool pre_shower= (ep_system==0?(ep_shw_sum1+ep_shw_sum2-ep_shw_sum0) > (parametrization(ep_p)):true)
-	             &&(em_system==0?(em_shw_sum1+em_shw_sum2-em_shw_sum0) > (parametrization(em_p)):true);
-      bool flanch=!(ep_theta>65 && eVert_z<-45) && !(em_theta>65 && eVert_z<-45); 
-      bool mass_condition=(ep_p>80 && em_p>80 && ep_p<2000. && em_p<2000.
+	             &&(em_system==0?(em_shw_sum1+em_shw_sum2-em_shw_sum0) > (parametrization(em_p)):true);								   
+      bool mass_condition=(ep_p>100 && em_p>100 && ep_p<2000. && em_p<2000.
 			   //&& ep_p>200 && em_p>200
-			   //&&(ep_system==0?ep_beta_new>0.95:ep_beta_new>0.92)&&(em_system==0?em_beta_new>0.95:em_beta_new>0.92)
-			   //&& em_beta_new<1.1 && ep_beta_new<1.1
-			   && em_beta_new>0.9 && ep_beta_new>0.9
+			   //&&(ep_system==0?ep_beta>0.95:ep_beta>0.92)&&(em_system==0?em_beta>0.95:em_beta>0.92)
+			   && em_beta<1.1 && ep_beta<1.1
+			   && em_beta>0.9 && ep_beta>0.9
 			   && pre_shower
-			   && flanch
 			   );
       int i_array=0;
 
@@ -375,8 +373,7 @@ void EpEm::Loop()
 	      sig_rf_and_bt->Fill(m_inv_e1e2/1000., EFF );
 	    }
 	  
-	if(ep_isring>0 && em_isring>0 && mass_condition)//RF signal
-	  { 
+	if(ep_isring>0 && em_isring>0 && mass_condition) { //RF signal
 	    sig_all->Fill(m_inv_e1e2/1000., EFF );
             sig_all_var->Fill(m_inv_e1e2/1000., EFF );
 	    em_mom->Fill(em_p);
@@ -399,11 +396,7 @@ void EpEm::Loop()
 		if(em_p>h/9.*p_max && em_p<(h+1)/9.*p_max)
 		  phi_theta_rich[h]->Fill((em_theta-em_theta_rich),(em_phi-em_phi_rich)*TMath::Sin(em_theta*TMath::DegToRad()));
 	      }
-	    z_theta_epem->Fill(eVert_z,em_theta);
-	    z_theta_epem->Fill(eVert_z,ep_theta);
-	    z_theta_all->Fill(eVert_z,em_theta);
-	    z_theta_all->Fill(eVert_z,ep_theta);
-	  }
+         }
 	if(mass_condition && (bt_ep_condition||ep_isring) && (bt_em_condition||em_isring) && !(em_isring && ep_isring))//pure backtracking signal
 	  {
 	    pureBT_signal->Fill(m_inv_e1e2/1000., EFF );
@@ -554,25 +547,12 @@ EpEm::EpEm(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/288/day288.root/EpEm_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/288_new/lepton288new.root/EpEm_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/288_new_pcut/lepton288new_p.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list5/sum5.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list4/sum4.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list3/sum3.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list1/sum1.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/115_combinatorics/lepton.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/leptons.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton00.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton01.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton02.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton03.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton04.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton05.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton06.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton07.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton08.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton09.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton10.root/EpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton11.root/EpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list5/sum5.root/EpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list4/sum4.root/EpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list3/sum3.root/EpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/EpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list1/sum1.root/EpEm_ID");
+
       // -- PE 690 ----------------------------------------
       /*       
       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/196/lepton196.root/EpEm_ID");

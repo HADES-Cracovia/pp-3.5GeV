@@ -224,7 +224,7 @@ void PEmEm::Loop()
 			    //&& em1_btMaxima>=2
 			    && em1_btPadsRing>=2
 			    );
-      bool bt_condition=(bt_em2_condition && bt_em1_condition);
+      bool bt_condition=1;//(bt_em2_condition && bt_em1_condition);
       bool pre_shower= (em1_system==0?(em1_shw_sum1+em1_shw_sum2-em1_shw_sum0) > (parametrization(em1_p)):true)
 	             &&(em2_system==0?(em2_shw_sum1+em2_shw_sum2-em2_shw_sum0) > (parametrization(em2_p)):true);
       //bool flanch=!(em1_theta>65 && eVert_z<-55) && !(em2_theta>65 && eVert_z<-55); 
@@ -297,19 +297,31 @@ PEmEm::PEmEm(TTree *tree)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
 
-   em2_acc = em2_acc_err = em1_acc = em1_acc_err = 0.;
-   em2_eff = em2_eff_err = em1_eff = em1_eff_err = 0.;
+  em2_acc = em2_acc_err = em1_acc = em1_acc_err = 0.;
+  em2_eff = em2_eff_err = em1_eff = em1_eff_err = 0.;
 
-   if (tree == 0) {
+  if (tree == 0) {
 	  
-      TChain * chain = new TChain("PEmEm_ID","");
+    TChain * chain = new TChain("PEmEm_ID","");
 
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/hadron.root/PEmEm_ID");
-      
-	  tree = chain; 
-   }
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/hadron.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton00.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton01.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton02.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton03.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton04.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton05.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton06.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton07.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton08.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton09.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton10.root/PEmEm_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton11.root/PEmEm_ID");
+   
+    tree = chain; 
+  }
 
-   Init(tree);
+  Init(tree);
 }
 
 

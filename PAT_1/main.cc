@@ -39,8 +39,8 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 Int_t simflag = 0;
 Int_t wallflag = 1;
 
-#define LEPTONS 1
-//#define HADRONS 1
+//#define LEPTONS 1
+#define HADRONS 1
 
 /*********************************************************************************/
 
@@ -56,8 +56,9 @@ int main(Int_t argc, Char_t **argv)
     inputDir.Resize(inputFile.Last('/')+1);
     inputFile=inputFile(inputFile.Last('/')+1,inputFile.Length()-inputFile.Last('/')-1);
 
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
- 
+    //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/";
+  
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------
@@ -119,9 +120,9 @@ int main(Int_t argc, Char_t **argv)
 #ifdef HADRONS
     //myHyps.add("HpHp", eHadronPos,eHadronPos);
     //myHyps.add("HpHm", eHadronPos,eHadronNeg);
-    myHyps.add("HpHpHm", eHadronPos,eHadronPos,eHadronNeg);
+    myHyps.add("HpHm", eHadronPos,eHadronNeg);
     //myHyps.add("HpHpHp", eHadronPos,eHadronPos,eHadronPos);
-    myHyps.add("HpHpHpHm", eHadronPos,eHadronPos,eHadronPos,eHadronNeg);
+    myHyps.add("HpHmHpHm", eHadronPos,eHadronNeg,eHadronPos,eHadronNeg);
 #endif
     //***************************************************
     //HPidPool myPids( &outputFile );
@@ -152,10 +153,10 @@ int main(Int_t argc, Char_t **argv)
     //myPids2.add("HpHp", "PPip",eProton,ePiPlus);
     //myPids2.add("HpHm", "PPim",eProton,ePiMinus);
     //myPids2.add("HpHm", "PipPim",ePiPlus,ePiMinus);
-    myPids2.add("HpHpHm", "PPipPim",eProton,ePiPlus,ePiMinus);
+    myPids2.add("HpHm", "PPim",eProton,ePiMinus);
     //myPids2.add("HpHpHm", "PPPim",eProton,eProton,ePiMinus);
     //myPids2.add("HpHpHp", "PPPip",eProton,eProton,ePiPlus);
-    myPids2.add("HpHpHpHm", "PPPipPim",eProton,eProton,ePiPlus,ePiMinus);
+    myPids2.add("HpHmHpHm", "PPPipPim",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
 #ifdef LEPTONS
@@ -189,10 +190,10 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A2.add("HpHp", "PP_ID",eProton,eProton);
     //myPids_A2.add("HpHp", "PPip_ID",eProton,ePiPlus);
     //myPids_A2.add("HpHm", "PipPim_ID",ePiPlus,ePiMinus);
-    myPids_A2.add("HpHpHm", "PPipPim_ID",eProton,ePiPlus,ePiMinus);
+    myPids_A2.add("HpHm", "PPim_ID",eProton,ePiMinus);
     //myPids_A2.add("HpHpHm", "PPPim_ID",eProton,eProton,ePiMinus);
     //myPids_A2.add("HpHpHp", "PPPip_ID",eProton,eProton,ePiPlus);
-    myPids_A2.add("HpHpHpHm", "PPPipPim_ID",eProton,eProton,ePiPlus,ePiMinus);
+    myPids_A2.add("HpHmHpHm", "PPimPipPim_ID",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
     //HPidPool myPids_B( &outputFile );

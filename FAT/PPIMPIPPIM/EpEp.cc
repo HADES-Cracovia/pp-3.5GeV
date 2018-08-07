@@ -1,5 +1,3 @@
-
-
 #include "EpEp.h"
 #include "data.h"
 #include <iostream>
@@ -102,8 +100,8 @@ void EpEp::Loop()
       double oa = R2D * openingangle(*e1, *e2);
       double oa_rich = R2D * openingangle(r1, r2);
 
-      double e1_mass = ep1_p*ep1_p * (  1. / (ep1_beta_new*ep1_beta_new)  - 1. ) ;
-      double e2_mass = ep2_p*ep2_p * (  1. / (ep2_beta_new*ep2_beta_new)  - 1. ) ;
+      double e1_mass = ep1_p*ep1_p * (  1. / (ep1_beta*ep1_beta)  - 1. ) ;
+      double e2_mass = ep2_p*ep2_p * (  1. / (ep2_beta*ep2_beta)  - 1. ) ;
 
       ACC = 1.;
       EFF = 1.;
@@ -188,7 +186,7 @@ void EpEp::Loop()
       double ang_cut =9.;
       //double ang_cut = 4.;
 	  
-      double close_cut =4.;
+      double close_cut =9.;
       double nonfit_close_cut =-4.;
       //double close_cut = 4.;
 
@@ -235,9 +233,9 @@ void EpEp::Loop()
 
 
       NoLeptonE1 = !((ep1_oa_lept< close_cut&&ep1_oa_lept>0.0) &&ep1_oa_lept>nonfit_close_cut );
-      NoHadronE1 = 1; // !(ep1_oa_hadr< close_cut &&ep1_oa_hadr>nonfit_close_cut );
+      NoHadronE1 = !(ep1_oa_hadr< close_cut &&ep1_oa_hadr>nonfit_close_cut );
       NoLeptonE2 = !((ep2_oa_lept< close_cut&&ep2_oa_lept>0.0) &&ep2_oa_lept>nonfit_close_cut );
-      NoHadronE2 = 1; // !(ep2_oa_hadr< close_cut &&ep2_oa_hadr>nonfit_close_cut );
+      NoHadronE2 = !(ep2_oa_hadr< close_cut &&ep2_oa_hadr>nonfit_close_cut );
       NoHadronE1 = 1;
       NoHadronE2 = 1;
 
@@ -263,18 +261,16 @@ void EpEp::Loop()
 			     //&& ep2_btMaxima>=2
 			     && ep2_btPadsRing>=2
 			    );
-      bool flanch=!(ep1_theta>65 && eVert_z<-45) && !(ep2_theta>65 && eVert_z<-45);
       bool bt_condition=(bt_ep1_condition && bt_ep2_condition);
       bool pre_shower= (ep1_system==0?(ep1_shw_sum1+ep1_shw_sum2-ep1_shw_sum0) > (parametrization(ep1_p)):true)
 	             &&(ep2_system==0?(ep2_shw_sum1+ep2_shw_sum2-ep2_shw_sum0) > (parametrization(ep2_p)):true);
       
-      bool mass_condition=(ep1_p>80 && ep2_p>80 && ep1_p <2000. && ep2_p < 2000.
+      bool mass_condition=(ep1_p>100 && ep2_p>100 && ep1_p <2000. && ep2_p < 2000.
 			   //&& ep1_p>200 && ep2_p>200
-			   //&&(ep1_system==0?ep1_beta_new>0.95:ep1_beta_new>0.92)&&(ep2_system==0?ep2_beta_new>0.95:ep2_beta_new>0.92)
-			   //&& ep1_beta_new<1.1 && ep2_beta_new<1.1
-			   && ep1_beta_new>0.9 && ep2_beta_new>0.9
+			   //&&(ep1_system==0?ep1_beta>0.95:ep1_beta>0.92)&&(ep2_system==0?ep2_beta>0.95:ep2_beta>0.92)
+			   && ep1_beta<1.1 && ep2_beta<1.1
+			   && ep1_beta>0.9 && ep2_beta>0.9
 			   && pre_shower
-			   && flanch
 			   );
       int i_array;
 
@@ -368,10 +364,6 @@ void EpEp::Loop()
 	    { // [1]
 	    sig_all_back1->Fill(m_inv_e1e2/1000., EFF );
             sig_all_var_back1->Fill(m_inv_e1e2/1000., EFF );
-	    z_theta_epep->Fill(eVert_z,ep1_theta);
-	    z_theta_epep->Fill(eVert_z,ep2_theta);
-	    z_theta_all->Fill(eVert_z,ep1_theta);
-	    z_theta_all->Fill(eVert_z,ep2_theta);
 	    //ep2_mom->Fill(ep2_p);
 	    //ep1_mom->Fill(ep1_p);
             //ep1_beta_mom->Fill( ep1_beta_new, ep1_p, EFF );
@@ -493,29 +485,131 @@ EpEp::EpEp(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/288_new_pcut/lepton288new_p.root/EpEp_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/288_new_std/dilepton_sep08_KN.root/EpEp_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/sep08_lepton_all.root/EpEm_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list5/sum5.root/EpEp_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list4/sum4.root/Ep_Ep_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list3/sum3.root/Ep_Ep_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/Ep_Ep_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list1/sum1.root/Ep_Ep_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/115_combinatorics/lepton.root/EpEp_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/full_stat/leptons.root/EpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list5/sum5.root/EpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list4/sum4.root/Ep_Ep_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list3/sum3.root/Ep_Ep_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/Ep_Ep_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list1/sum1.root/Ep_Ep_ID");
+
       //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/lepton656.root/EpEp_ID");
       //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/lepton690.root/EpEp_ID");
       //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/lepton748.root/EpEp_ID");
       //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/lepton800.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton00.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton01.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton02.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton03.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton04.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton05.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton06.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton07.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton08.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton09.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton10.root/EpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/lepton11.root/EpEp_ID");
+
+
+      // -- PE 690 ----------------------------------------
+      /*      
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/196/lepton196.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/197/lepton197.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/198/lepton198.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/232/lepton232.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/233/lepton233.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/234/lepton234.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/235/lepton235.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/236/lepton236.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/237/lepton237.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/238/lepton238.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/239/lepton239.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/240/lepton240.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/241/lepton241.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/242/lepton242.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/243/lepton243.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/244/lepton244.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/245/lepton245.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/246/lepton246.root/EpEp_ID");
+      */ 
+/*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/196/lepton196.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/197/lepton197.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/198/lepton198.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/232/lepton232.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/233/lepton233.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/234/lepton234.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/235/lepton235.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/236/lepton236.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/237/lepton237.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/238/lepton238.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/239/lepton239.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/240/lepton240.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/241/lepton241.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/242/lepton242.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/243/lepton243.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/244/lepton244.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/245/lepton245.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/246/lepton246.root/EpEp_ID");
+*/
+      // -- PE 656 ----------------------------------------
+      /*
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/247/656/lepton247_656.root/EpEp_ID");
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/248/656/lepton248_656.root/EpEp_ID");
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/249/656/lepton249_656.root/EpEp_ID");
+      */
+/*
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/247/656/lepton247_656.root/EpEp_ID");
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/248/656/lepton248_656.root/EpEp_ID");
+       chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/249/656/lepton249_656.root/EpEp_ID");
+*/
+      // -- PE 748 ----------------------------------------
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/246/748/lepton246_748.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/247/748/lepton247_748.root/EpEp_ID");
+      */
+/*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/246/748/lepton246_748.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/247/748/lepton247_748.root/EpEp_ID");
+*/
+      // -- PE 800 ----------------------------------------
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/249/800/lepton249_800.root/EpEp_ID");
+      */
+/*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/249/800/lepton249_800.root/EpEp_ID");
+*/
+      // --  C 656 ----------------------------------------
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/252/656/lepton252_656.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/253/656/lepton253_656.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/254/656/lepton254_656.root/EpEp_ID");
+      */
+/*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/252/656/lepton252_656.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/253/656/lepton253_656.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/254/656/lepton254_656.root/EpEp_ID");
+*/
+      // --  C 690 ----------------------------------------
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/195/lepton195.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/250/lepton250.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/251/lepton251.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/254/lepton254.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/255/lepton255.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/256/lepton256.root/EpEp_ID");
+      */
+
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/195/lepton195.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/250/lepton250.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/251/lepton251.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/254/lepton254.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/255/lepton255.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/256/lepton256.root/EpEp_ID");
+
+      // --  C 748 ----------------------------------------
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/252/748/lepton252_748.root/EpEp_ID");
+      */
+/*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/252/748/lepton252_748.root/EpEp_ID");
+*/
+      // --  C 800 ----------------------------------------
+      
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/251/800/lepton251_800.root/EpEp_ID");
+      //chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/LEPTONS/252/800/lepton252_800.root/EpEp_ID");
+      
+      /*
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/251/800/lepton251_800.root/EpEp_ID");
+      chain->Add("/hera/hades/user/przygoda/PAT2/out/exp/gen1/252/800/lepton252_800.root/EpEp_ID");
+      */
+
      
       tree = chain;
 
