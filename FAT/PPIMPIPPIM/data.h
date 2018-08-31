@@ -30,6 +30,8 @@ namespace PATData {
   extern TH2F *dist_p_pim_pim_pip;
   extern TH1F *dist_p_pim, *dist_pim_pip;
 
+  extern TH1F *miss_energy, *DL_miss_energy, *DML_miss_energy;
+
   extern TH1F *DL_p_pim1_mass, *DL_p_pim2_mass, *DL_pim_pip_mass,*DL_pim1_pip_mass,*DL_pim2_pip_mass, *DL_p_pim_pip_pim_mass;
   extern TH1F *DL_dist_p_pim, *DL_dist_pim_pip;
   extern TH2F *DL_dist_p_pim_pim_pip;

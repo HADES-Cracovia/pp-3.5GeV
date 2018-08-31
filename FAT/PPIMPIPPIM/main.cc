@@ -30,18 +30,19 @@ int main()
   //   double pion_momentum = 612.0;
 
   //   double pion_momentum = 656.0;
-  double pion_momentum = 690.0; 
+  //double pion_momentum = 690.0; 
   //   double pion_momentum = 748.0;
   //   double pion_momentum = 800.0;
-
+  double proton_momentum=TMath::Sqrt((3.5+0.938)*(3.5+0.938)+0.938*0.938)*1000;
   // ORIGIN: https://hades-wiki.gsi.de/foswiki/bin/view/PionBeam/WebHome
-
-  double pion_energy = sqrt( pion_momentum*pion_momentum + 139.56995*139.56995 );
-
-  proj = new TLorentzVector(0,0, pion_momentum, pion_energy); // PION BEAM momentum as above
-
+  //double pion_energy = sqrt( pion_momentum*pion_momentum + 139.56995*139.56995 );
+  double proton_energy=sqrt(proton_momentum*proton_momentum + 938.27231*938.27231);
+  
+  proj = new TLorentzVector(0,0, proton_momentum, proton_energy); // PION BEAM momentum as above
   targ = new TLorentzVector(0,0,0,938.27231); // PROTON
+
   /*******************************************************************************************************/
+
   beam = new TLorentzVector(0,0,0,0);
   *beam = *proj + *targ;
 
@@ -148,6 +149,9 @@ int main()
   DML_dist_p_pim=new TH1F("DML_dist_p_pim","DML_dist_p_pim",1000,0,300);
   DML_dist_pim_pip=new TH1F("DML_dist_pip_pim","DML_dist_pip_pim",1000,0,300);
 
+  miss_energy=new TH1F("miss_energy","missing energy",2000,0,6000);
+  DL_miss_energy=new TH1F("DL_miss_energy","missing energy",2000,0,6000);
+  DML_miss_energy=new TH1F("DLM_miss_energy","missing energy",2000,0,6000);
   
   /**************************** M A I N   P A R T ****************************************/
 
@@ -188,7 +192,8 @@ int main()
   pim2_pip_mass->Write();
   pim1_pip_mass->Write();
   p_pim_pip_pim_mass->Write();
-
+  miss_energy->Write();
+  
   dist_p_pim_pim_pip->Write();
   dist_pim_pip->Write();
   dist_p_pim->Write();
@@ -204,6 +209,7 @@ int main()
   DL_dist_p_pim_pim_pip->Write();
   DL_dist_pim_pip->Write();
   DL_dist_p_pim->Write();
+  DL_miss_energy->Write();
 
   DML_p_pim_mass->Write();
   DML_p_pim1_mass->Write();
@@ -216,6 +222,7 @@ int main()
   DML_dist_p_pim_pim_pip->Write();
   DML_dist_pim_pip->Write();
   DML_dist_p_pim->Write();
+  DML_miss_energy->Write();
   //p_mass->Write();
   //pim_mass->Write();
  
