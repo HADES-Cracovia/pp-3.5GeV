@@ -44,6 +44,8 @@ void HParticlePool::reset()
    partNum[eElectron] = 0;
    partNum[ePiPlus] = 0;
    partNum[ePiMinus] = 0;
+   partNum[eKPlus] = 0;
+   partNum[eKMinus] = 0;
    partNum[eProton] = 0;
    partNum[eDeuteron] = 0;
    partNum[eLeptonPos] = 0;

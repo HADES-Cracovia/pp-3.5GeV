@@ -14,6 +14,8 @@ EParticle CommonDefinitions::convertId(const char* name)
    else if (tmp_name == "pim") return ePiMinus;
    else if (tmp_name == "p") return eProton;
    else if (tmp_name == "d") return eDeuteron;
+   else if (tmp_name == "kp") return eKPlus;
+   else if (tmp_name == "km") return eKMinus;
    else if (tmp_name == "lpos") return eLeptonPos;
    else if (tmp_name == "lneg") return eLeptonNeg;
    else if (tmp_name == "hpos") return eHadronPos;
@@ -32,6 +34,8 @@ EParticle CommonDefinitions::convertId(int n)
    else if (n == 3) return eElectron;
    else if (n == 8) return ePiPlus;
    else if (n == 9) return ePiMinus;
+   else if (n == 11) return eKPlus;
+   else if (n == 12) return eKMinus;
    else if (n == 14) return eProton;
    else if (n == 45) return eDeuteron;
    else if (n == 102) return eLeptonPos;
@@ -51,6 +55,8 @@ std::string CommonDefinitions::convertId(CommonDefinitions::EParticle eid)
    else if (eid == ePiPlus) return "pip";
    else if (eid == ePiMinus) return "pim";
    else if (eid == eProton) return "p";
+   else if (eid == eKPlus) return "kp";
+   else if (eid == eKMinus) return "km";
    else if (eid == eDeuteron) return "d";
    else if (eid == eLeptonPos) return "lpos";
    else if (eid == eLeptonNeg) return "lneg";

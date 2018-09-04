@@ -12,7 +12,7 @@ class HNtuple;
 
 namespace CommonDefinitions {
 
-enum EParticle { eUnknown=0, ePositron=2, eElectron=3, ePiPlus=8, ePiMinus=9, eProton=14, eDeuteron=45, eLeptonPos=102, eLeptonNeg=103, eHadronPos=104, eHadronNeg=105 };
+enum EParticle { eUnknown=0, ePositron=2, eElectron=3, ePiPlus=8, ePiMinus=9, eKPlus=11, eKMinus=12, eProton=14, eDeuteron=45, eLeptonPos=102, eLeptonNeg=103, eHadronPos=104, eHadronNeg=105 };
 
 typedef std::multimap< EParticle, HParticleCandidate* > MultiParticle;
 typedef std::vector< HParticle* > ParticleCandSeq;

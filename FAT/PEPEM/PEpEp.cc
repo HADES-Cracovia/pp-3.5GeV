@@ -224,7 +224,7 @@ void PEpEp::Loop()
 			    //&& ep1_btMaxima>=2
 			    && ep1_btPadsRing>=2
 			    );
-      bool bt_condition=1;//(bt_ep2_condition && bt_ep1_condition);
+      bool bt_condition=(bt_ep2_condition && bt_ep1_condition);
       bool pre_shower= (ep1_system==0?(ep1_shw_sum1+ep1_shw_sum2-ep1_shw_sum0) > (parametrization(ep1_p)):true)
 	             &&(ep2_system==0?(ep2_shw_sum1+ep2_shw_sum2-ep2_shw_sum0) > (parametrization(ep2_p)):true);
       //bool flanch=!(ep1_theta>65 && eVert_z<-55) && !(ep2_theta>65 && eVert_z<-55); 

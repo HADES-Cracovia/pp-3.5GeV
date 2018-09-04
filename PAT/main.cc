@@ -44,7 +44,7 @@ Int_t simflag = 0;
 Int_t wallflag = 1;
 Int_t startflag = 0;
 
-#define LEPTONS 1
+//#define LEPTONS 1
 #define HADRONS 1
 
 /*********************************************************************************/
@@ -85,7 +85,8 @@ int main(Int_t argc, Char_t **argv)
   //*******************************************
   //TString output_Dir ="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/115_notime/";
   //TString output_Dir ="/lustre/nyx/hades/user/knowakow/PION/FILES/288_time/";
-  TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/correlation_window/";
+  //TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/correlation_window/";
+  TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip/";
   //*******************************************
   //*******************************************
   //*******************************************
@@ -164,9 +165,9 @@ int main(Int_t argc, Char_t **argv)
   //myHyps.add("HpHm", eHadronPos,eHadronNeg);
   myHyps.add("HpHmHp", eHadronPos,eHadronNeg,eHadronPos);
   //myHyps.add("HpHmLpLm", eHadronPos,eHadronNeg,eLeptonPos,eLeptonNeg);
-  myHyps.add("HpLpLm", eHadronPos,eLeptonPos,eLeptonNeg);
-  myHyps.add("HpLpLp", eHadronPos,eLeptonPos,eLeptonPos);
-  myHyps.add("HpLmLm", eHadronPos,eLeptonNeg,eLeptonNeg);
+  //myHyps.add("HpLpLm", eHadronPos,eLeptonPos,eLeptonNeg);
+  //myHyps.add("HpLpLp", eHadronPos,eLeptonPos,eLeptonPos);
+  //myHyps.add("HpLmLm", eHadronPos,eLeptonNeg,eLeptonNeg);
 #endif
   //*************************************************** 
 #ifdef LEPTONS 
@@ -195,9 +196,9 @@ int main(Int_t argc, Char_t **argv)
   //myPids2.add("HpHm", "PPim",eProton,ePiMinus);
   myPids2.add("HpHmHp", "PPimPip",eProton,ePiMinus,ePiPlus);
   //myPids2.add("HpHmLpLm", "PipPimEpEm",ePiPlus,ePiMinus,ePositron,eElectron);
-  myPids2.add("HpLpLm", "PEpEm",eProton,ePositron,eElectron);
-  myPids2.add("HpLpLp", "PEpEp",eProton,ePositron,ePositron);
-  myPids2.add("HpLmLm", "PEmEm",eProton,eElectron,eElectron);
+  //myPids2.add("HpLpLm", "PEpEm",eProton,ePositron,eElectron);
+  //myPids2.add("HpLpLp", "PEpEp",eProton,ePositron,ePositron);
+  //myPids2.add("HpLmLm", "PEmEm",eProton,eElectron,eElectron);
 #endif
   //*************************************************** 
 #ifdef LEPTONS 
@@ -225,9 +226,9 @@ int main(Int_t argc, Char_t **argv)
   //myPids_A2.add("HpHm", "PPim_ID",eProton,ePiMinus);
   myPids_A2.add("HpHmHp", "PPimPip_ID",eProton,ePiMinus,ePiPlus);
   //myPids_A2.add("HpHmLpLm", "PipPimEpEm_ID",ePiPlus,ePiMinus,ePositron,eElectron);
-  myPids_A2.add("HpLpLm", "PEpEm_ID",eProton,ePositron,eElectron);
-  myPids_A2.add("HpLpLp", "PEpEp_ID",eProton,ePositron,ePositron);
-  myPids_A2.add("HpLmLm", "PEmEm_ID",eProton,eElectron,eElectron);
+  //myPids_A2.add("HpLpLm", "PEpEm_ID",eProton,ePositron,eElectron);
+  //myPids_A2.add("HpLpLp", "PEpEp_ID",eProton,ePositron,ePositron);
+  //myPids_A2.add("HpLmLm", "PEmEm_ID",eProton,eElectron,eElectron);
 #endif
 
   HTrackCut tCut("all");
