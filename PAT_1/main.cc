@@ -38,6 +38,7 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 
 Int_t simflag = 0;
 Int_t wallflag = 1;
+Int_t btflag=1;
 
 //#define LEPTONS 1
 #define HADRONS 1

@@ -40,6 +40,8 @@ public:
   HIterator      *m_pFWallCatIter;        //!
   HCategory      *m_pGeantKineCat;    //!
   HIterator      *m_pGeantKineCatIter;   //!
+  HCategory      *m_pBTCat;    //!
+  HIterator      *m_pBTCatIter;   //!
 
 
    HParticlePool &partPool;  

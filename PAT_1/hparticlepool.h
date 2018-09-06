@@ -39,7 +39,7 @@ public:
 
    void reset();
    void loop(HIterator *dataIt);
-   void fill(HIterator *dataIt = 0, HIterator *geantIt = 0);
+  void fill(HIterator *dataIt = 0, HIterator *geantIt = 0, HIterator *btIt=0);
 
 ClassDef(HParticlePool, 0) 
 };

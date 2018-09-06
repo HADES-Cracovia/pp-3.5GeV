@@ -2,11 +2,12 @@
 #include "walldef.h"
 #include "hgeantkine.h"
 #include "heditor.h"
+#include "hparticledef.h"
 
 ClassImp(HTrackPlayer)
 
 extern int wallflag;
-
+extern int btflag;
 //-----------------------------------------------------------------
   HTrackPlayer::HTrackPlayer(HParticlePool& ref) : 
       HReconstructor( const_cast<Text_t*>("trackplayer"), const_cast<Text_t*>("trackplayer") ), 
@@ -30,6 +31,8 @@ Bool_t HTrackPlayer::init()
 	m_pFWallCatIter = 0;
 	m_pGeantKineCat = 0;
 	m_pGeantKineCatIter = 0;
+	m_pBTCat=0;
+	m_pBTCatIter=0;
 
 	if ((m_pContCatPart =
 		gHades->getCurrentEvent()->getCategory(catPidTrackCand)) == 0) {
@@ -58,6 +61,16 @@ Bool_t HTrackPlayer::init()
 	   m_pGeantKineCatIter = (HIterator *) m_pGeantKineCat->MakeIterator();
         }
 
+	if ( btflag == 1 )
+        {
+	   if ((m_pBTCat =
+		   gHades->getCurrentEvent()->getCategory(catParticleBtRing)) == 0) {
+		   ErrorMsg(ERROR, "HTrackPlayer::init", 1, "Cannot get catParticleBtRing cat");
+		   return kFALSE;
+	   }
+	   m_pBTCatIter = (HIterator *) m_pBTCat->MakeIterator();
+        }
+
 	return kTRUE;
 }
 
@@ -76,7 +89,7 @@ Int_t HTrackPlayer::execute()
       ++itCut;
    }   
    
-   partPool.fill( m_pFWallCatIter, m_pGeantKineCatIter );
+   partPool.fill( m_pFWallCatIter, m_pGeantKineCatIter, m_pBTCatIter );
 
    return 0;
 }
