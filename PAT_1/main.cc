@@ -39,7 +39,7 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 Int_t simflag = 0;
 Int_t wallflag = 1;
 
-#define LEPTONS 1
+//#define LEPTONS 1
 #define HADRONS 1
 
 /*********************************************************************************/
@@ -57,7 +57,7 @@ int main(Int_t argc, Char_t **argv)
     inputFile=inputFile(inputFile.Last('/')+1,inputFile.Length()-inputFile.Last('/')-1);
 
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/withBT/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
   
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
