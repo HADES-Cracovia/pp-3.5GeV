@@ -58,7 +58,8 @@ int main(Int_t argc, Char_t **argv)
     inputFile=inputFile(inputFile.Last('/')+1,inputFile.Length()-inputFile.Last('/')-1);
 
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt_1/";
   
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
