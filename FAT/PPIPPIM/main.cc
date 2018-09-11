@@ -127,7 +127,7 @@ int main()
 
   
   DL_p_pim_mass=new TH1F("DL_p_pim_mass","Invariant mass #pi^{-} p",2000,500,2500);						       
-  //DL_p_pim_mass=new TH1F("DL_p_pim_mass","DL_Invariant mass #pi_{1}^{-} p",2000,500,2500);
+  DL_pim_mass=new TH1F("DL_pim_mass","DL_Invariant mass #pi^{-}",2000,500,2500);
   //DL_p_pim2_mass=new TH1F("DL_p_pim2_mass","DL_Invariant mass #pi_{2}^{-} p",2000,500,2500);
   DL_pim_pip_mass=new TH1F("DL_pim_pip_mass","DL_Invariant mass #pi^{-} #pi^{+} ",2000,200,1500);
   //DL_pim2_pip_mass=new TH1F("DL_pim2_pip_mass","DL_Invariant mass #pi_{2}^{-} #pi^{+} ",2000,200,1500);

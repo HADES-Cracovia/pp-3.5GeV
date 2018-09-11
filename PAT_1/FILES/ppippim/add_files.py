@@ -5,7 +5,7 @@ import os
 
 print("Copy and hadd files from shorter lists")
 
-max_value=23
+max_value=11
 
 for k in range (0,max_value+1):
     input_name="x{:02d}".format(k)
