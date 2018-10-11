@@ -152,7 +152,9 @@ int main()
   miss_energy=new TH1F("miss_energy","missing energy",2000,0,6000);
   DL_miss_energy=new TH1F("DL_miss_energy","missing energy",2000,0,6000);
   DML_miss_energy=new TH1F("DLM_miss_energy","missing energy",2000,0,6000);
-  
+
+  ppim_pippim_mass=new TH2F("ppim_pippim_mass","ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
+  dist_z_ppim_pippim_mass=new TH2F("dist_z_ppim_pippim_mass","dist_z_ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
   /**************************** M A I N   P A R T ****************************************/
 
   //PPim t;
@@ -223,6 +225,10 @@ int main()
   DML_dist_pim_pip->Write();
   DML_dist_p_pim->Write();
   DML_miss_energy->Write();
+
+  dist_z_ppim_pippim_mass->Write();
+  ppim_pippim_mass->Write();
+
   //p_mass->Write();
   //pim_mass->Write();
  

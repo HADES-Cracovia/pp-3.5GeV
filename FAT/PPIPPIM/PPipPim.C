@@ -32,26 +32,26 @@ void PPipPim::Loop()
 
 
       double F = 1.006;
-      TVector3 v1, v2, v3, v4;// v5;
-      v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
-      v3.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
-      v4.SetXYZ(F*pip_p*sin(D2R*pip_theta)*cos(D2R*pip_phi),F*pip_p*sin(D2R*pip_theta)*sin(D2R*pip_phi),F*pip_p*cos(D2R*pip_theta));
+      TVector3 v1, v_proton, v_pim, v4;// v5;
+      v_proton.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
+      v_pim.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
+      v_pip.SetXYZ(F*pip_p*sin(D2R*pip_theta)*cos(D2R*pip_phi),F*pip_p*sin(D2R*pip_theta)*sin(D2R*pip_phi),F*pip_p*cos(D2R*pip_theta));
       //v5.SetXYZ(F*pim2_p*sin(D2R*pim2_theta)*cos(D2R*pim2_phi),F*pim2_p*sin(D2R*pim2_theta)*sin(D2R*pim2_phi),F*pim2_p*cos(D2R*pim2_theta));
       
-      TVector3 r1, r2, r3,r4;
-      r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
-      r2.SetXYZ(sin(D2R*pim_theta_rich)*cos(D2R*pim_phi_rich),sin(D2R*pim_theta_rich)*sin(D2R*pim_phi_rich),cos(D2R*pim_theta_rich));
-      r3.SetXYZ(sin(D2R*pip_theta_rich)*cos(D2R*pip_phi_rich),sin(D2R*pip_theta_rich)*sin(D2R*pip_phi_rich),cos(D2R*pip_theta_rich));
+      TVector3 r_proton, r_pim, r_pip,r4;
+      r_proton.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
+      r_pim.SetXYZ(sin(D2R*pim_theta_rich)*cos(D2R*pim_phi_rich),sin(D2R*pim_theta_rich)*sin(D2R*pim_phi_rich),cos(D2R*pim_theta_rich));
+      r_pip.SetXYZ(sin(D2R*pip_theta_rich)*cos(D2R*pip_phi_rich),sin(D2R*pip_theta_rich)*sin(D2R*pip_phi_rich),cos(D2R*pip_theta_rich));
       //r4.SetXYZ(sin(D2R*pim2_theta_rich)*cos(D2R*pim2_phi_rich),sin(D2R*pim2_theta_rich)*sin(D2R*pim2_phi_rich),cos(D2R*pim2_theta_rich));
-      p->SetVectM( v2, 938.272013 );
-      pim->SetVectM( v3, 139.57018 );
-      pip->SetVectM( v4, 139.57018 );
+      p->SetVectM( v_proton, 938.272013 );
+      pim->SetVectM( v_pim, 139.57018 );
+      pip->SetVectM( v_pip, 139.57018 );
       //pim2->SetVectM( v5, 139.57018 );
      
       *gammappim = *p + *pim;
       //*gammappim2 = *p + *pim2;
       *gammapimpip= *pim + *pip;
-      //*gammapim2pip= *pim2 + *pip;
+      //*gammapimpip= *pim2 + *pip;
       *gammappimpip=*pim + *pip + *p;
       
       //*ppim = *p + *pim;
@@ -66,22 +66,22 @@ void PPipPim::Loop()
       //double m_inv_pippim2 = gammapim2pip->M();
       double m_inv_ppimpip = gammappimpip->M();
       double oa = R2D * openingangle(*p, *pim);
-      double oa_rich = R2D * openingangle(r1, r2);
+      double oa_rich = R2D * openingangle(r_proton, r_pim);
 
       double p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
       double pi_mass = pim_p*pim_p * (  1. / (pim_beta*pim_beta)  - 1. ) ;
 
       double missing_energy=beam->E()-gammappimpip->E();
       
-      double d_dist_p_pim=trackDistance(p_r,p_z,v2,pim_r,pim_z,v3);
-      //double d_dist_p_pim2=trackDistance(p_r,p_z,v2,pim2_r,pim2_z,v5);
-      double d_dist_pip_pim=trackDistance(pip_r,pip_z,v4,pim_r,pim_z,v3);
-      //double d_dist_pip_pim2=trackDistance(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
+      double d_dist_p_pim=trackDistance(p_r,p_z,v_proton,pim_r,pim_z,v_pim);
+      //double d_dist_p_pim2=trackDistance(p_r,p_z,v_proton,pim2_r,pim2_z,v5);
+      double d_dist_pip_pim=trackDistance(pip_r,pip_z,v_pip,pim_r,pim_z,v_pim);
+      //double d_dist_pip_pim2=trackDistance(pip_r,pip_z,v_pip,pim2_r,pim2_z,v5);
 
-      TVector3 ver_p_pim=vertex(p_r,p_z,v2,pim_r,pim_z,v3);
-      //TVector3 ver_p_pim2=vertex(p_r,p_z,v2,pim2_r,pim2_z,v5);
-      TVector3 ver_pip_pim=vertex(pip_r,pip_z,v4,pim_r,pim_z,v3);
-      //TVector3 ver_pip_pim2=vertex(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
+      TVector3 ver_p_pim=vertex(p_r,p_z,v_proton,pim_r,pim_z,v_pim);
+      //TVector3 ver_p_pim2=vertex(p_r,p_z,v_proton,pim2_r,pim2_z,v5);
+      TVector3 ver_pip_pim=vertex(pip_r,pip_z,v_pip,pim_r,pim_z,v_pim);
+      //TVector3 ver_pip_pim2=vertex(pip_r,pip_z,v_pip,pim2_r,pim2_z,v5);
       
 
       //	  cout << "opening angle = " << oa << endl;
@@ -188,7 +188,7 @@ void PPipPim::Loop()
 	{
 	  DL_p_pim_mass->Fill(m_inv_ppim);
 	  //DL_p_pim_mass->Fill(m_inv_ppim);
-	  DL_pim_mass->Fill(m_inv_pippim);
+	  //_pim_mass->Fill(m_inv_pippim);
 	  //DL_pim2_pip_mass->Fill(m_inv_pippim2);
 	  DL_p_pim_pip_mass->Fill(m_inv_ppimpip);
 	  //DL_dist_p_pim_pim_pip->Fill(d_dist_p_pim,d_dist_pip_pim2);

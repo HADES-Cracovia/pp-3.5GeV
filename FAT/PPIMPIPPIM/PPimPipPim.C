@@ -183,6 +183,9 @@ void PPimPipPim::Loop()
 	  dist_pim_pip->Fill(dist_pip_pim1);
 
 	  miss_energy->Fill(missing_energy);
+
+	  ppim_pippim_mass->Fill(m_inv_ppim1,m_inv_pippim2);
+	  ppim_pippim_mass->Fill(m_inv_ppim2,m_inv_pippim1);
 	}
       if(isBest==1 && dist1)
 	{
@@ -195,6 +198,7 @@ void PPimPipPim::Loop()
 	  DL_dist_p_pim->Fill(dist_p_pim1);
 	  DL_dist_pim_pip->Fill(dist_pip_pim2);
 	  DL_miss_energy->Fill(missing_energy);
+	  dist_z_ppim_pippim_mass->Fill(m_inv_ppim1,m_inv_pippim2);
 	}
       if(isBest==1 && dist2)
 	{
@@ -207,6 +211,7 @@ void PPimPipPim::Loop()
 	  DL_dist_p_pim->Fill(dist_p_pim2);
 	  DL_dist_pim_pip->Fill(dist_pip_pim1);
 	  DL_miss_energy->Fill(missing_energy);
+	  dist_z_ppim_pippim_mass->Fill(m_inv_ppim2,m_inv_pippim1);
 	}
       if(isBest==1 && dist1 && c_mass1)
 	{

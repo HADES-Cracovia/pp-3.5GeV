@@ -99,7 +99,7 @@ bool HGraphCut::graphCut(HParticle *pPart)
       //if (pim_cut) return pim_cut->IsInside( mom, mass ); 
       break;
       
-    case 14: if ( sqrt(mass) > 750 && sqrt(mass) <1027 )
+    case 14: if ( sqrt(mass) > 650 && sqrt(mass) <1127 )
 	{
 	  //	  cout<<endl<<"true proton"<<endl;
 	  return true;

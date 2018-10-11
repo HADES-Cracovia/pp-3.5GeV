@@ -78,8 +78,8 @@ void PPim::Loop()
 
       double close_cut = 9.;
       double nonfit_close_cut = -4.;
-      double min_dist=30;
-      double min_z=4;
+      double min_dist=20;
+      double min_z=15;
       //double close_cut = 0.;
       //double nonfit_close_cut = 0.;
       //double close_cut = 4.;
@@ -151,10 +151,15 @@ void PPim::Loop()
 	    {
 	      D_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
-	  if(isBest>=1 && d_p_pim<50)
+	  if(isBest>=1 && d_p_pim<10)
 	    {
 	      if(ver.Z()>(ll*2)-10)
 		Z_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
+	    }
+	  for(int kk=1;kk<=25;kk++)
+	    {
+	      if(isBest>=1 && d_p_pim<ll*2 && (ver.Z()>(kk*2)-10))
+		DZ_p_pim_mass_array[ll-1][kk-1]->Fill(m_inv_ppi);
 	    }
 	}
     } // end of main loop
