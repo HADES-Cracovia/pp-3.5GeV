@@ -29,10 +29,11 @@ void PPim::Loop()
 
 
       double F = 1.006;
-      TVector3 v1, v2, v3;
+      TVector3 v1, v2, v3,v0;
       v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
       v3.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
-
+      v0.SetXYZ(0,0,1);
+      
       TVector3 r1, r2;
       r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
       r2.SetXYZ(sin(D2R*pim_theta_rich)*cos(D2R*pim_phi_rich),sin(D2R*pim_theta_rich)*sin(D2R*pim_phi_rich),cos(D2R*pim_theta_rich));
@@ -57,6 +58,8 @@ void PPim::Loop()
       double d_p_pim=trackDistance(p_r,p_z,v2,pim_r,pim_z,v3);
       TVector3 ver=vertex(p_r,p_z,v2,pim_r,pim_z,v3);
 
+      TVector3 prim_ver=vertex(0,0,v0,ver.Perp(),ver.Z(),gammappi->Vect());
+
 
       //	  cout << "opening angle = " << oa << endl;
 
@@ -78,8 +81,8 @@ void PPim::Loop()
 
       double close_cut = 9.;
       double nonfit_close_cut = -4.;
-      double min_dist=20;
-      double min_z=15;
+      double min_dist=15;
+      double min_z=25;
       //double close_cut = 0.;
       //double nonfit_close_cut = 0.;
       //double close_cut = 4.;
@@ -132,6 +135,7 @@ void PPim::Loop()
 	  pim_p_beta->Fill(pim_p,pim_beta_new);
 	  p_pim_mass->Fill(m_inv_ppi);
 	  dist_p_pim->Fill(d_p_pim);
+	  z_lambda->Fill(prim_ver.Z());
 	}
       if(isBest==1 && d_p_pim<min_dist)
 	{
@@ -142,9 +146,10 @@ void PPim::Loop()
       if(isBest==1 && d_p_pim<min_dist && ver.Z()>min_z)
 	{
 	  ZD_p_pim_mass->Fill(m_inv_ppi);
+	  z_real_lambda->Fill(prim_ver.Z());
 	  //vertex_z_r->Fill(ver.Z(),TMath::Sqrt(ver.X()*ver.X()+ver.Y()*ver.Y()));
 	}
-
+      /*      
       for(int ll=1;ll<=25;ll++)
 	{
 	  if(isBest>=1 && d_p_pim<ll*2)
@@ -162,6 +167,8 @@ void PPim::Loop()
 		DZ_p_pim_mass_array[ll-1][kk-1]->Fill(m_inv_ppi);
 	    }
 	}
+      */
+
     } // end of main loop
 } // eof Loop 
 

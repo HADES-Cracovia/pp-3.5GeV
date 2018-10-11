@@ -26,6 +26,7 @@ namespace PATData
   TH2F *dist_p_pim_pim_pip, *vertex_z_r;
   TH1F *dist_p_pim, *dist_pim_pip;
 
+  TH1F *z_lambda, *z_real_lambda;
   //***************************************** 
 
   TFile *filp_cuts, *filpi_cuts;

@@ -86,7 +86,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppim_all.root","recreate");
+  outFileData = new TFile("pp_ppim_all_z_vertex.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -115,6 +115,7 @@ int main()
   D_p_pim_mass=new TH1F("D_p_pim_mass","Invariant mass #pi^{-} p after distance cut",2000,500,2500);
   ZD_p_pim_mass=new TH1F("ZD_p_pim_mass","Invariant mass #pi^{-} p after geometric cuts",2000,500,2500);
 
+  
   char hname[40];
   char htitle[40];
   char zname[40];
@@ -142,6 +143,8 @@ int main()
   dist_p_pim=new TH1F("dist_p_pim","dist_p_pim",1000,0,300);
   vertex_z_r=new TH2F("vertex_z_r","Z vs. r coordinate for vertex, after distance cut",400,-100,100,200,0,100);  
   
+  z_lambda=new TH1F("z_lambda","Lambda extrapolation to target",1000,-20,5);
+  z_real_lambda=new TH1F("z_real_lambda","Lambda extrapolation to target",1000,-20,5);
   /**************************** M A I N   P A R T ****************************************/
 
   PPim t;
@@ -181,6 +184,9 @@ int main()
   ZD_p_pim_mass->Write();
   
   vertex_z_r->Write();
+
+  z_lambda->Write();
+  z_real_lambda->Write();
   
   TCanvas *c2=new TCanvas("c2","Cut on distance");
   c2->Divide(5,5);

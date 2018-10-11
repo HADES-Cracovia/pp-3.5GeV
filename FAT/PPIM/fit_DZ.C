@@ -2,11 +2,6 @@
 int fit_DZ()
 {
   TFile *f = new TFile("pp_ppim_all.root");
-  TCanvas* c1=new TCanvas("c1","c1");
-  TCanvas* c2=new TCanvas("c2","c2");
-
-  c1->Divide(5,5);
-  c2->Divide(2);
   
   TH1F *hists[25][25];
   f->ls();
@@ -39,7 +34,7 @@ int fit_DZ()
       z_cut[n-1]=(n*2)-10;
       for(int z=1;z<=25;z++)
 	{
-	  sprintf(hname,"DZ_p_pim_mass_%d_%d",n*2,(z*2)-10);
+	  sprintf(hname,"DZ_p_pim_mass_%d_%d",n*2,(z*2));
 	  sprintf(new_name,"mass_%d_%d",n*2,(z*2)-10);
 	  hists[n-1][z-1]=new TH1F("new_name","new_name",2000,500,2500);
 	  hists[n-1][z-1]=(TH1F*)f->Get(hname);
@@ -78,7 +73,7 @@ int fit_DZ()
       double start_high=hists[j][k]->GetBinContent(hists[j][k]->FindBin(1115))-start_base;
       cout<<"starting parameters "<<start_base<<" "<<start_high<<endl;
       signal[j][k]->SetParameters(start_high,1115,5,start_base);
-      hists[j][k]->Fit(signal[j],"R");
+      hists[j][k]->Fit(signal[j][k],"R");
       
       all[j][k]->SetParameter(0,bg[j][k]->GetParameter(0));
       all[j][k]->SetParameter(1,bg[j][k]->GetParameter(1));
@@ -114,6 +109,10 @@ int fit_DZ()
   
   TGraph2D *sig_to_bacg=new TGraph2D();
   TGraph2D *signifi=new TGraph2D();
+  sig_to_bacg->SetTitle("S/B;dist cut [mm];z cut [mm]");
+  signifi->SetTitle("significance; dist cut[mm]; z cut[mm]");
+  signifi->SetMaximum(200);
+
   int npoint=0;
 
   for(int l=0;l<25;l++)
@@ -121,13 +120,16 @@ int fit_DZ()
       {
 	sig_to_bacg->SetPoint(npoint,d_cut[l],z_cut[j],d_sig_to_bg[l][j]);
 	signifi->SetPoint(npoint,d_cut[l],z_cut[j],d_signif[l][j]);
+	npoint++;
       }
 
-  
-  c2->cd(1);
-  sig_to_bacg->Draw();
-  c2->cd(2);
-  signifi->Draw();
+  TCanvas* c1=new TCanvas("c1","c1");
+  TCanvas* c2=new TCanvas("c2","c2");
+
+  c1->cd();
+  sig_to_bacg->Draw("surf1");
+  c2->cd();
+  signifi->Draw("surf1");
   
   return 0;
 }
