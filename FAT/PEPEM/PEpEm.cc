@@ -219,11 +219,11 @@ void PEpEm::Loop()
            
     bool bt_em_condition=(em_isBT!=-1
 			  //&& em_btMaxima>=2
-			  //&& em_btPadsRing>=2
+			  && em_btPadsRing>=2
 			  );
     bool bt_ep_condition=(ep_isBT!=-1
 			  //&& ep_btMaxima>=2
-			  //&& ep_btPadsRing>=2
+			  && ep_btPadsRing>=2
 			  );
     bool bt_condition=(bt_em_condition && bt_ep_condition);
     bool pre_shower= (ep_system==0?(ep_shw_sum1+ep_shw_sum2-ep_shw_sum0) > (parametrization(ep_p)):true)

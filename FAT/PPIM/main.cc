@@ -86,7 +86,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppim_all_z_vertex.root","recreate");
+  outFileData = new TFile("pp_ppim_3fiels_z_vertex.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -143,8 +143,8 @@ int main()
   dist_p_pim=new TH1F("dist_p_pim","dist_p_pim",1000,0,300);
   vertex_z_r=new TH2F("vertex_z_r","Z vs. r coordinate for vertex, after distance cut",400,-100,100,200,0,100);  
   
-  z_lambda=new TH1F("z_lambda","Lambda extrapolation to target",1000,-20,5);
-  z_real_lambda=new TH1F("z_real_lambda","Lambda extrapolation to target",1000,-20,5);
+  z_lambda=new TH1F("z_lambda","Lambda extrapolation to target",1000,-500,500);
+  z_real_lambda=new TH1F("z_real_lambda","Lambda extrapolation to target",1000,-500,500);
   /**************************** M A I N   P A R T ****************************************/
 
   PPim t;

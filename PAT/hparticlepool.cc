@@ -74,8 +74,8 @@ void HParticlePool::loop(HIterator* dataIt)
       if ( ParticleCand->getCharge()>0 ) isPositive = kTRUE;
       else if ( ParticleCand->getCharge()<0 ) isPositive = kFALSE;
       //isRing = ( ParticleCand->getRichMatchingQuality() != -1 ) || ( (ParticleCand->getRichBTInd() != -1 ) );
-      //isRing = ParticleCand->getRingCorr() || ( (ParticleCand->getRichBTInd() != -1 ) );
-      isRing = ParticleCand->getRingCorr();
+      isRing = ParticleCand->getRingCorr() || ( (ParticleCand->getRichBTInd() != -1 ) );
+      //isRing = ParticleCand->getRingCorr();
       if (  isPositive && !isRing ) ++hposnum;
       if (  isPositive &&  isRing ) ++lposnum;
       if ( !isPositive && !isRing ) ++hnegnum;

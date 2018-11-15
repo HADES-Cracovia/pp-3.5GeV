@@ -58,7 +58,7 @@ void PPim::Loop()
       double d_p_pim=trackDistance(p_r,p_z,v2,pim_r,pim_z,v3);
       TVector3 ver=vertex(p_r,p_z,v2,pim_r,pim_z,v3);
 
-      TVector3 prim_ver=vertex(0,0,v0,ver.Perp(),ver.Z(),gammappi->Vect());
+      TVector3 prim_ver=vertex(0,-100,v0,ver.Perp(),ver.Z(),gammappi->Vect());
 
 
       //	  cout << "opening angle = " << oa << endl;
@@ -190,6 +190,7 @@ PPim::PPim(TTree *tree)
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron00.root/PPim_ID");
+    /*
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron01.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron02.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron03.root/PPim_ID");
@@ -203,7 +204,7 @@ PPim::PPim(TTree *tree)
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron11.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron12.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron13.root/PPim_ID");
-    
+    */
   
     tree = chain; 
   }

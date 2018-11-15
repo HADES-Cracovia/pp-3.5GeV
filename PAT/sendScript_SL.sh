@@ -35,7 +35,7 @@ submmissionbase=/lustre/nyx/hades/user/knowakow/PP
 submissiondir=${submmissionbase}/PAT
  nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
     jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
-    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip/
+    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip_no_beta/
     #outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/correlation_window/    # outputdir for files AND logFiles
     #outputdir=/lustre/nyx/hades/user/przygoda/PAT2/out/sim/PI0/800     # outputdir for files AND logFiles
 pathoutputlog=${outputdir}/out                    # protocol from batch farm for each file

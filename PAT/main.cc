@@ -86,7 +86,8 @@ int main(Int_t argc, Char_t **argv)
   //TString output_Dir ="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/115_notime/";
   //TString output_Dir ="/lustre/nyx/hades/user/knowakow/PION/FILES/288_time/";
   //TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/correlation_window/";
-  TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip/";
+  //TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip/";
+  TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT/FILES/ppimpip_no_beta/";
   //*******************************************
   //*******************************************
   //*******************************************
