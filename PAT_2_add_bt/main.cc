@@ -40,7 +40,7 @@ Int_t simflag = 0;
 Int_t wallflag = 1;
 Int_t btflag=1;
 
-//#define LEPTONS 1
+#define LEPTONS 1
 #define HADRONS 1
 
 /*********************************************************************************/
@@ -59,7 +59,7 @@ int main(Int_t argc, Char_t **argv)
 
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_2_add_bt/FILES/temp/";
   
     TString output_File  = inputFile;
     TString output_File2  = inputFile;

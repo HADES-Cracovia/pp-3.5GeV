@@ -32,14 +32,14 @@ currentDir=$(pwd | xargs -i basename {})
 currentDir=../$currentDir
 
 submmissionbase=/lustre/nyx/hades/user/knowakow/PP
-submissiondir=${submmissionbase}/PAT_1
+submissiondir=${submmissionbase}/PAT_2_add_bt
  nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
     jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
-    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/    # outputdir for files AND logFiles
+    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_2_add_bt/FILES/temp/    # outputdir for files AND logFiles
     #outputdir=/lustre/nyx/hades/user/przygoda/PAT2/out/sim/PI0/800     # outputdir for files AND logFiles
 pathoutputlog=${outputdir}/out                    # protocol from batch farm for each file
      filename=testrun                           # filename of log file if nFilesPerJob > 1 (partnumber will be appended)
-par1=/lustre/nyx/hades/user/knowakow/PP/PAT_1/set64.sh  # gen8a optional par1 : environment script
+par1=/lustre/nyx/hades/user/knowakow/PP/PAT_2_add_bt/set64.sh  # gen8a optional par1 : environment script
 par2=${submissiondir}/ana                           # optional par2 : executable
 par3=""                                                        # optional par3 : input file list
 par4=${outputdir}                                              # optional par4 : outputfile (part number will be appended (_num.root))
