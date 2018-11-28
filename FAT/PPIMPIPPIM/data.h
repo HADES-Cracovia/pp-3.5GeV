@@ -22,39 +22,39 @@ namespace PATData {
   extern HFilter *filter;
   extern float EFF, ACC;
   //PPimPipPim*******************************
-  TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
-  TH1F *p_pim_mass, *p_mass, *pim_mass;
+  extern TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
+  extern TH1F *p_pim_mass, *p_mass, *pim_mass;
 
   
-  TH1F *p_pim1_mass, *p_pim2_mass, *pim_pip_mass,*pim1_pip_mass,*pim2_pip_mass, *p_pim_pip_pim_mass;
-  TH2F *dist_p_pim_pim_pip;
-  TH2F *ver_pip_lambda;
-  TH1F *dist_p_pim, *dist_pim_pip;
+  extern TH1F *p_pim1_mass, *p_pim2_mass, *pim_pip_mass,*pim1_pip_mass,*pim2_pip_mass, *p_pim_pip_pim_mass;
+  extern TH2F *dist_p_pim_pim_pip;
+  extern TH2F *ver_pip_lambda;
+  extern TH1F *dist_p_pim, *dist_pim_pip;
 
-  TH1F *sum_dist_1, *sum_dist_2, *sum_dist_diff;
+  extern TH1F *sum_dist_1, *sum_dist_2, *sum_dist_diff;
 
-  TH1F *DL_p_pim1_mass, *DL_p_pim2_mass, *DL_pim_pip_mass,*DL_pim1_pip_mass,*DL_pim2_pip_mass, *DL_p_pim_pip_pim_mass;
-  TH1F *DL_dist_p_pim, *DL_dist_pim_pip;
-  TH2F *DL_dist_p_pim_pim_pip;
-  TH1F *DL_p_pim_mass, *DL_p_mass, *DL_pim_mass, *DL_in_target;
+  extern TH1F *DL_p_pim1_mass, *DL_p_pim2_mass, *DL_pim_pip_mass,*DL_pim1_pip_mass,*DL_pim2_pip_mass, *DL_p_pim_pip_pim_mass;
+  extern TH1F *DL_dist_p_pim, *DL_dist_pim_pip;
+  extern TH2F *DL_dist_p_pim_pim_pip;
+  extern TH1F *DL_p_pim_mass, *DL_p_mass, *DL_pim_mass, *DL_in_target;
 
-  TH1F *chi_p_pim_mass, *chi_pip_pim_mass, *chi_final_mass;
-  TH2F *chi_lambda_vertex;
+  extern TH1F *chi_p_pim_mass, *chi_pip_pim_mass, *chi_final_mass;
+  extern TH2F *chi_lambda_vertex;
 
-  TH1F *LM_chi_p_pim_mass, *LM_chi_pip_pim_mass, *LM_chi_final_mass;
-  TH2F *LM_chi_lambda_vertex;
+  extern TH1F *LM_chi_p_pim_mass, *LM_chi_pip_pim_mass, *LM_chi_final_mass;
+  extern TH2F *LM_chi_lambda_vertex;
   
-  TH1F *DML_p_pim1_mass, *DML_p_pim2_mass, *DML_pim_pip_mass,*DML_pim1_pip_mass,*DML_pim2_pip_mass, *DML_p_pim_pip_pim_mass;
-  TH1F *DML_dist_p_pim, *DML_dist_pim_pip;
-  TH2F *DML_dist_p_pim_pim_pip;
-  TH1F *DML_p_pim_mass, *DML_p_mass, *DML_pim_mass;
+  extern TH1F *DML_p_pim1_mass, *DML_p_pim2_mass, *DML_pim_pip_mass,*DML_pim1_pip_mass,*DML_pim2_pip_mass, *DML_p_pim_pip_pim_mass;
+  extern TH1F *DML_dist_p_pim, *DML_dist_pim_pip;
+  extern TH2F *DML_dist_p_pim_pim_pip;
+  extern TH1F *DML_p_pim_mass, *DML_p_mass, *DML_pim_mass;
 
-  TH1F *DL_target_z, *DL_target_z_diff, *DL_pip_z;
-  TH1F *DL_pim_pip_z;
+  extern TH1F *DL_target_z, *DL_target_z_diff, *DL_pip_z;
+  extern TH1F *DL_pim_pip_z;
 
-  TH1F *signal_fit[10][10];
+  extern TH1F *signal_fit[10][10];
 
-  TH2F *vertex_lambda, *vertex_target, *DL_vertex_lambda, *DL_vertex_target, *DLM_vertex_lambda, *DLM_vertex_target;
+  extern TH2F *vertex_lambda, *vertex_target, *DL_vertex_lambda, *DL_vertex_target, *DLM_vertex_lambda, *DLM_vertex_target;
 
   //*****************************************  
 
@@ -127,6 +127,7 @@ namespace PATData {
   double parametrization(double y);
   double trackDistance(double r1, double z1, TVector3 v1, double r2, double z2, TVector3 v2);
   TVector3 vertex(double z1,double r1,TVector3 vec1, double z2,double r2,TVector3 vec2);
+  double getR(TVector3 vec);
 }
 
 /*********************************************************************************************/

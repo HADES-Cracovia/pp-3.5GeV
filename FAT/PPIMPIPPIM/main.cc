@@ -149,12 +149,12 @@ int main()
   DML_dist_p_pim=new TH1F("DML_dist_p_pim","DML_dist_p_pim",1000,0,300);
   DML_dist_pim_pip=new TH1F("DML_dist_pip_pim","DML_dist_pip_pim",1000,0,300);
 
-  miss_energy=new TH1F("miss_energy","missing energy",2000,0,6000);
-  DL_miss_energy=new TH1F("DL_miss_energy","missing energy",2000,0,6000);
-  DML_miss_energy=new TH1F("DLM_miss_energy","missing energy",2000,0,6000);
+  //miss_energy=new TH1F("miss_energy","missing energy",2000,0,6000);
+  //DL_miss_energy=new TH1F("DL_miss_energy","missing energy",2000,0,6000);
+  //DML_miss_energy=new TH1F("DLM_miss_energy","missing energy",2000,0,6000);
 
-  ppim_pippim_mass=new TH2F("ppim_pippim_mass","ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
-  dist_z_ppim_pippim_mass=new TH2F("dist_z_ppim_pippim_mass","dist_z_ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
+  //ppim_pippim_mass=new TH2F("ppim_pippim_mass","ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
+  //dist_z_ppim_pippim_mass=new TH2F("dist_z_ppim_pippim_mass","dist_z_ppim_pippim_mass;M_{p #pi^{-}}[MeV];M_{#pi^{+} #pi^{-}}[MeV]",600,1000,2200,400,200,1000);
 
   sum_dist_1=new TH1F("sum_dist_1","Sum of all distances in hyp1",500,0,500);
   sum_dist_2=new TH1F("sum_dist_2","Sum of all distances in hyp2",500,0,500);
@@ -224,7 +224,7 @@ int main()
   pim2_pip_mass->Write();
   pim1_pip_mass->Write();
   p_pim_pip_pim_mass->Write();
-  miss_energy->Write();
+  //miss_energy->Write();
   
   dist_p_pim_pim_pip->Write();
   dist_pim_pip->Write();
@@ -241,7 +241,7 @@ int main()
   DL_dist_p_pim_pim_pip->Write();
   DL_dist_pim_pip->Write();
   DL_dist_p_pim->Write();
-  DL_miss_energy->Write();
+  //DL_miss_energy->Write();
 
   DML_p_pim_mass->Write();
   DML_p_pim1_mass->Write();
@@ -254,10 +254,10 @@ int main()
   DML_dist_p_pim_pim_pip->Write();
   DML_dist_pim_pip->Write();
   DML_dist_p_pim->Write();
-  DML_miss_energy->Write();
+  //DML_miss_energy->Write();
 
-  dist_z_ppim_pippim_mass->Write();
-  ppim_pippim_mass->Write();
+  //dist_z_ppim_pippim_mass->Write();
+  //ppim_pippim_mass->Write();
 
   //p_mass->Write();
   //pim_mass->Write();

@@ -193,6 +193,11 @@ namespace PATData
     out.SetXYZ(ver.X(),ver.Y(),ver.Z());
     return out; 
   }
+  
+  double getR(TVector3 vec)
+  {
+    return TMath::Sqrt(vec.X()*vec.X()+vec.Y()*vec.Y());
+  }
 }
 
 /*********************************************************************************************/
