@@ -58,8 +58,9 @@ void PPim::Loop()
       double d_p_pim=trackDistance(p_r,p_z,v2,pim_r,pim_z,v3);
       TVector3 ver=vertex(p_r,p_z,v2,pim_r,pim_z,v3);
 
-      TVector3 prim_ver=vertex(0,-100,v0,ver.Perp(),ver.Z(),gammappi->Vect());
+      TVector3 prim_ver(eVert_x,eVert_y,eVert_z);
 
+      double ver_dist=(prim_ver-ver).Mag();
 
       //	  cout << "opening angle = " << oa << endl;
 
@@ -143,31 +144,31 @@ void PPim::Loop()
 	  vertex_z_r->Fill(ver.Z(),TMath::Sqrt(ver.X()*ver.X()+ver.Y()*ver.Y()));
 	}
       
-      if(isBest==1 && d_p_pim<min_dist && ver.Z()>min_z)
+      if(isBest==1 && d_p_pim<min_dist && ver_dist>min_z)
 	{
 	  ZD_p_pim_mass->Fill(m_inv_ppi);
 	  z_real_lambda->Fill(prim_ver.Z());
 	  //vertex_z_r->Fill(ver.Z(),TMath::Sqrt(ver.X()*ver.X()+ver.Y()*ver.Y()));
 	}
-      /*      
+            
       for(int ll=1;ll<=25;ll++)
 	{
 	  if(isBest>=1 && d_p_pim<ll*2)
 	    {
 	      D_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
-	  if(isBest>=1 && d_p_pim<10)
+	  if(isBest>=1 && d_p_pim<30)
 	    {
-	      if(ver.Z()>(ll*2)-10)
+	      if(ver_dist>(ll*2))
 		Z_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
 	  for(int kk=1;kk<=25;kk++)
 	    {
-	      if(isBest>=1 && d_p_pim<ll*2 && (ver.Z()>(kk*2)-10))
+	      if(isBest>=1 && d_p_pim<ll*2 && (ver_dist>(kk*2)))
 		DZ_p_pim_mass_array[ll-1][kk-1]->Fill(m_inv_ppi);
 	    }
 	}
-      */
+      
 
     } // end of main loop
 } // eof Loop 
@@ -190,7 +191,7 @@ PPim::PPim(TTree *tree)
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron00.root/PPim_ID");
-    /*
+    
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron01.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron02.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron03.root/PPim_ID");
@@ -204,7 +205,7 @@ PPim::PPim(TTree *tree)
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron11.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron12.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron13.root/PPim_ID");
-    */
+    
   
     tree = chain; 
   }
