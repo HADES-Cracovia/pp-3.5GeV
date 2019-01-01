@@ -114,7 +114,7 @@ int main()
   p_pim_mass=new TH1F("p_pim_mass","Invariant mass #pi^{-} p",2000,500,2500);									       
   D_p_pim_mass=new TH1F("D_p_pim_mass","Invariant mass #pi^{-} p after distance cut",2000,500,2500);
   ZD_p_pim_mass=new TH1F("ZD_p_pim_mass","Invariant mass #pi^{-} p after geometric cuts",2000,500,2500);
-
+  dist_between_vertex=new TH1F("dist_between_vertex","Distance between primary vertex and #Lambda decay place;dist[mm]",1000,0,500);
   
   char hname[40];
   char htitle[40];
@@ -134,8 +134,8 @@ int main()
 
       for(int kk=1; kk<=25;kk++)
 	{
-	  sprintf(dzname,"DZ_p_pim_mass_%d_%d",(jj)*2,kk*2);
-	  sprintf(dztitle,"mass_after_distance_cut_%d_min_vert_distance_cut_%d",jj,(kk)*2);
+	  sprintf(dzname,"DZ_p_pim_mass_%d_%d",(jj)*2,kk*4);
+	  sprintf(dztitle,"mass_after_distance_cut_%d_min_vert_distance_cut_%d",jj*2,(kk)*4);
 	  DZ_p_pim_mass_array[jj-1][kk-1]=new TH1F(dzname,dztitle,2000,500,2500);
 	}
     }
@@ -187,7 +187,8 @@ int main()
 
   z_lambda->Write();
   z_real_lambda->Write();
-  
+
+  dist_between_vertex->Write();
   TCanvas *c2=new TCanvas("c2","Cut on distance");
   c2->Divide(5,5);
 

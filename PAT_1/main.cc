@@ -37,8 +37,8 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 /*********************************************************************************/
 
 Int_t simflag = 0;
-Int_t wallflag = 1;
-Int_t btflag=1;
+Int_t wallflag = 0;
+Int_t btflag=0;
 
 //#define LEPTONS 1
 #define HADRONS 1
@@ -59,8 +59,9 @@ int main(Int_t argc, Char_t **argv)
 
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-  
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
+    
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------
@@ -225,7 +226,8 @@ int main(Int_t argc, Char_t **argv)
     HTimeCut tCut2("all");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP125_PID_NEW_CUTS.root");
     // poprzedni staranny EXP HGraphCut tCut3("all","/u/przygoda/PAT/PP125_p_pip_CUT.root");
-    HGraphCut tCut3("all","/hera/hades/user/przygoda/PAT35/pp35_cuts.root"); // mass^2 versus mom
+    //HGraphCut tCut3("all","/hera/hades/user/przygoda/PAT35/pp35_cuts.root"); // mass^2 versus mom
+    HGraphCut tCut3("all","/lustre/nyx/hades/user/knowakow/PP/PAT_1/Mdc_dEdx_PiP_cut_PID_mod_ChiiV2.root");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP125_p_p_CUT.root");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP_END_CUTS.root");
     // dla testow

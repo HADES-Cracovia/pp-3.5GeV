@@ -1,7 +1,7 @@
 
 int fit_DZ()
 {
-  TFile *f = new TFile("pp_ppim_all.root");
+  TFile *f = new TFile("pp_ppim_all_opt_distance_between_vertexes.root");
   
   TH1F *hists[25][25];
   f->ls();
@@ -31,11 +31,11 @@ int fit_DZ()
   for(int n=1;n<=25;n++)
     {
       d_cut[n-1]=2*n;
-      z_cut[n-1]=(n*2)-10;
+      z_cut[n-1]=4*n;
       for(int z=1;z<=25;z++)
 	{
-	  sprintf(hname,"DZ_p_pim_mass_%d_%d",n*2,(z*2));
-	  sprintf(new_name,"mass_%d_%d",n*2,(z*2)-10);
+	  sprintf(hname,"DZ_p_pim_mass_%d_%d",n*2,z*4);
+	  sprintf(new_name,"mass_%d_%d",n*2,z*4);
 	  hists[n-1][z-1]=new TH1F("new_name","new_name",2000,500,2500);
 	  hists[n-1][z-1]=(TH1F*)f->Get(hname);
 	}

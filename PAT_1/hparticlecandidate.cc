@@ -47,7 +47,7 @@ HParticleCandidate::HParticleCandidate(HPidTrackCand* ptr)
       set("rich_houtra", HitData->getRingHouTra() );
       set("tofino_mult", HitData->getTofinoMult() );
 
-      
+      /*
       if ( ptr->getRichBTInd() != -1 ) {
          HCategory* btCat = (HCategory*)HCategoryManager::getCategory(catParticleBtRing);
          HParticleBtRing*     btRing = 0;
@@ -90,7 +90,7 @@ HParticleCandidate::HParticleCandidate(HPidTrackCand* ptr)
          set("btPadsRing", -1 );
          set("btRingMatrix", -1 );
       }
-
+      */
 	  if (HitData->getSystem() == 0)
 	  {
 	     set("resolution", 450); 

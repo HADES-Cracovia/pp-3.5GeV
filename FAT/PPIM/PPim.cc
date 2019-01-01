@@ -137,6 +137,7 @@ void PPim::Loop()
 	  p_pim_mass->Fill(m_inv_ppi);
 	  dist_p_pim->Fill(d_p_pim);
 	  z_lambda->Fill(prim_ver.Z());
+	  dist_between_vertex->Fill(ver_dist);
 	}
       if(isBest==1 && d_p_pim<min_dist)
 	{
@@ -159,12 +160,12 @@ void PPim::Loop()
 	    }
 	  if(isBest>=1 && d_p_pim<30)
 	    {
-	      if(ver_dist>(ll*2))
+	      if(ver_dist>(ll*4))
 		Z_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
 	  for(int kk=1;kk<=25;kk++)
 	    {
-	      if(isBest>=1 && d_p_pim<ll*2 && (ver_dist>(kk*2)))
+	      if(isBest>=1 && d_p_pim<ll*2 && (ver_dist>(kk*4)))
 		DZ_p_pim_mass_array[ll-1][kk-1]->Fill(m_inv_ppi);
 	    }
 	}

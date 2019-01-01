@@ -79,24 +79,28 @@ bool HGraphCut::graphCut(HParticle *pPart)
       else return false;
       if (em_cut) return em_cut->IsInside( beta, mom );
       break;
+
       
-    case 8: if ( sqrt(mass) < 240 && sqrt(mass)>40 )
+    case 8:
+      /*if ( sqrt(mass) < 240 && sqrt(mass)>40 )
 	return true;
-      else return false;
-      return true;
-      if (pip_cut) return pip_cut->IsInside( mom, mass );
+	else return false;
+	return true;
+      */      
+      if (pip_cut) return pip_cut->IsInside( -1*mom, dedx_mdc);
       //cout << "8 masa: " << mass << "    ";
       //if ( mass > 5000. && mass < 30000. ) cout << " 8 OK "; else cout << "8 NO!!! ";
       //if ( mass > 5000. && mass < 30000. ) return true; else return false;
       break;
       
-    case 9: if ( sqrt(mass) < 240 && sqrt(mass)>40 ) return true; else return false;
+    case 9:
+      //if ( sqrt(mass) < 240 && sqrt(mass)>40 ) return true; else return false;
       //return true;
       //if (pip_cut) return ( mass > 4000. && pip_cut->IsInside( mom, mass ) ); // same for pi-
       //cout << "9 masa: " << mass << "    ";
       //if ( mass > 5000. && mass < 30000. ) cout << " 9 OK "; else cout << " 9 NO!!! ";
       //if ( mass > 5000. && mass < 30000. ) return true; else return false;
-      //if (pim_cut) return pim_cut->IsInside( mom, mass ); 
+      if (pim_cut) return pim_cut->IsInside(-1*mom, dedx_mdc ); 
       break;
       
     case 14: if ( sqrt(mass) > 650 && sqrt(mass) <1127 )
@@ -115,7 +119,7 @@ bool HGraphCut::graphCut(HParticle *pPart)
       
     case 45: return true; // !!!! always ok
       //if (d_cut) return d_cut->IsInside( mom, mass );
-      if (p_cut) return p_cut->IsInside( mom, mass );
+      if (p_cut) return p_cut->IsInside(mom, mass );
       break;
     default: return true;
     }
