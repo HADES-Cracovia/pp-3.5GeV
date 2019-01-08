@@ -25,7 +25,7 @@ namespace PATData {
   extern TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
   extern TH1F *p_pim_mass, *p_mass, *pim_mass;
 
-  
+
   extern TH1F *p_pim1_mass, *p_pim2_mass, *pim_pip_mass,*pim1_pip_mass,*pim2_pip_mass, *p_pim_pip_pim_mass;
   extern TH2F *dist_p_pim_pim_pip;
   extern TH2F *ver_pip_lambda;
@@ -43,7 +43,7 @@ namespace PATData {
 
   extern TH1F *LM_chi_p_pim_mass, *LM_chi_pip_pim_mass, *LM_chi_final_mass;
   extern TH2F *LM_chi_lambda_vertex;
-  
+
   extern TH1F *DML_p_pim1_mass, *DML_p_pim2_mass, *DML_pim_pip_mass,*DML_pim1_pip_mass,*DML_pim2_pip_mass, *DML_p_pim_pip_pim_mass;
   extern TH1F *DML_dist_p_pim, *DML_dist_pim_pip;
   extern TH2F *DML_dist_p_pim_pim_pip;
@@ -56,7 +56,7 @@ namespace PATData {
 
   extern TH2F *vertex_lambda, *vertex_target, *DL_vertex_lambda, *DL_vertex_target, *DLM_vertex_lambda, *DLM_vertex_target;
 
-  //*****************************************  
+  //*****************************************
 
   extern TCutG *pEpS0, *pEpS1, *pEmS0, *pEmS1;
   extern TCutG *pEm1S0, *pEm1S1, *pEm2S0, *pEm2S1;

@@ -62,7 +62,9 @@ bool HGraphCut::graphCut(HParticle *pPart)
 {
   id = pPart->getId();
   mom = pPart->get("p");
+  dedx_mdc=pPart->get("dedx_mdc");
   beta = pPart->get("beta_new");
+  
   // double mass = mom / ( beta * TMath::Sqrt( 1. / ( 1. - (beta*beta) ) ) );
   double mass = mom*mom * (  1. / (beta*beta)  - 1. ) ; // mass squared !!!
 
@@ -82,6 +84,7 @@ bool HGraphCut::graphCut(HParticle *pPart)
 
       
     case 8:
+      //return true;
       /*if ( sqrt(mass) < 240 && sqrt(mass)>40 )
 	return true;
 	else return false;
@@ -94,6 +97,7 @@ bool HGraphCut::graphCut(HParticle *pPart)
       break;
       
     case 9:
+      //return true;
       //if ( sqrt(mass) < 240 && sqrt(mass)>40 ) return true; else return false;
       //return true;
       //if (pip_cut) return ( mass > 4000. && pip_cut->IsInside( mom, mass ) ); // same for pi-
@@ -103,7 +107,8 @@ bool HGraphCut::graphCut(HParticle *pPart)
       if (pim_cut) return pim_cut->IsInside(-1*mom, dedx_mdc ); 
       break;
       
-    case 14: if ( sqrt(mass) > 650 && sqrt(mass) <1127 )
+    case 14:
+      /*if ( sqrt(mass) > 650 && sqrt(mass) <1127 )
 	{
 	  //	  cout<<endl<<"true proton"<<endl;
 	  return true;
@@ -112,9 +117,9 @@ bool HGraphCut::graphCut(HParticle *pPart)
 	{
 	  // cout<<endl<<"false proton"<<endl;
 	  return false;
-	}
+	  }*/
       //return true; 
-      //if (p_cut) return p_cut->IsInside( mom, mass );
+      if (p_cut) return p_cut->IsInside( mom, dedx_mdc );
       break;
       
     case 45: return true; // !!!! always ok

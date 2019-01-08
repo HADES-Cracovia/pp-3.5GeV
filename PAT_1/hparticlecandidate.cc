@@ -34,7 +34,8 @@ HParticleCandidate::HParticleCandidate(HPidTrackCand* ptr)
       set("dedx_in_sigma", HitData->getInnerMdcdEdxSigma() );
       set("dedx_out", HitData->getOuterMdcdEdx() );
       set("dedx_out_sigma", HitData->getOuterMdcdEdxSigma() );
-      set("dedx_mdc", HitData->getCombinedMdcdEdxSigma() );
+      set("dedx_mdc", HitData->getCombinedMdcdEdx() );
+      //set("dedx_mdc", HitData->getInnerMdcdEdx());
       set("dedx_mdc_sigma", HitData->getCombinedMdcdEdxSigma() );
       set("dedx_tof", TrackData->getCorrectedEloss(4) );
       set("shw_sum0", HitData->getShowerSum(0) );
