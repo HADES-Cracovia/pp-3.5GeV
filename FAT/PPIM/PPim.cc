@@ -25,7 +25,7 @@ void PPim::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
 
       ++licznik;
-      if ((licznik % 100000)==0) cout << "Events: " << licznik << endl;
+      if ((licznik % 100000)==0) cout << "Events: " << licznik <<" "<<(1.0*licznik)/(1.0*nentries)*100<<" %"<< endl;
 
 
       double F = 1.006;
@@ -124,13 +124,14 @@ void PPim::Loop()
       NoHadronP = 1;
       NoHadronPI = 1;
 
+      bool proper_track=(isBest==1 && trigdownscaleflag==1);
       /*
 	NoLeptonP = 1;
 	NoHadronP = 1;
 	NoLeptonPI = 1;
 	NoHadronPI = 1;
       */
-      if(isBest==1)
+      if(proper_track==1)
 	{
 	  p_p_beta->Fill(p_p,p_beta_new);
 	  pim_p_beta->Fill(pim_p,pim_beta_new);
@@ -139,13 +140,13 @@ void PPim::Loop()
 	  z_lambda->Fill(prim_ver.Z());
 	  dist_between_vertex->Fill(ver_dist);
 	}
-      if(isBest==1 && d_p_pim<min_dist)
+      if(proper_track==1 && d_p_pim<min_dist)
 	{
 	  D_p_pim_mass->Fill(m_inv_ppi);
 	  vertex_z_r->Fill(ver.Z(),TMath::Sqrt(ver.X()*ver.X()+ver.Y()*ver.Y()));
 	}
       
-      if(isBest==1 && d_p_pim<min_dist && ver_dist>min_z)
+      if(proper_track==1 && d_p_pim<min_dist && ver_dist>min_z)
 	{
 	  ZD_p_pim_mass->Fill(m_inv_ppi);
 	  z_real_lambda->Fill(prim_ver.Z());
@@ -154,18 +155,18 @@ void PPim::Loop()
             
       for(int ll=1;ll<=25;ll++)
 	{
-	  if(isBest>=1 && d_p_pim<ll*2)
+	  if(proper_track>=1 && d_p_pim<ll*2)
 	    {
 	      D_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
-	  if(isBest>=1 && d_p_pim<30)
+	  if(proper_track>=1 && d_p_pim<30)
 	    {
 	      if(ver_dist>(ll*4))
 		Z_p_pim_mass_array[ll-1]->Fill(m_inv_ppi);
 	    }
 	  for(int kk=1;kk<=25;kk++)
 	    {
-	      if(isBest>=1 && d_p_pim<ll*2 && (ver_dist>(kk*4)))
+	      if(proper_track>=1 && d_p_pim<ll*2 && (ver_dist>(kk*4)))
 		DZ_p_pim_mass_array[ll-1][kk-1]->Fill(m_inv_ppi);
 	    }
 	}
