@@ -14,12 +14,12 @@ using namespace PATData;
 
 void PPimPipPim::Loop()
 {
-  static long licznik = 0;
+  int licznik = 0;
   if (fChain == 0) return;
 
-  Long64_t nentries = fChain->GetEntriesFast();
+  int nentries = fChain->GetEntriesFast();
 
-  Long64_t nbytes = 0, nb = 0;
+  double nbytes = 0, nb = 0;
   for (Long64_t jentry=0; jentry<nentries;jentry++)
     {
       Long64_t ientry = LoadTree(jentry);
@@ -28,7 +28,7 @@ void PPimPipPim::Loop()
       // if (Cut(ientry) < 0) continue;
 
       ++licznik;
-      if ((licznik % 100000)==0) cout << "Events: " << licznik << " "<<(1.0*licznik)/(1.0*nentries)*100<<" %"<< endl;
+      if ((licznik % 100000)==0) cout << "Events: " << licznik << " "<<(1.0*licznik)/(nentries)*100<<" %"<< endl;
 
 
       double F = 1.006;
@@ -53,7 +53,8 @@ void PPimPipPim::Loop()
       *gammapim1pip= *pim1 + *pip;
       *gammapim2pip= *pim2 + *pip;
       *gammappim1pippim2=*pim1 +*pim2 + *pip + *p;
-
+      *miss=*beam-*gammappim1pippim2;
+      
       //*ppim1 = *p + *pim1;
       //*p_delta = *p;
       //*pim1_delta = *pim1;
@@ -68,7 +69,10 @@ void PPimPipPim::Loop()
       double oa_rich = R2D * openingangle(r1, r2);
 
       double p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
-      double pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta)  - 1. ) ;
+      double pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+      double pip_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+      double pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+      double pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
 
       TVector3 ver_p_pim1=vertex(p_r,p_z,v2,pim1_r,pim1_z,v3);
       TVector3 ver_p_pim2=vertex(p_r,p_z,v2,pim2_r,pim2_z,v5);
@@ -83,7 +87,7 @@ void PPimPipPim::Loop()
       double dist_lambda2_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
       double dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,v5,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
       double dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,v3,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-
+      
 
       //  cout << "opening angle = " << oa << endl;
 
@@ -109,7 +113,7 @@ void PPimPipPim::Loop()
       //double close_cut = 4.;
 
 
-      #ifdef FLANCH
+#ifdef FLANCH
       //insidePim1S0 = (pPim1S0 == 0) ? 0 : pPim1S0->IsInside(pim1_z,pim1_theta);
       //insidePim1S1 = (pPim1S1 == 0) ? 0 : pPim1S1->IsInside(pim1_z,pim1_theta);
       //insideEpS0 = (pPS0 == 0) ? 0 : pPS0->IsInside(p_z,p_theta);
@@ -118,16 +122,16 @@ void PPimPipPim::Loop()
       //insidePim1S1 = (pPim1S1 == 0) ? 0 : pPim1S1->IsInside(eVert_z,pim1_theta);
       //insidePS0 = (pPS0 == 0) ? 0 : pPS0->IsInside(eVert_z,p_theta);
       //insideEpS1 = (pPS1 == 0) ? 0 : pPS1->IsInside(eVert_z,p_theta);
-      #endif
+#endif
 
       insideTarget = 1;
 
-      #ifdef RECTANG
+#ifdef RECTANG
       //insidePim1S0 = (pim1_theta > 50 && pim1_z < -50 /* && pim1_p<200.*/) ? 1 : 0;
       //insidePim1S1 = (pim1_theta > 50 && pim1_z < -50 /* && pim1_p<200.*/) ? 1 : 0;
       //insidePS0 = (p_theta > 50 && p_z < -50 /* && p_p<200.*/) ? 1 : 0;
       //insidePS1 = (p_theta > 50 && p_z < -50 /* && p_p<200.*/) ? 1 : 0;
-      #endif
+#endif
 
       //#ifdef NOCUT
       //insidePim1S0 = 0;
@@ -151,10 +155,88 @@ void PPimPipPim::Loop()
 	NoHadronPI = 1;
       */
       double chi_max=180;
+      double sum1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2+dist_lambda1_pip*dist_lambda1_pip+dist_lambda1_pim2*dist_lambda1_pim2;
+      double sum2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1+dist_lambda2_pip*dist_lambda2_pip+dist_lambda2_pim1*dist_lambda2_pim1;
+
+      double sum1_1=dist_p_pim1+dist_pip_pim2+dist_lambda1_pip+dist_lambda1_pim2;
+      double sum2_1=dist_p_pim2+dist_pip_pim1+dist_lambda2_pip+dist_lambda2_pim1;
 
 
       if(isBest==1 && trigdownscaleflag==1)
 	{
+	  (*tlo)["p_p"]=p_p;
+	  (*tlo)["p_theta"] = p_theta;
+	  (*tlo)["p_theta_rich"] = p_theta_rich;
+	  (*tlo)["p_phi"] = p_phi;
+	  (*tlo)["p_phi_rich"] = p_phi_rich;
+	  (*tlo)["p_beta"] = p_beta_new;
+	  (*tlo)["p_m"] = p_mass;
+	  
+	  (*tlo)["pip_p"]=pip_p;
+	  (*tlo)["pip_theta"] = pip_theta;
+	  (*tlo)["pip_theta_rich"] = pip_theta_rich;
+	  (*tlo)["pip_phi"] = pip_phi;
+	  (*tlo)["pip_phi_rich"] = pip_phi_rich;
+	  (*tlo)["pip_beta"] = pip_beta_new;
+	  (*tlo)["pip_m"] = pip_mass;
+
+	  (*tlo)["pim1_p"]=pim1_p;
+	  (*tlo)["pim1_theta"] = pim1_theta;
+	  (*tlo)["pim1_theta_rich"] = pim1_theta_rich;
+	  (*tlo)["pim1_phi"] = pim1_phi;
+	  (*tlo)["pim1_phi_rich"] = pim1_phi_rich;
+	  (*tlo)["pim1_beta"] = pim1_beta_new;
+	  (*tlo)["pim1_m"] = pim1_mass;
+
+	  (*tlo)["pim2_p"]=pim2_p;
+	  (*tlo)["pim2_theta"] = pim2_theta;
+	  (*tlo)["pim2_theta_rich"] = pim2_theta_rich;
+	  (*tlo)["pim2_phi"] = pim2_phi;
+	  (*tlo)["pim2_phi_rich"] = pim2_phi_rich;
+	  (*tlo)["pim2_beta"] = pim2_beta_new;
+	  (*tlo)["pim2_m"] = pim2_mass;
+
+	  (*tlo)["dist_pip_pim1"]=dist_pip_pim1;
+	  (*tlo)["dist_pip_pim2"] = dist_pip_pim2;
+	  (*tlo)["dist_p_pim1"] = dist_p_pim1;
+	  (*tlo)["dist_p_pim2"] = dist_p_pim2;
+	  (*tlo)["dist_lambda1_pim2"] = dist_lambda1_pim2;
+	  (*tlo)["dist_lambda1_pip"] = dist_lambda1_pip;
+	  (*tlo)["dist_lambda2_pim1"] = dist_lambda2_pim1;
+	  (*tlo)["dist_lambda2_pip"] = dist_lambda2_pip;
+	  
+	  (*tlo)["m_inv_p_pim1"] = m_inv_ppim1;
+	  (*tlo)["m_inv_p_pim2"] = m_inv_ppim2;
+	  (*tlo)["m_inv_pip_pim1"] = m_inv_pippim1;
+	  (*tlo)["m_inv_pip_pim2"] = m_inv_pippim2;
+	  (*tlo)["m_inv_p_pim_pip_pim"] = m_inv_ppimpippim;
+
+	  (*tlo)["ver_p_pim1_x"]=ver_p_pim1.X();
+	  (*tlo)["ver_p_pim1_y"]=ver_p_pim1.Y();
+	  (*tlo)["ver_p_pim1_z"]=ver_p_pim1.Z();
+
+	  (*tlo)["ver_p_pim2_x"]=ver_p_pim2.X();
+	  (*tlo)["ver_p_pim2_y"]=ver_p_pim2.Y();
+	  (*tlo)["ver_p_pim2_z"]=ver_p_pim2.Z();
+
+	  (*tlo)["ver_pip_pim1_x"]=ver_pip_pim1.X();
+	  (*tlo)["ver_pip_pim1_y"]=ver_pip_pim1.Y();
+	  (*tlo)["ver_pip_pim1_z"]=ver_pip_pim1.Z();
+
+	  (*tlo)["ver_pip_pim2_x"]=ver_pip_pim2.X();
+	  (*tlo)["ver_pip_pim2_y"]=ver_pip_pim2.Y();
+	  (*tlo)["ver_pip_pim2_z"]=ver_pip_pim2.Z();
+
+	  (*tlo)["sum_dist_1"]=sum1_1;
+	  (*tlo)["sum_dist_2"]=sum2_1;
+	  
+	  (*tlo)["sum_dist2_1"]=sum1;
+	  (*tlo)["sum_dist2_2"]=sum2;
+
+	  (*tlo)["miss_mass_kp"]=miss->M();
+	  	  
+	  tlo->fill();
+	  	  
 	  p_p_beta->Fill(p_p,p_beta_new);
 	  pim_p_beta->Fill(pim1_p,pim1_beta_new);
 	  pim_p_beta->Fill(pim1_p,pim1_beta_new);
@@ -256,18 +338,18 @@ PPimPipPim::PPimPipPim(TTree *tree)
 
     TChain * chain = new TChain("PPimPipPim_ID","");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPimPipPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron00.root/PPim_ID");    
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron01.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron02.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron03.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron04.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron05.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron06.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron07.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron08.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron09.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron10.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPim_ID");    //*/
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron00.root/PPimPipPim_ID");    
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron01.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron02.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron03.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron04.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron05.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron06.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron07.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron08.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron09.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron10.root/PPimPipPim_ID");
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPimPipPim_ID");    //*/
 
     tree = chain;
   }

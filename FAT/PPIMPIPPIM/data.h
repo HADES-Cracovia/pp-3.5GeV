@@ -82,7 +82,7 @@ namespace PATData {
 
   extern TLorentzVector *p;
   extern TLorentzVector *pi, *pim1, *pim2, *pim, *pip;
-  extern TLorentzVector *beam;
+  extern TLorentzVector *beam, *miss;
   extern TLorentzVector *proj;
   extern TLorentzVector *targ;
   extern TLorentzVector *gammappi;

@@ -78,7 +78,7 @@ namespace PATData
 
   TLorentzVector *p;
   TLorentzVector *pi, *pim, *pim1, *pim2, *pip;
-  TLorentzVector *beam;
+  TLorentzVector *beam, *miss;
   TLorentzVector *proj;
   TLorentzVector *targ;
   TLorentzVector *gammappi;
