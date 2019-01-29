@@ -60,8 +60,8 @@ int main(Int_t argc, Char_t **argv)
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
-    TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/";
     
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
@@ -125,7 +125,7 @@ int main(Int_t argc, Char_t **argv)
     //myHyps.add("HpHp", eHadronPos,eHadronPos);
     //myHyps.add("HpHm", eHadronPos,eHadronNeg);
     myHyps.add("HpHm", eHadronPos,eHadronNeg);
-    myHyps.add("HpHnHp", eHadronPos,eHadronPos,eHadronPos);
+    myHyps.add("HpHmHp", eHadronPos,eHadronPos,eHadronPos);
     myHyps.add("HpHmHpHm", eHadronPos,eHadronNeg,eHadronPos,eHadronNeg);
 #endif
     //***************************************************
@@ -159,7 +159,7 @@ int main(Int_t argc, Char_t **argv)
     //myPids2.add("HpHm", "PipPim",ePiPlus,ePiMinus);
     myPids2.add("HpHm", "PPim",eProton,ePiMinus);
     //myPids2.add("HpHpHm", "PPPim",eProton,eProton,ePiMinus);
-    myPids2.add("HpHnHp", "PPimPip",eProton,ePiMinus,ePiPlus);
+    myPids2.add("HpHmHp", "PPimPip",eProton,ePiMinus,ePiPlus);
     myPids2.add("HpHmHpHm", "PPPipPim",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
@@ -196,7 +196,7 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A2.add("HpHm", "PipPim_ID",ePiPlus,ePiMinus);
     myPids_A2.add("HpHm", "PPim_ID",eProton,ePiMinus);
     //myPids_A2.add("HpHpHm", "PPPim_ID",eProton,eProton,ePiMinus);
-    myPids_A2.add("HpHnHp", "PPimPip_ID",eProton,ePiMinus,ePiPlus);
+    myPids_A2.add("HpHmHp", "PPimPip_ID",eProton,ePiMinus,ePiPlus);
     myPids_A2.add("HpHmHpHm", "PPimPipPim_ID",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
@@ -366,7 +366,8 @@ Bool_t myselect(HPidTrackCand* pcand)
     if(!pTrack)                   return kFALSE;
     if (!pTrack->bIsAccepted[2])  return kFALSE;
     if (!pTrack->bIsAccepted[4])  return kFALSE;
-    if (pHit->iSystem<0)          return kFALSE;
+    //flag for reconstructed system!!!
+    //if (pHit->iSystem<0)          return kFALSE;
     //if (pTrack->nTofRecFlag[4]<1) return kFALSE;
     if (pTrack->fMomenta[4]>3000) return kFALSE;
     if (pTrack->fRKChiSquare>10000.) return kFALSE;
@@ -389,7 +390,8 @@ Bool_t myselecthadron(HPidTrackCand* pcand)
     if(!pTrack)                   return kFALSE;
     if (!pTrack->bIsAccepted[2])  return kFALSE;
     if (!pTrack->bIsAccepted[4])  return kFALSE;
-    if (pHit->iSystem<0)          return kFALSE;
+    //flaf for reconstruction in system!!!
+    //if (pHit->iSystem<0)          return kFALSE;
     if (pTrack->fMomenta[4]>3000) return kFALSE;
     if (pTrack->fRKChiSquare>10000.) return kFALSE;
     //if (pTrack->getBeta(4)<0.1)   return kFALSE;

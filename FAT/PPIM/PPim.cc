@@ -124,14 +124,14 @@ void PPim::Loop()
       NoHadronP = 1;
       NoHadronPI = 1;
 
-      bool proper_track=(isBest==1 && trigdownscaleflag==1);
+      bool proper_track=(isBest>=0 && trigdownscaleflag==1);
       /*
 	NoLeptonP = 1;
 	NoHadronP = 1;
 	NoLeptonPI = 1;
 	NoHadronPI = 1;
       */
-      if(proper_track==1)
+      if(proper_track)
 	{
 	  p_p_beta->Fill(p_p,p_beta_new);
 	  pim_p_beta->Fill(pim_p,pim_beta_new);
@@ -193,7 +193,6 @@ PPim::PPim(TTree *tree)
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron00.root/PPim_ID");
-    
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron01.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron02.root/PPim_ID");
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron03.root/PPim_ID");

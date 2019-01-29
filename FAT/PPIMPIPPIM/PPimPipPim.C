@@ -28,7 +28,7 @@ void PPimPipPim::Loop()
       // if (Cut(ientry) < 0) continue;
 
       ++licznik;
-      if ((licznik % 100000)==0) cout << "Events: " << licznik << " "<<(1.0*licznik)/(nentries)*100<<" %"<< endl;
+      if ((licznik % 100000)==0) cout << "Events: " << licznik << " "<<(1.0*licznik)/(1.0*nentries)*100<<" %"<< endl;
 
 
       double F = 1.006;
@@ -162,7 +162,7 @@ void PPimPipPim::Loop()
       double sum2_1=dist_p_pim2+dist_pip_pim1+dist_lambda2_pip+dist_lambda2_pim1;
 
 
-      if(isBest==1 && trigdownscaleflag==1)
+      if(isBest>=1 && trigdownscaleflag==1)
 	{
 	  (*tlo)["p_p"]=p_p;
 	  (*tlo)["p_theta"] = p_theta;
