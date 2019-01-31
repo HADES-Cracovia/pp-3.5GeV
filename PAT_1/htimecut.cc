@@ -207,7 +207,7 @@ void HTimeCut::calcTof(HHypCandidate *pHyp)
     {
       //  for i particle
       p1 = pHyp->getPart(i);
-      if(p1->get("system") > 0)
+      if(p1->get("system") > -1)
 	{
 	  p1->set("tof_new", tof_new_arr[best_index][i]);
 	  p1->set("beta_new", p1->get("track_length") / (C * tof_new_arr[best_index][i]) );
