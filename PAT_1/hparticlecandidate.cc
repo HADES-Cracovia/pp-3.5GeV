@@ -20,8 +20,6 @@ HParticleCandidate::HParticleCandidate(HPidTrackCand* ptr)
       set("theta", TrackData->getRKTheta() );
       set("phi", TrackData->getRKPhi() );
       set("q", TrackData->getPolarity(4) );
-      set("theta_rich", HitData->getRichTheta() );
-      set("phi_rich", HitData->getRichPhi() );
       set("r", TrackData->getTrackR(4) );
       set("z", TrackData->getTrackZ(4) );
       set("rkchi2", TrackData->getRKChiSquare() );
@@ -41,11 +39,15 @@ HParticleCandidate::HParticleCandidate(HPidTrackCand* ptr)
       set("shw_sum0", HitData->getShowerSum(0) );
       set("shw_sum1", HitData->getShowerSum(1) );
       set("shw_sum2", HitData->getShowerSum(2) );
+      /*
       set("rich_amp", HitData->getRingAmplitude() );
       set("rich_padnum", HitData->getRingPadNr() );
       set("rich_centr", HitData->getRingCentroid() );
       set("rich_patmat", HitData->getRingPatMat() );
       set("rich_houtra", HitData->getRingHouTra() );
+      set("theta_rich", HitData->getRichTheta() );
+      set("phi_rich", HitData->getRichPhi() );      
+      */      
       set("tofino_mult", HitData->getTofinoMult() );
 
       /*

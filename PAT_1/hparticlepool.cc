@@ -147,6 +147,7 @@ void HParticlePool::fill(HIterator* dataIt, HIterator *geantIt, HIterator * btIt
   eventData.set("eVert_chi2", vertex.getChi2());
 
   //------------------BT---------------------------
+  /*
   eventData.set("bt_mult",-100);
   //eventData.set("bt_uniqueID_1",-100);
   //eventData.set("bt_bits_1",-100);
@@ -219,7 +220,7 @@ void HParticlePool::fill(HIterator* dataIt, HIterator *geantIt, HIterator * btIt
   eventData.set("bt_maximasheredbad_4",-100);
   eventData.set("bt_nearbymaximashered_4",-100);
   //eventData.set("bt_size_4",-100);
-
+  */
   
   if ( btflag == 1 )
     {
