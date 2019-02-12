@@ -15,6 +15,8 @@ print("scancel -u knowakow")
 print("./sendScript_01.sh")
 os.system("./sendScript_01.sh")
 
+time.sleep(10)
+
 #for k in content:   #take every name from vector content
 #   print('try to run files from list{}'.format(k))
 while(1 != int(subprocess.check_output('squeue -u knowakow | wc -l',shell=True,))):

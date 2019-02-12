@@ -60,8 +60,8 @@ int main(Int_t argc, Char_t **argv)
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
-    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_2/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/";
     
     TString output_File  = inputFile;
     TString output_File2  = inputFile;

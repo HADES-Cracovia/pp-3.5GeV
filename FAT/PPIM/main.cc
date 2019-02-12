@@ -86,7 +86,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppim_all_dedx_all_2.root","recreate");
+  outFileData = new TFile("pp_ppim_all_dedx_all_3_file00.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -173,8 +173,8 @@ int main()
 
   outFileData->cd();
 
-  //tlo->Write();
-  
+  tlo->Write();
+  /*
   p_p_beta->Write();
   pim_p_beta->Write();
   p_pim_mass->Write();
@@ -211,7 +211,7 @@ int main()
     }
   c2->Write();
   c3->Write();
-  
+  */
   outFileData->Close();
 }
 

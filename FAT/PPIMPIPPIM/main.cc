@@ -87,7 +87,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppimpippim_full_stat_chi2_dedx.root","recreate");
+  outFileData = new TFile("pp_ppimpippim_full_stat_dedx_extended_2.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -109,7 +109,7 @@ int main()
   int p_min=0;
   int p_max=3000;
   int p_n=3000;
-  
+  /*  
   p_p_beta=new TH2F("p_p_beta","Momentum vs. beta for protons",p_n,p_min,p_max,beta_n,beta_min,beta_max);
   pim_p_beta=new TH2F("pim_p_beta","Momentum vs. beta for #pi^{-}",p_n,p_min,p_max,beta_n,beta_min,beta_max);
   pip_p_beta=new TH2F("pip_p_beta","Momentum vs. beta for #pi^{+}",p_n,p_min,p_max,beta_n,beta_min,beta_max);
@@ -185,7 +185,7 @@ int main()
 	signal_fit[i][j]=new TH1F(hname,htitle,500,1300,2300);
       }
 
-
+  */
   /**************************** M A I N   P A R T ****************************************/
 
   //PPim t;
@@ -214,8 +214,8 @@ int main()
 
   outFileData->cd();
 
-  //tlo->Write();
-  
+  tlo->Write();
+  /*
   p_p_beta->Write();
   pim_p_beta->Write();
   pip_p_beta->Write();
@@ -287,7 +287,7 @@ int main()
       {
 	signal_fit[i][j]->Write();
       }
-
+  */
   outFileData->Close();
 }
 

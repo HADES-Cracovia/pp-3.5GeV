@@ -68,7 +68,7 @@ void HTimeCut::calcTofMom(HParticle *pPart)
   //check if tof is reconstructed
   if(pPart->get("system")==-1)
     {
-      pPart->set("track_length", -1);
+      pPart->set("track_length", track_length);
       pPart->set("tof_mom", -1);       
     }
   else
