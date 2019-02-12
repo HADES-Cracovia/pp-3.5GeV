@@ -2,7 +2,7 @@
 #include "walldef.h"
 #include "hgeantkine.h"
 #include "heditor.h"
-#include "hparticledef.h"
+//#include "hparticledef.h"
 
 ClassImp(HTrackPlayer)
 
@@ -60,7 +60,7 @@ Bool_t HTrackPlayer::init()
 	   }
 	   m_pGeantKineCatIter = (HIterator *) m_pGeantKineCat->MakeIterator();
         }
-
+	/*
 	if ( btflag == 1 )
         {
 	   if ((m_pBTCat =
@@ -70,7 +70,7 @@ Bool_t HTrackPlayer::init()
 	   }
 	   m_pBTCatIter = (HIterator *) m_pBTCat->MakeIterator();
         }
-
+	*/
 	return kTRUE;
 }
 

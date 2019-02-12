@@ -1,4 +1,4 @@
-#include "hparticlebtring.h"
+//#include "hparticlebtring.h"
 #include "hades.h"
 #include "hevent.h"
 #include "heventheader.h"
@@ -220,7 +220,7 @@ void HParticlePool::fill(HIterator* dataIt, HIterator *geantIt, HIterator * btIt
   eventData.set("bt_maximasheredbad_4",-100);
   eventData.set("bt_nearbymaximashered_4",-100);
   //eventData.set("bt_size_4",-100);
-  */
+  
   
   if ( btflag == 1 )
     {
@@ -328,6 +328,7 @@ void HParticlePool::fill(HIterator* dataIt, HIterator *geantIt, HIterator * btIt
 	   break;
 	}
     }
+  */
   //---------------end of BT ------------------------
   
   // ----------- forward wall  ----------------------------------

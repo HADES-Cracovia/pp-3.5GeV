@@ -36,7 +36,7 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 /* here set whether you have also Forward Wall data (HWallHit or HWallHitSim)    */
 /*********************************************************************************/
 
-Int_t simflag = 0;
+Int_t simflag = 1;
 Int_t wallflag = 0;
 Int_t btflag=0;
 
@@ -61,7 +61,7 @@ int main(Int_t argc, Char_t **argv)
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES//";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/";
     
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
