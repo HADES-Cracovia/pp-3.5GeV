@@ -18,7 +18,7 @@
 
 namespace PATData {
   extern TFile *outFileData;
-  extern HNtuple *tlo;
+  extern HNtuple *tlo, *n_out;
   extern HFilter *filter;
   extern float EFF, ACC;
   //PPimPipPim*******************************

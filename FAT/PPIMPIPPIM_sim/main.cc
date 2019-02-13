@@ -87,7 +87,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppimpippim_full_stat_dedx_extended_2.root","recreate");
+  outFileData = new TFile("pp_ppimpippim_sim.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -99,8 +99,8 @@ int main()
   /*******************************************************************************************************/
 
   /************************** control ntuple ***************************/
-  tlo = new HNtuple("ppim","ppim");
-  tlo->setFile( outFileData );
+  n_out = new HNtuple("ppimpippim","ppimpippim");
+  n_out->setFile( outFileData );
   /*********************************************************************/
 
   int beta_min=0;
@@ -214,7 +214,10 @@ int main()
 
   outFileData->cd();
 
-  tlo->Write();
+  if(n_out!=0)
+    n_out->Write();
+  else
+    cout<<"n_out pointer empty"<<endl;
   /*
   p_p_beta->Write();
   pim_p_beta->Write();

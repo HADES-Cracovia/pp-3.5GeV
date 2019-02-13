@@ -2,7 +2,7 @@
 #include <TVector3.h>
 #include <hgeomvector.h>
 #include <hparticletool.h>  
-//#include <hgeomvector.h>
+#include <hgeomvector.h>
 /**************************** Global histograms repository ***********************************/
 
 
@@ -11,7 +11,7 @@ namespace PATData
 
   TFile         *outFileData;
 
-  HNtuple       *tlo;
+  HNtuple       *tlo, *n_out;
 
   HFilter       *filter;
   float         EFF, ACC;
