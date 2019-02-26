@@ -1,4 +1,5 @@
 #include "PPimPipPim.h"
+#include "PPimPipPim_buffer.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -176,11 +177,20 @@ void PPimPipPim::Loop()
       double sum1_1=dist_p_pim1+dist_pip_pim2+dist_lambda1_pip+dist_lambda1_pim2;
       double sum2_1=dist_p_pim2+dist_pip_pim1+dist_lambda2_pip+dist_lambda2_pim1;
 
+      
 
       if(isBest>=0 /*&& trigdownscaleflag==1*/)
 	{
 	  //cout<<"trig down: "<< trigdownscale <<" p beta "<<p_beta_new<<" lambda1 oa: "<<oa_lambda_1<<endl; 
-	  
+	  if(event!=event_number)
+	    {
+	      event_number=event;
+	      event_mult=1;
+	    }
+	  else
+	    event_mult++;
+
+	  //save all important variables
 	  (*n_out)["isBest"]=isBest;
 	  (*n_out)["event"]=event;
 	  (*n_out)["hneg_mult"]=hneg_mult;
@@ -191,16 +201,16 @@ void PPimPipPim::Loop()
 	  (*n_out)["totalmult"]=totalmult;
 	  (*n_out)["trigdownscaleflag"]=trigdownscaleflag;
 	  (*n_out)["trigdownscale"]=trigdownscale;
+	  (*n_out)["event_mult"]=event_mult;
 	  
 	  (*n_out)["p_p"]=p_p;
 	  (*n_out)["p_theta"] = p_theta;
-	  //(*n_out)["p_theta_rich"] = p_theta_rich;
 	  (*n_out)["p_phi"] = p_phi;
-	  //(*n_out)["p_phi_rich"] = p_phi_rich;
 	  (*n_out)["p_beta"] = p_beta_new;
 	  (*n_out)["p_m"] = p_mass;
 	  (*n_out)["p_dedx"]=p_dedx_mdc;
-
+	  (*n_out)["p_q"]=p_q;
+	  
 	  (*n_out)["p_sim_p"]=p_sim_p;
 	  (*n_out)["p_sim_id"]=p_sim_id;
 	  (*n_out)["p_sim_parentid"]=p_sim_parentid;
@@ -210,13 +220,12 @@ void PPimPipPim::Loop()
 	  
 	  (*n_out)["pip_p"]=pip_p;
 	  (*n_out)["pip_theta"] = pip_theta;
-	  //(*n_out)["pip_theta_rich"] = pip_theta_rich;
 	  (*n_out)["pip_phi"] = pip_phi;
-	  //(*n_out)["pip_phi_rich"] = pip_phi_rich;
 	  (*n_out)["pip_beta"] = pip_beta_new;
 	  (*n_out)["pip_m"] = pip_mass;
 	  (*n_out)["pip_dedx"]=pip_dedx_mdc;
-
+	  (*n_out)["pip_q"]=pip_q;
+	  
 	  (*n_out)["pip_sim_p"]=pip_sim_p;
 	  (*n_out)["pip_sim_id"]=pip_sim_id;
 	  (*n_out)["pip_sim_parentid"]=pip_sim_parentid;
@@ -227,13 +236,12 @@ void PPimPipPim::Loop()
 	  
 	  (*n_out)["pim1_p"]=pim1_p;
 	  (*n_out)["pim1_theta"] = pim1_theta;
-	  //(*n_out)["pim1_theta_rich"] = pim1_theta_rich;
 	  (*n_out)["pim1_phi"] = pim1_phi;
-	  //(*n_out)["pim1_phi_rich"] = pim1_phi_rich;
 	  (*n_out)["pim1_beta"] = pim1_beta_new;
 	  (*n_out)["pim1_m"] = pim1_mass;
 	  (*n_out)["pim1_dedx"]=pim1_dedx_mdc;
-
+	  (*n_out)["pim1_q"]=pim1_q;
+	  
 	  (*n_out)["pim1_sim_p"]=pim1_sim_p;
 	  (*n_out)["pim1_sim_id"]=pim1_sim_id;
 	  (*n_out)["pim1_sim_parentid"]=pim1_sim_parentid;
@@ -244,13 +252,12 @@ void PPimPipPim::Loop()
 	  
 	  (*n_out)["pim2_p"]=pim2_p;
 	  (*n_out)["pim2_theta"] = pim2_theta;
-	  //(*n_out)["pim2_theta_rich"] = pim2_theta_rich;
 	  (*n_out)["pim2_phi"] = pim2_phi;
-	  //(*n_out)["pim2_phi_rich"] = pim2_phi_rich;
 	  (*n_out)["pim2_beta"] = pim2_beta_new;
 	  (*n_out)["pim2_m"] = pim2_mass;
 	  (*n_out)["pim2_dedx"]=pim2_dedx_mdc;
-
+	  (*n_out)["pim2_q"]=pim2_q;
+	  
 	  (*n_out)["pim2_sim_p"]=pim2_sim_p;
 	  (*n_out)["pim2_sim_id"]=pim2_sim_id;
 	  (*n_out)["pim2_sim_parentid"]=pim2_sim_parentid;
@@ -412,7 +419,9 @@ PPimPipPim::PPimPipPim(TTree *tree)
   if (tree == 0)
     {
       TChain * chain = new TChain("PPimPipPim_ID","");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
+      /*
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k3_dst_hadron_out.root/PPimPipPim_ID");

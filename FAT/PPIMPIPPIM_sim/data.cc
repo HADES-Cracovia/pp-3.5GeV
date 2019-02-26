@@ -16,6 +16,7 @@ namespace PATData
   HFilter       *filter;
   float         EFF, ACC;
 
+  int event_number, event_mult;
   //PPimPipPim*******************************
   TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
   TH1F *p_pim_mass, *p_mass, *pim_mass;

@@ -61,8 +61,10 @@ int main(Int_t argc, Char_t **argv)
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/";
-    
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/ver2/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/";
+
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------
@@ -87,7 +89,7 @@ int main(Int_t argc, Char_t **argv)
 
     HPidTrackCleaner* cleaner = new HPidTrackCleaner();
     HPidTrackSorter::setIgnoreRICH();
-    HPidTrackSorter::setIgnoreInnerMDC();
+    //HPidTrackSorter::setIgnoreInnerMDC();
     cleaner->setUserSelectionLeptons(myselect);
     cleaner->setUserSelectionHadrons(myselecthadron);
     gHades->getTaskSet(context)->add(cleaner);

@@ -33,10 +33,13 @@ int main()
   //double pion_momentum = 690.0; 
   //   double pion_momentum = 748.0;
   //   double pion_momentum = 800.0;
-  double proton_momentum=TMath::Sqrt((3.5+0.938)*(3.5+0.938)+0.938*0.938)*1000;
+  double proton_momentum=TMath::Sqrt((3.5+0.93827)*(3.5+0.93827)-0.93827*0.93827)*1000;
   // ORIGIN: https://hades-wiki.gsi.de/foswiki/bin/view/PionBeam/WebHome
   //double pion_energy = sqrt( pion_momentum*pion_momentum + 139.56995*139.56995 );
   double proton_energy=sqrt(proton_momentum*proton_momentum + 938.27231*938.27231);
+
+  event_number=0;
+  event_mult=0;
   
   proj = new TLorentzVector(0,0, proton_momentum, proton_energy); // PION BEAM momentum as above
   targ = new TLorentzVector(0,0,0,938.27231); // PROTON
@@ -87,7 +90,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ppimpippim_sim.root","recreate");
+  outFileData = new TFile("pp_ony_pip_pim_sim_new_miss_mass.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");

@@ -21,6 +21,7 @@ namespace PATData {
   extern HNtuple *tlo, *n_out;
   extern HFilter *filter;
   extern float EFF, ACC;
+  extern int event_number, event_mult;
   //PPimPipPim*******************************
   extern TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
   extern TH1F *p_pim_mass, *p_mass, *pim_mass;
