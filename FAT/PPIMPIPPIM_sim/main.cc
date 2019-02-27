@@ -38,9 +38,6 @@ int main()
   //double pion_energy = sqrt( pion_momentum*pion_momentum + 139.56995*139.56995 );
   double proton_energy=sqrt(proton_momentum*proton_momentum + 938.27231*938.27231);
 
-  event_number=0;
-  event_mult=0;
-  
   proj = new TLorentzVector(0,0, proton_momentum, proton_energy); // PION BEAM momentum as above
   targ = new TLorentzVector(0,0,0,938.27231); // PROTON
 
@@ -90,7 +87,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_ony_pip_pim_sim_new_miss_mass.root","recreate");
+  outFileData = new TFile("pp_buffer.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");

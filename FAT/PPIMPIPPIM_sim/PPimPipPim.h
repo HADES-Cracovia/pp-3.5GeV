@@ -12,6 +12,7 @@
 #include <TChain.h>
 #include <TFile.h>
 
+class PPimPipPim_ID_buffer;
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
@@ -481,6 +482,7 @@ public :
   virtual void     Init(TTree *tree);
   virtual void     Loop();
   virtual Bool_t   Notify();
+  virtual void filler( const PPimPipPim_ID_buffer& s, int event_mult=1, double WEIGHT=1);
   virtual void     Show(Long64_t entry = -1);
 };
 
