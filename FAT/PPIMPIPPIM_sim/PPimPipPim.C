@@ -25,8 +25,9 @@ void PPimPipPim::Loop()
   std::vector< PPimPipPim_ID_buffer >  buffer;
   event_number=-1;
   event_mult=1;
-  
-  
+
+  std::vector<double> the_best;
+    
   for (Long64_t jentry=0; jentry<nentries;jentry++)
     {
       Long64_t ientry = LoadTree(jentry);
@@ -47,102 +48,64 @@ void PPimPipPim::Loop()
 		{
 		  for(int k=0;k<buffer.size();k++)
 		    {
-		      filler(buffer[k],event_mult,1);
+		      double min_value=1000;
+		      int best_hipo;
+		      for(int j=0;j<the_best.size();j++)
+			{
+			  cout<<the_best[j]<<" ";
+			  if(the_best[j]<=min_value)
+			    {
+			      min_value=the_best[j];
+			      best_hipo=j;
+			    }
+			}
+		      cout<<endl;
+		      cout<<"best hipo "<<best_hipo<<endl;
+		      if(k==best_hipo)
+			filler(buffer[k],event_mult,1,1);
+		      else
+			filler(buffer[k],event_mult,1,0);
+			
 		      //cout<<"end of ev. "<<event_number<<" mult "<<event_mult<<endl;
 		    }
 		  buffer.clear();
+		  the_best.clear();
 		}
 	      event_number=event;
 	      event_mult=1;
 	    }
 	  else
-	    event_mult++;
+	    {
+	      event_mult++;
+	    }
 
+	  double F = 1.006;
+
+	  TVector3 v1, v2, v3, v4, v5;
+	  v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
+	  v3.SetXYZ(F*pim1_p*sin(D2R*pim1_theta)*cos(D2R*pim1_phi),F*pim1_p*sin(D2R*pim1_theta)*sin(D2R*pim1_phi),F*pim1_p*cos(D2R*pim1_theta));
+	  v4.SetXYZ(F*pip_p*sin(D2R*pip_theta)*cos(D2R*pip_phi),F*pip_p*sin(D2R*pip_theta)*sin(D2R*pip_phi),F*pip_p*cos(D2R*pip_theta));
+	  v5.SetXYZ(F*pim2_p*sin(D2R*pim2_theta)*cos(D2R*pim2_phi),F*pim2_p*sin(D2R*pim2_theta)*sin(D2R*pim2_phi),F*pim2_p*cos(D2R*pim2_theta));
+     
+	  p->SetVectM( v2, 938.272013 );
+	  pim1->SetVectM( v3, 139.57018 );
+	  pip->SetVectM( v4, 139.57018 );
+	  pim2->SetVectM( v5, 139.57018 );
+
+	  *gammappim1 = *p + *pim1;
+	  *gammappim2 = *p + *pim2;
+	  *gammapim1pip= *pim1 + *pip;
+	  *gammapim2pip= *pim2 + *pip;
+	  *gammappim1pippim2=*pim1 +*pim2 + *pip + *p;
+	  *miss=*beam-*gammappim1pippim2;
+      
+	  //double quality=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
+	  double quality=pim1_mdcchi2;
+	  
+	  //add hypothesis to buffer and quality measure
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
-
-	  /*	  
-		  p_p_beta->Fill(p_p,p_beta_new);
-		  pim_p_beta->Fill(pim1_p,pim1_beta_new);
-		  pim_p_beta->Fill(pim1_p,pim1_beta_new);
-		  pip_p_beta->Fill(pip_p,pip_beta_new);
-
-		  p_pim_mass->Fill(m_inv_ppim1);
-		  p_pim_mass->Fill(m_inv_ppim2);
-		  p_pim1_mass->Fill(m_inv_ppim1);
-		  p_pim2_mass->Fill(m_inv_ppim2);
-
-		  pim_pip_mass->Fill(m_inv_pippim2);
-		  pim_pip_mass->Fill(m_inv_pippim1);
-		  pim2_pip_mass->Fill(m_inv_pippim2);
-		  pim1_pip_mass->Fill(m_inv_pippim1);
-
-		  p_pim_pip_pim_mass->Fill(m_inv_ppimpippim);
-
-		  dist_p_pim_pim_pip->Fill(dist_p_pim1,dist_pip_pim1);
-		  dist_p_pim_pim_pip->Fill(dist_p_pim2,dist_pip_pim2);
-		  dist_p_pim->Fill(dist_p_pim2);
-		  dist_p_pim->Fill(dist_p_pim1);
-		  dist_pim_pip->Fill(dist_pip_pim2);
-		  dist_pim_pip->Fill(dist_pip_pim1);
-	  */
-
-	  /*
-	    double sum1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2+dist_lambda1_pip*dist_lambda1_pip+dist_lambda1_pim2*dist_lambda1_pim2;
-	    double sum2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1+dist_lambda2_pip*dist_lambda2_pip+dist_lambda2_pim1*dist_lambda2_pim1;
-
-	    sum_dist_1->Fill(sum1);
-	    sum_dist_2->Fill(sum2);
-	    if(sum1<chi_max || sum2<chi_max)
-	    sum_dist_diff->Fill(TMath::Abs(sum1-sum2));
-
-	    if(chi_max>sum1)
-	    {
-	    chi_p_pim_mass->Fill(m_inv_ppim1);
-	    chi_pip_pim_mass->Fill(m_inv_pippim2);
-	    chi_lambda_vertex->Fill(ver_p_pim1.Z(),getR(ver_p_pim1));
-	    chi_final_mass->Fill(m_inv_ppimpippim);
-
-	    if(m_inv_ppim1<1120 && m_inv_ppim1>1110 && m_inv_pippim2<460)
-	    {
-	    LM_chi_p_pim_mass->Fill(m_inv_ppim1);
-	    LM_chi_pip_pim_mass->Fill(m_inv_pippim2);
-	    LM_chi_lambda_vertex->Fill(ver_p_pim1.Z(),getR(ver_p_pim1));
-	    LM_chi_final_mass->Fill(m_inv_ppimpippim);
-	    }
-	    }
-
-	    if(sum2<chi_max)
-	    {
-	    chi_p_pim_mass->Fill(m_inv_ppim2);
-	    chi_pip_pim_mass->Fill(m_inv_pippim1);
-	    chi_lambda_vertex->Fill(ver_p_pim2.Z(),getR(ver_p_pim2));
-	    chi_final_mass->Fill(m_inv_ppimpippim);
-
-	    if(m_inv_ppim2<1120 && m_inv_ppim2>1110 && m_inv_pippim1<460)
-	    {
-	    LM_chi_p_pim_mass->Fill(m_inv_ppim2);
-	    LM_chi_pip_pim_mass->Fill(m_inv_pippim1);
-	    LM_chi_lambda_vertex->Fill(ver_p_pim2.Z(),getR(ver_p_pim2));
-	    LM_chi_final_mass->Fill(m_inv_ppimpippim);
-	    }
-	    }
-	    //optimalization part
-	    double dist1=(ver_p_pim1-ver_pip_pim2).Mag();
-	    double dist2=(ver_p_pim2-ver_pip_pim1).Mag();
-
-	    for(int i=0;i<10;i++)
-	    for(int j=0;j<10;j++)
-	    {
-	    if(sum1<250+50*i && dist1>j*2)
-	    if(m_inv_ppim1<1120 && m_inv_ppim1>1110)
-	    signal_fit[i][j]->Fill(m_inv_ppimpippim);
-
-	    if(sum2<250+50*i  && dist2>j*2)
-	    if(m_inv_ppim2<1120 && m_inv_ppim2>1110)
-	    signal_fit[i][j]->Fill(m_inv_ppimpippim);
-	    }
-	    //end of opt part
-	    */	
+	  the_best.push_back(quality);
+	  	
 	}
 	  
     }
@@ -164,7 +127,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
     {
       TChain * chain = new TChain("PPimPipPim_ID","");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
       /*
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
@@ -200,7 +164,7 @@ PPimPipPim::~PPimPipPim()
   delete fChain->GetCurrentFile();
 }
 
-void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT )
+void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT,int is_best)
 {
   
       double F = 1.006;
@@ -351,7 +315,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       
 
   	  //save all important variables
-	  (*n_out)["isBest"]=isBest;
+	  (*n_out)["isBest"]=s.isBest;
+	  (*n_out)["isBest_new"]=is_best;
 	  (*n_out)["event"]=event;
 	  (*n_out)["hneg_mult"]=hneg_mult;
 	  (*n_out)["hpos_mult"]=hpos_mult;

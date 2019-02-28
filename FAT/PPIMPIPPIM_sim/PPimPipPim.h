@@ -482,7 +482,7 @@ public :
   virtual void     Init(TTree *tree);
   virtual void     Loop();
   virtual Bool_t   Notify();
-  virtual void filler( const PPimPipPim_ID_buffer& s, int event_mult=1, double WEIGHT=1);
+  virtual void filler( const PPimPipPim_ID_buffer& s, int event_mult=1, double WEIGHT=1, int is_best=0);
   virtual void     Show(Long64_t entry = -1);
 };
 

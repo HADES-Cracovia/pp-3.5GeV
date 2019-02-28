@@ -1,7 +1,7 @@
 #ifndef HHYPPOOL_H
 #define HHYPPOOL_H
 
-#define COMB_REPETITION 1
+#define COMB_REPETITION 0
 
 
 #include <list>
