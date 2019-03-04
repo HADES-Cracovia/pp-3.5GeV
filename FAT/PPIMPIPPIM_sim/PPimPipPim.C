@@ -41,36 +41,40 @@ void PPimPipPim::Loop()
 
       if(isBest>=0 /*&& trigdownscaleflag==1*/)
 	{
+	  //initialization for first event
+	  if(event_number==-1)
+	    { 
+	      event_number=event;
+	      event_mult=1;
+	    }
 	  //reset event multiplisity in case of a new event 
-	  if(event!=event_number)
+	  if(event!=event_number ||jentry==nentries-1) //every new event or end of last event
 	    {
-	      if(event_number!=-1)
+	      double min_value=the_best[0];
+	      int best_hipo;
+	      //find the best hypothesis
+	      for(int j=0;j<the_best.size();j++)
 		{
-		  for(int k=0;k<buffer.size();k++)
+		  cout<<the_best[j]<<" "<<endl;
+		  if(the_best[j]<=min_value)
 		    {
-		      double min_value=1000;
-		      int best_hipo;
-		      for(int j=0;j<the_best.size();j++)
-			{
-			  cout<<the_best[j]<<" ";
-			  if(the_best[j]<=min_value)
-			    {
-			      min_value=the_best[j];
-			      best_hipo=j;
-			    }
-			}
-		      cout<<endl;
-		      cout<<"best hipo "<<best_hipo<<endl;
-		      if(k==best_hipo)
-			filler(buffer[k],event_mult,1,1);
-		      else
-			filler(buffer[k],event_mult,1,0);
-			
-		      //cout<<"end of ev. "<<event_number<<" mult "<<event_mult<<endl;
+		      min_value=the_best[j];
+		      best_hipo=j;
 		    }
-		  buffer.clear();
-		  the_best.clear();
 		}
+	      cout<<"best hipo:"<<best_hipo<<endl;
+
+	      for(int k=0;k<buffer.size();k++)
+		{
+		  if(k==best_hipo)
+		    filler(buffer[k],event_mult,1,1);
+		  else
+		    filler(buffer[k],event_mult,1,0);
+		}
+	      
+	      buffer.clear();
+	      the_best.clear();
+		
 	      event_number=event;
 	      event_mult=1;
 	    }
@@ -279,6 +283,16 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   double dist_ver_to_ver_1=ver_to_ver_1.Mag();
   double dist_ver_to_ver_2=ver_to_ver_2.Mag();
 
+
+  double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
+  double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+
+  int pim_no;
+  if(quality1<quality2)
+    pim_no=1;
+  else
+    pim_no=2;
+  
   //  cout << "opening angle = " << oa << endl;
 
   ACC = 1.;
@@ -478,7 +492,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["oa_pim2_pip"]=oa_pim2_pip;
 	 
   (*n_out)["miss_mass_kp"]=miss->M();
-	  	  
+  (*n_out)["hypothesis"]=pim_no;
+  
   n_out->fill();
 }
 
