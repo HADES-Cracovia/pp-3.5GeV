@@ -35,7 +35,7 @@ submmissionbase=/lustre/nyx/hades/user/knowakow/PP
 submissiondir=${submmissionbase}/PAT_sim
  nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
     jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
-    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/    # outputdir for files AND logFiles
+    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver2/    # outputdir for files AND logFiles
     #outputdir=/lustre/nyx/hades/user/przygoda/PAT2/out/sim/PI0/800     # outputdir for files AND logFiles
 pathoutputlog=${outputdir}/out                    # protocol from batch farm for each file
      filename=testrun                           # filename of log file if nFilesPerJob > 1 (partnumber will be appended)

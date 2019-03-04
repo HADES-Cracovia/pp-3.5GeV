@@ -18,26 +18,35 @@ void PPimPipPim::Loop()
   int licznik = 0;
   if (fChain == 0) return;
 
-  int nentries = fChain->GetEntriesFast();
+  Long64_t nentries = fChain->GetEntries();
 
   double nbytes = 0, nb = 0;
 
   std::vector< PPimPipPim_ID_buffer >  buffer;
+  std::vector<double> the_best;
+  //std::vector<int> isBest_vector;
   event_number=-1;
   event_mult=1;
 
-  std::vector<double> the_best;
+  
     
-  for (Long64_t jentry=0; jentry<nentries;jentry++)
+  for(Long64_t jentry=0; jentry<nentries;jentry++)
     {
       Long64_t ientry = LoadTree(jentry);
-      if (ientry < 0) break;
+      if (ientry < 0)
+	{
+	  cout<<"jentry out of range!!!"<<endl;
+	  break;
+	}
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
-
-      ++licznik;
-      if ((licznik % 100000)==0) cout << "Events: " << licznik << " "<<(1.0*licznik)/(1.0*nentries)*100<<" %"<< endl;
-
+      cout.precision(10);
+      if(jentry%100==0 && isBest!=-1)
+	{
+	  cout << "netry no. "<< jentry<<" from "<<nentries;
+	  //cout<<" isBest: "<< isBest<<" event: "<<event;
+	  cout<<endl;
+	}
 
       if(isBest>=0 /*&& trigdownscaleflag==1*/)
 	{
@@ -48,21 +57,23 @@ void PPimPipPim::Loop()
 	      event_mult=1;
 	    }
 	  //reset event multiplisity in case of a new event 
-	  if(event!=event_number ||jentry==nentries-1) //every new event or end of last event
+	  if(event!=event_number || jentry==(nentries-1)) //every new event or end of last event
 	    {
-	      double min_value=the_best[0];
-	      int best_hipo;
+	      double min_value=10000000;
+	      int best_hipo=-1;
+	      //int isBest_sum=0;
 	      //find the best hypothesis
 	      for(int j=0;j<the_best.size();j++)
 		{
-		  cout<<the_best[j]<<" "<<endl;
-		  if(the_best[j]<=min_value)
+		  cout<<the_best[j]<<" ";
+		  //isBest_sum=isBest_sum+isBest_vector[j];
+		  if(the_best[j]<min_value)
 		    {
 		      min_value=the_best[j];
 		      best_hipo=j;
 		    }
 		}
-	      cout<<"best hipo:"<<best_hipo<<endl;
+	      cout<<endl<<"best hipo:"<<best_hipo"<<endl;
 
 	      for(int k=0;k<buffer.size();k++)
 		{
@@ -74,6 +85,7 @@ void PPimPipPim::Loop()
 	      
 	      buffer.clear();
 	      the_best.clear();
+	      //isBest_vector.clear();
 		
 	      event_number=event;
 	      event_mult=1;
@@ -148,6 +160,7 @@ void PPimPipPim::Loop()
 	  //add hypothesis to buffer and quality measure
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
 	  the_best.push_back(quality);
+	  //isBest_vector.push_back(isBest);
 	  	
 	}
 	  
@@ -171,7 +184,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
       TChain * chain = new TChain("PPimPipPim_ID","");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver2/all.root/PPimPipPim_ID");
       /*
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
@@ -207,7 +221,7 @@ PPimPipPim::~PPimPipPim()
   delete fChain->GetCurrentFile();
 }
 
-void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT,int is_best)
+void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
 {
   
   double F = 1.006;
@@ -369,7 +383,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 
   //save all important variables
   (*n_out)["isBest"]=s.isBest;
-  (*n_out)["isBest_new"]=is_best;
+  (*n_out)["isBest_new"]=isBest_new;
   (*n_out)["event"]=event;
   (*n_out)["hneg_mult"]=hneg_mult;
   (*n_out)["hpos_mult"]=hpos_mult;
