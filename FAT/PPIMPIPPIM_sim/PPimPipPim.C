@@ -24,10 +24,11 @@ void PPimPipPim::Loop()
 
   std::vector< PPimPipPim_ID_buffer >  buffer;
   std::vector<double> the_best;
-  //std::vector<int> isBest_vector;
+  std::vector<int> isBest_vector;
   event_number=-1;
-  event_mult=1;
+  event_mult=-1;
 
+  int dif_events=1;
   
     
   for(Long64_t jentry=0; jentry<nentries;jentry++)
@@ -39,16 +40,15 @@ void PPimPipPim::Loop()
 	  break;
 	}
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      // if (Cut(ientry) < 0) continue;
       cout.precision(10);
-      if(jentry%100==0 && isBest!=-1)
+      if(jentry%10==0 && isBest!=-1)
 	{
 	  cout << "netry no. "<< jentry<<" from "<<nentries;
 	  //cout<<" isBest: "<< isBest<<" event: "<<event;
 	  cout<<endl;
 	}
 
-      if(isBest>=0 /*&& trigdownscaleflag==1*/)
+      if(isBest!=-1 /*&& trigdownscaleflag==1*/)
 	{
 	  //initialization for first event
 	  if(event_number==-1)
@@ -56,37 +56,46 @@ void PPimPipPim::Loop()
 	      event_number=event;
 	      event_mult=1;
 	    }
-	  //reset event multiplisity in case of a new event 
+	  
+	  //reset event multiplisity in case of a new event
 	  if(event!=event_number || jentry==(nentries-1)) //every new event or end of last event
 	    {
+	      dif_events++;
 	      double min_value=10000000;
 	      int best_hipo=-1;
-	      //int isBest_sum=0;
+	      int isBest_sum=0;
 	      //find the best hypothesis
 	      for(int j=0;j<the_best.size();j++)
 		{
-		  cout<<the_best[j]<<" ";
-		  //isBest_sum=isBest_sum+isBest_vector[j];
+		  //cout<<the_best[j]<<" ";
+		  isBest_sum=isBest_sum+isBest_vector[j];
 		  if(the_best[j]<min_value)
 		    {
 		      min_value=the_best[j];
 		      best_hipo=j;
 		    }
 		}
-	      cout<<endl<<"best hipo:"<<best_hipo"<<endl;
+	      //cout<<endl;
+	      if(isBest_sum<1)
+		{
+		  cout<<"best hipo:"<<best_hipo;
+		  cout<<" isBest sum ="<<isBest_sum <<"for event "<<event_number;
+		  cout<<endl;
+		}
 
 	      for(int k=0;k<buffer.size();k++)
 		{
+		  //cout<<"writing event "<< endl <<"best hipo "<<best_hipo<<endl;
 		  if(k==best_hipo)
 		    filler(buffer[k],event_mult,1,1);
 		  else
 		    filler(buffer[k],event_mult,1,0);
 		}
-	      
+      
 	      buffer.clear();
 	      the_best.clear();
-	      //isBest_vector.clear();
-		
+	      isBest_vector.clear();
+
 	      event_number=event;
 	      event_mult=1;
 	    }
@@ -160,11 +169,12 @@ void PPimPipPim::Loop()
 	  //add hypothesis to buffer and quality measure
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
 	  the_best.push_back(quality);
-	  //isBest_vector.push_back(isBest);
+	  isBest_vector.push_back(isBest);
 	  	
 	}
 	  
     }
+  cout<<"all different values for \"event\""<<dif_events<<endl;
 }
 
 PPimPipPim::PPimPipPim(TTree *tree)
@@ -185,7 +195,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver2/all.root/PPimPipPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3/all.root/PPimPipPim_ID");
       /*
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
@@ -263,7 +273,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   //double oa_rich = R2D * openingangle(r1, r2);
 
   double p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
-  double pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
+  //double pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
   double pip_mass = s.pip_p*s.pip_p * (  1. / (s.pip_beta*s.pip_beta_new)  - 1. ) ;
   double pim1_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
   double pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
@@ -301,100 +311,41 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
   double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
 
-  int pim_no;
-  if(quality1<quality2)
-    pim_no=1;
-  else
-    pim_no=2;
+  double quality=std::min(quality1,quality2);
   
-  //  cout << "opening angle = " << oa << endl;
+  int pim_no;
+  double m_inv_ppim;
+  double m_inv_pippim;
+  if(quality1<quality2)
+    {
+      pim_no=1;
+      m_inv_ppim=m_inv_ppim1;
+      m_inv_pippim=m_inv_pippim2;
+    }
+  else
+    {
+      pim_no=2;
+      m_inv_ppim=m_inv_ppim2;
+      m_inv_pippim=m_inv_pippim1;
+    }
 
-  ACC = 1.;
-  EFF = 1.;
-
-  /*
-    gammappi->Boost(0., 0., -(beam->Beta()));
-    p_delta->Boost(0., 0., -(beam->Beta()));
-    pi_delta->Boost(0., 0., -(beam->Beta()));
-    p_delta->Boost( -gammappi->Px()/gammappi->E(), -gammappi->Py()/gammappi->E(), -gammappi->Pz()/gammappi->E());
-    pi_delta->Boost( -gammappi->Px()/gammappi->E(), -gammappi->Py()/gammappi->E(), -gammappi->Pz()/gammappi->E());
-  */
-  //cout << "Poczatek obliczen..." << endl;
-
-  //double ang_cut = 0.;
-  //double ang_cut = 9.;
-
-  //double close_cut = 9.;
-  //double nonfit_close_cut = -4.;
-  //double close_cut = 0.;
-  //double nonfit_close_cut = 0.;
-  //double close_cut = 4.;
-
-
-#ifdef FLANCH
-  //insidePim1S0 = (pPim1S0 == 0) ? 0 : pPim1S0->IsInside(pim1_z,pim1_theta);
-  //insidePim1S1 = (pPim1S1 == 0) ? 0 : pPim1S1->IsInside(pim1_z,pim1_theta);
-  //insideEpS0 = (pPS0 == 0) ? 0 : pPS0->IsInside(p_z,p_theta);
-  //insidePS1 = (pPS1 == 0) ? 0 : pPS1->IsInside(p_z,p_theta);
-  //insidePim1S0 = (pPim1S0 == 0) ? 0 : pPim1S0->IsInside(eVert_z,pim1_theta);
-  //insidePim1S1 = (pPim1S1 == 0) ? 0 : pPim1S1->IsInside(eVert_z,pim1_theta);
-  //insidePS0 = (pPS0 == 0) ? 0 : pPS0->IsInside(eVert_z,p_theta);
-  //insideEpS1 = (pPS1 == 0) ? 0 : pPS1->IsInside(eVert_z,p_theta);
-#endif
-
-  insideTarget = 1;
-
-#ifdef RECTANG
-  //insidePim1S0 = (pim1_theta > 50 && pim1_z < -50 /* && pim1_p<200.*/) ? 1 : 0;
-  //insidePim1S1 = (pim1_theta > 50 && pim1_z < -50 /* && pim1_p<200.*/) ? 1 : 0;
-  //insidePS0 = (p_theta > 50 && p_z < -50 /* && p_p<200.*/) ? 1 : 0;
-  //insidePS1 = (p_theta > 50 && p_z < -50 /* && p_p<200.*/) ? 1 : 0;
-#endif
-
-  //#ifdef NOCUT
-  //insidePim1S0 = 0;
-  //insidePim1S1 = 0;
-  //insidePS0 = 0;
-  //insidePS1 = 0;
-  //#endif
-
-
-  //NoLeptonP = !((p_oa_lept< close_cut&&p_oa_lept>0.0) &&p_oa_lept>nonfit_close_cut );
-  //NoHadronP = !(p_oa_hadr< close_cut &&p_oa_hadr>nonfit_close_cut );
-  //NoLeptonPI = !((pim1_oa_lept< close_cut&&pim1_oa_lept>0.0) &&pim1_oa_lept>nonfit_close_cut );
-  //NoHadronPI = !(pim1_oa_hadr< close_cut &&pim1_oa_hadr>nonfit_close_cut );
-  //NoHadronP = 1;
-  //NoHadronPI = 1;
-
-  /*
-    NoLeptonP = 1;
-    NoHadronP = 1;
-    NoLeptonPI = 1;
-    NoHadronPI = 1;
-  */
-  double chi_max=180;
-  double sum1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2+dist_lambda1_pip*dist_lambda1_pip+dist_lambda1_pim2*dist_lambda1_pim2;
-  double sum2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1+dist_lambda2_pip*dist_lambda2_pip+dist_lambda2_pim1*dist_lambda2_pim1;
-
-  double sum1_1=dist_p_pim1+dist_pip_pim2+dist_lambda1_pip+dist_lambda1_pim2;
-  double sum2_1=dist_p_pim2+dist_pip_pim1+dist_lambda2_pip+dist_lambda2_pim1;
-
-      
 
   //save all important variables
   (*n_out)["isBest"]=s.isBest;
   (*n_out)["isBest_new"]=isBest_new;
-  (*n_out)["event"]=event;
-  (*n_out)["hneg_mult"]=hneg_mult;
-  (*n_out)["hpos_mult"]=hpos_mult;
-  (*n_out)["eVert_x"]=eVert_x;
-  (*n_out)["eVert_y"]=eVert_y;
-  (*n_out)["eVert_z"]=eVert_z;
-  (*n_out)["totalmult"]=totalmult;
-  (*n_out)["trigdownscaleflag"]=trigdownscaleflag;
-  (*n_out)["trigdownscale"]=trigdownscale;
+  (*n_out)["event"]=s.event;
+  (*n_out)["hneg_mult"]=s.hneg_mult;
+  (*n_out)["hpos_mult"]=s.hpos_mult;
+  (*n_out)["eVert_x"]=s.eVert_x;
+  (*n_out)["eVert_y"]=s.eVert_y;
+  (*n_out)["eVert_z"]=s.eVert_z;
+  (*n_out)["totalmult"]=s.totalmult;
+  (*n_out)["trigdownscaleflag"]=s.trigdownscaleflag;
+  (*n_out)["trigdownscale"]=s.trigdownscale;
   (*n_out)["event_mult"]=event_mult;
-	  
+  (*n_out)["hypothesis"]=pim_no;
+  (*n_out)["hypothesis_quality"]=quality;
+  
   (*n_out)["p_p"]=s.p_p;
   (*n_out)["p_theta"] = s.p_theta;
   (*n_out)["p_phi"] = s.p_phi;
@@ -470,8 +421,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 	  
   (*n_out)["m_inv_p_pim1"] = m_inv_ppim1;
   (*n_out)["m_inv_p_pim2"] = m_inv_ppim2;
+  (*n_out)["m_inv_p_pim"]=m_inv_ppim;
+
   (*n_out)["m_inv_pip_pim1"] = m_inv_pippim1;
   (*n_out)["m_inv_pip_pim2"] = m_inv_pippim2;
+  (*n_out)["m_inv_pip_pim"] = m_inv_pippim;
   (*n_out)["m_inv_p_pim_pip_pim"] = m_inv_ppimpippim;
 
   (*n_out)["ver_p_pim1_x"]=ver_p_pim1.X();
@@ -490,12 +444,6 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["ver_pip_pim2_y"]=ver_pip_pim2.Y();
   (*n_out)["ver_pip_pim2_z"]=ver_pip_pim2.Z();
 
-  (*n_out)["sum_dist_1"]=sum1_1;
-  (*n_out)["sum_dist_2"]=sum2_1;
-	  
-  (*n_out)["sum_dist2_1"]=sum1;
-  (*n_out)["sum_dist2_2"]=sum2;
-
   (*n_out)["oa_lambda_1"]=oa_lambda_1;
   (*n_out)["oa_lambda_2"]=oa_lambda_2;
   (*n_out)["oa_pim1_p"]=oa_pim1_p;
@@ -506,8 +454,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["oa_pim2_pip"]=oa_pim2_pip;
 	 
   (*n_out)["miss_mass_kp"]=miss->M();
-  (*n_out)["hypothesis"]=pim_no;
-  
+    
   n_out->fill();
 }
 
