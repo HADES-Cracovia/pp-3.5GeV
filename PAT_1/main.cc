@@ -87,7 +87,7 @@ int main(Int_t argc, Char_t **argv)
 
     HPidTrackCleaner* cleaner = new HPidTrackCleaner();
     HPidTrackSorter::setIgnoreRICH();
-    HPidTrackSorter::setIgnoreInnerMDC();
+    //HPidTrackSorter::setIgnoreInnerMDC();
     cleaner->setUserSelectionLeptons(myselect);
     cleaner->setUserSelectionHadrons(myselecthadron);
     gHades->getTaskSet(context)->add(cleaner);

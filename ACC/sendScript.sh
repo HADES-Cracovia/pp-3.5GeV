@@ -29,11 +29,11 @@
 
 user=$(whoami)
 currentDir=$(pwd)
-submmissionbase=/hera/hades/user/${user}/PION
+submmissionbase=/lustre/nyx/hades/user/${user}/PP
 submissiondir=${submmissionbase}/ACC
 nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
 jobscript=${submissiondir}/jobScript.sh      # exec script (full path, call without dot, set it executable!)
-outputdir=/hera/hades/user/przygoda/PION/ACC/FILES/ELASTIC # outputdir for files AND logFiles
+outputdir=/lustre/nyx/hades/user/knowakow/PP/ACC/FILES/ver1 # outputdir for files AND logFiles
 pathoutputlog=${outputdir}/out                   # protocol from batch farm for each file
 par1=/hera/hades/user/przygoda/PAT2/defall.sh # optional par1 : environment script
 par2=${submissiondir}/acc656             # optional par2 : executable
@@ -44,7 +44,7 @@ par6="no"                                        # optional par6
 par7=/hera/hades/user/przygoda/PION/ACC/set64.sh     # optional par7
 resources="-l h_rt=10:0:0,h_vmem=2G"             # runtime < 10h, mem < 2GB
 
-filelist=${currentDir}/pion656_elast.list  # file list in local dir! not in submissiondir!!!
+filelist=${currentDir}/pimpipL.list  # file list in local dir! not in submissiondir!!!
 ######################################################################
 
 

@@ -196,7 +196,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
       TChain * chain = new TChain("PPimPipPim_ID","");
       
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron00.root/PPimPipPim_ID");    
-    
+
+      
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron01.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron02.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron03.root/PPimPipPim_ID");
@@ -208,8 +209,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron09.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron10.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron11.root/PPimPipPim_ID"); 
-      /*
-       */
+      
+      
       tree = chain;
     }
 
@@ -243,6 +244,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   pip->SetVectM( v4, 139.57018 );
   pim2->SetVectM( v5, 139.57018 );
 
+  *gammappip=*p+*pip;
   *gammappim1 = *p + *pim1;
   *gammappim2 = *p + *pim2;
   *gammapim1pip= *pim1 + *pip;
@@ -255,6 +257,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   //*pim1_delta = *pim1;
   //*ppim1_miss = *beam - *p - *pim1;
 
+  double m_inv_ppip = gammappip->M();
   double m_inv_ppim1 = gammappim1->M();
   double m_inv_ppim2 = gammappim2->M();
   double m_inv_pippim1 = gammapim1pip->M();
@@ -304,20 +307,35 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 
   double quality=std::min(quality1,quality2);
   
+  
   int pim_no;
   double m_inv_ppim;
   double m_inv_pippim;
+  double dist_p_pim;
+  double dist_pip_pim;
+  double oa_lambda;
+  double oa_p_pim;
+
+
   if(quality1<quality2)
     {
       pim_no=1;
       m_inv_ppim=m_inv_ppim1;
       m_inv_pippim=m_inv_pippim2;
+      dist_p_pim=dist_p_pim1;
+      dist_pip_pim=dist_pip_pim2;
+      oa_lambda=oa_lambda_1;
+      oa_p_pim=oa_pim1_p;
     }
   else
     {
       pim_no=2;
       m_inv_ppim=m_inv_ppim2;
       m_inv_pippim=m_inv_pippim1;
+      dist_p_pim=dist_p_pim2;
+      dist_pip_pim=dist_pip_pim1;
+      oa_lambda=oa_lambda_2;
+      oa_p_pim=oa_pim2_p;
     }
 
 
@@ -344,8 +362,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*tlo)["p_m"] = p_mass;
   (*tlo)["p_dedx"]=s.p_dedx_mdc;
   (*tlo)["p_q"]=s.p_q;
-
-  /*
+  /*	  
   (*tlo)["p_sim_p"]=s.p_sim_p;
   (*tlo)["p_sim_id"]=s.p_sim_id;
   (*tlo)["p_sim_parentid"]=s.p_sim_parentid;
@@ -383,8 +400,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*tlo)["pim1_sim_vertex_x"]=s.pim1_sim_vertexx;
   (*tlo)["pim1_sim_vertex_y"]=s.pim1_sim_vertexy;
   (*tlo)["pim1_sim_vertex_z"]=s.pim1_sim_vertexz;
-  */	  
-	  
+  */  
   (*tlo)["pim2_p"]=s.pim2_p;
   (*tlo)["pim2_theta"] = s.pim2_theta;
   (*tlo)["pim2_phi"] = s.pim2_phi;
@@ -402,8 +418,10 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   */	  	  
   (*tlo)["dist_pip_pim1"]=dist_pip_pim1;
   (*tlo)["dist_pip_pim2"] = dist_pip_pim2;
+  (*tlo)["dist_pip_pim"] = dist_pip_pim;
   (*tlo)["dist_p_pim1"] = dist_p_pim1;
   (*tlo)["dist_p_pim2"] = dist_p_pim2;
+  (*tlo)["dist_p_pim"] = dist_p_pim;
   (*tlo)["dist_lambda1_pim2"] = dist_lambda1_pim2;
   (*tlo)["dist_lambda1_pip"] = dist_lambda1_pip;
   (*tlo)["dist_lambda2_pim1"] = dist_lambda2_pim1;
@@ -419,7 +437,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*tlo)["m_inv_pip_pim2"] = m_inv_pippim2;
   (*tlo)["m_inv_pip_pim"] = m_inv_pippim;
   (*tlo)["m_inv_p_pim_pip_pim"] = m_inv_ppimpippim;
-
+  (*tlo)["m_inv_p_pip"] = m_inv_ppip;
+  
   (*tlo)["ver_p_pim1_x"]=ver_p_pim1.X();
   (*tlo)["ver_p_pim1_y"]=ver_p_pim1.Y();
   (*tlo)["ver_p_pim1_z"]=ver_p_pim1.Z();
@@ -438,8 +457,10 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 
   (*tlo)["oa_lambda_1"]=oa_lambda_1;
   (*tlo)["oa_lambda_2"]=oa_lambda_2;
+  (*tlo)["oa_lambda"]=oa_lambda;
   (*tlo)["oa_pim1_p"]=oa_pim1_p;
   (*tlo)["oa_pim2_p"]=oa_pim2_p;
+  (*tlo)["oa_pim_p"]=oa_p_pim;
   (*tlo)["oa_pip_p"]=oa_pip_p;
   (*tlo)["oa_pim1_pim2"]=oa_pim1_pim2;
   (*tlo)["oa_pim1_pip"]=oa_pim1_pip;

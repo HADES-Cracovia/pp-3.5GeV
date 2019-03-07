@@ -7,7 +7,7 @@ print("Copy and hadd files from shorter lists")
 
 max_value=11
 
-for k in range (0,max_value+1):
+for k in range (11,max_value+1):
     input_name="x{:02d}".format(k)
     output_name="hadron{:02d}.root".format(k)
     print("file name: {}".format(input_name))

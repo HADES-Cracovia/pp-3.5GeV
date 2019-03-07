@@ -74,7 +74,7 @@ int main()
   pim2 = new TLorentzVector(0,0,0,0);
   pip = new TLorentzVector(0,0,0,0);
   pi = new TLorentzVector(0,0,0,0);
-  gammappi = new TLorentzVector(0,0,0,0);
+  gammappip = new TLorentzVector(0,0,0,0);
   gammappim1 = new TLorentzVector(0,0,0,0);
   gammappim2 = new TLorentzVector(0,0,0,0);
   gammapim1pip = new TLorentzVector(0,0,0,0);
