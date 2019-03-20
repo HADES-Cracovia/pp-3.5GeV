@@ -29,7 +29,11 @@ void PPimPipPim::Loop()
   int event_mult=-1;
 
   int dif_events=1;
-  
+
+  //read graphical cut from external file
+  TFile *f = new TFile("cut_p_pip_miss.root","R");
+  cut_p_pim_miss=(TCutG*)f->Get("CUTG");
+  f->Close();
     
   for(Long64_t jentry=0; jentry<nentries;jentry++)
     {
@@ -338,7 +342,15 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       oa_p_pim=oa_pim2_p;
     }
 
-
+  //Final conditions for hypothesis
+  if(isBest_new==1
+     && !cut_p_pim_miss->IsInside(m_inv_ppip,miss->M())
+     )
+    {
+      //cout<<"is outside"<<endl;
+      isBest_new=2;
+      //cout<<isBest_new<<endl;
+    }
   //save all important variables
   (*tlo)["isBest"]=s.isBest;
   (*tlo)["isBest_new"]=isBest_new;
