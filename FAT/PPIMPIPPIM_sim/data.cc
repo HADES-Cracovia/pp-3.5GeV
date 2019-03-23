@@ -200,6 +200,23 @@ namespace PATData
     return TMath::Sqrt(vec.X()*vec.X()+vec.Y()*vec.Y());
   }
 
+  double trackToPoint(TVector3 base,TVector3 dir, TVector3 point)
+  {
+    HGeomVector point1, dir1, base1, res;
+    double result;
+    point1.setXYZ(point.X(), point.Y(), point.Z());
+    dir1.setXYZ(dir.X(), dir.Y(), dir.Z());
+    base1.setXYZ(base.X(), base.Y(), base.Z());
+
+    //cout<<"direction vec: "<<dir1.X()<<" "<<dir1.Y()<<" "<<dir1.Z()<<" "<<endl;
+    HParticleTool p_tool;
+    result=p_tool.calculateMinimumDistanceStraightToPoint(base1, dir1, point1);
+    //cout<<res.X()<<" "<<res.Z()<<endl;
+    //res1.SetXYZ(res.X(),res.Y(),res.Z());
+    return result;
+
+  }
+
 }
 
 /*********************************************************************************************/

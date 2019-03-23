@@ -184,11 +184,11 @@ void PPimPipPim::Loop()
 	  //double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
 	  double quality1=TMath::Power((m_inv_ppim1-1116)/33,2)
 	    //+TMath::Power(dist_p_pim1/12,2)
-	    //dist_lambda1_pim2+dist_lambda1_pip
+	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
 	    ;
 	  double quality2=TMath::Power((m_inv_ppim2-1116)/33,2)
 	    //+TMath::Power(dist_p_pim2/12,2)
-	    //dist_lambda2_pim1+dist_lambda2_pip
+	    //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
 	    ;
 
 	  double quality=std::min(quality1,quality2);
@@ -339,18 +339,26 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   double dist_ver_to_ver_1=ver_to_ver_1.Mag();
   double dist_ver_to_ver_2=ver_to_ver_2.Mag();
 
+  double dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
+  double dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
+  double dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
+  double dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
 
+  double dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
+  double dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
+  double dist_pim1_eVert=trackToPoint(ver_p_pim1,pim1->Vect(),eVert);
+  double dist_pim2_eVert=trackToPoint(ver_p_pim2,pim2->Vect(),eVert);
+  
   //double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
   //double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
   double quality1=TMath::Power((m_inv_ppim1-1116)/33,2)
-    //+TMath::Power(dist_p_pim1/12,2)
-    //dist_lambda1_pip+dist_lambda1_pim2
-    ;
+	    //+TMath::Power(dist_p_pim1/12,2)
+	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
+	    ;
   double quality2=TMath::Power((m_inv_ppim2-1116)/33,2)
-    //+TMath::Power(dist_p_pim2/12,2)
-    //dist_lambda2_pip+dist_lambda2_pim1
-    ;
-
+	    //+TMath::Power(dist_p_pim2/12,2)
+            //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
+	    ;
   double quality=std::min(quality1,quality2);
   
   int pim_no, pim_sim_id, pim_sim_parentid;
@@ -362,8 +370,13 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   double oa_p_pim;
   double dist_ver_to_ver;
   TVector3 ver_p_pim;
-  TVector3 ver_pip_pim;  
-
+  TVector3 ver_pip_pim;
+  double dist_lambda_eVert;
+  double dist_lambda_ver_pip_pim;
+  double dist_p_eVert;
+  double dist_pim_eVert;
+  double lambda_mom_z;
+  
   if(quality1<quality2)
     {
       pim_no=1;
@@ -378,6 +391,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       ver_pip_pim=ver_pip_pim2;
       pim_sim_id=s.pim1_sim_id;
       pim_sim_parentid=s.pim1_sim_parentid;
+      dist_lambda_eVert=dist_lambda1_eVert;
+      dist_lambda_ver_pip_pim=dist_lambda1_ver_pip_pim;
+      dist_p_eVert=dist_p1_eVert;
+      dist_pim_eVert=dist_pim1_eVert;
+      lambda_mom_z=gammappim1->Z();
     }
   else
     {
@@ -393,8 +411,19 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       ver_pip_pim=ver_pip_pim1;
       pim_sim_id=s.pim2_sim_id;
       pim_sim_parentid=s.pim2_sim_parentid;
+      dist_lambda_eVert=dist_lambda2_eVert;
+      dist_lambda_ver_pip_pim=dist_lambda2_ver_pip_pim;
+      dist_p_eVert=dist_p2_eVert;
+      dist_pim_eVert=dist_pim2_eVert;
+      lambda_mom_z=gammappim2->Z();
     }
 
+  bool simon_cut=(oa_p_pim > 15
+		  && dist_p_pim < 10
+		  && dist_lambda_eVert > 50
+		  && dist_p_eVert > 5
+		  && dist_pim_eVert > 15
+		  );
 
   //save all important variables
   (*n_out)["isBest"]=s.isBest;
@@ -490,6 +519,19 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["dist_ver_to_ver_1"]=dist_ver_to_ver_1;
   (*n_out)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
   (*n_out)["dist_ver_to_ver"]=dist_ver_to_ver;
+  (*n_out)["dist_lambda1_eVert"]=dist_lambda1_eVert;
+  (*n_out)["dist_lambda1_ver_pip_pim"]=dist_lambda1_ver_pip_pim;
+  (*n_out)["dist_lambda2_eVert"]=dist_lambda2_eVert;
+  (*n_out)["dist_lambda2_ver_pip_pim"]=dist_lambda2_ver_pip_pim;
+  (*n_out)["dist_lambda_eVert"]=dist_lambda_eVert;
+  (*n_out)["dist_lambda_ver_pip_pim"]=dist_lambda_ver_pip_pim;
+  (*n_out)["dist_p1_eVert"]=dist_p1_eVert;
+  (*n_out)["dist_pim1_eVert"]=dist_pim1_eVert;
+  (*n_out)["dist_p2_eVert"]=dist_p2_eVert;
+  (*n_out)["dist_pim2_eVert"]=dist_pim2_eVert;
+  (*n_out)["dist_p_eVert"]=dist_p_eVert;
+  (*n_out)["dist_pim_eVert"]=dist_pim_eVert;
+  
 	  
   (*n_out)["m_inv_p_pim1"] = m_inv_ppim1;
   (*n_out)["m_inv_p_pim2"] = m_inv_ppim2;
@@ -538,7 +580,9 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["oa_pim2_pip"]=oa_pim2_pip;
 	 
   (*n_out)["miss_mass_kp"]=miss->M();
-    
+  (*n_out)["lambda_mom_z"]=lambda_mom_z;
+  (*n_out)["simon_cuts"]=simon_cut;
+  
   n_out->fill();
 }
 
