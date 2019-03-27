@@ -10,6 +10,7 @@ ROOTLIBS += -lHodo -lWall -lShowerTofino -lShower -lTofino -lTof
 ROOTLIBS += -lMdc -lRichUtil -lRich -lRpc -lHodo
 ROOTLIBS += -lTriggerUtil -lTrigger -lStart
 ROOTLIBS += -lQA -lTools
+ROOTLIBS += -lTMVA
 
 
 

@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Mar 19 17:07:55 2019 by ROOT version 5.34/34
+// Thu Mar 21 04:16:59 2019 by ROOT version 5.34/34
 // from TTree ppimpippim/ppimpippim
-// found on file: ../PPIMPIPPIM_sim/pp_odIzy_pippimL.root
+// found on file: /lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_odIzy_pippimL.root
 //////////////////////////////////////////////////////////
 
-#ifndef ppimpippim_h
-#define ppimpippim_h
+#ifndef temp_h
+#define temp_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,19 +16,31 @@
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
-class ppimpippim {
+class temp {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leaf types
+   Float_t         dist_lambda1_eVert;
    Float_t         dist_lambda1_pim2;
    Float_t         dist_lambda1_pip;
+   Float_t         dist_lambda1_ver_pip_pim;
+   Float_t         dist_lambda2_eVert;
    Float_t         dist_lambda2_pim1;
    Float_t         dist_lambda2_pip;
+   Float_t         dist_lambda2_ver_pip_pim;
+   Float_t         dist_lambda_eVert;
+   Float_t         dist_lambda_ver_pip_pim;
+   Float_t         dist_p1_eVert;
+   Float_t         dist_p2_eVert;
+   Float_t         dist_p_eVert;
    Float_t         dist_p_pim;
    Float_t         dist_p_pim1;
    Float_t         dist_p_pim2;
+   Float_t         dist_pim1_eVert;
+   Float_t         dist_pim2_eVert;
+   Float_t         dist_pim_eVert;
    Float_t         dist_pip_pim;
    Float_t         dist_pip_pim1;
    Float_t         dist_pip_pim2;
@@ -140,15 +152,27 @@ public :
    Float_t         ver_pip_pim_x;
    Float_t         ver_pip_pim_y;
    Float_t         ver_pip_pim_z;
-
+   Float_t         simon_cuts;
    // List of branches
+   TBranch        *b_dist_lambda1_eVert;   //!
    TBranch        *b_dist_lambda1_pim2;   //!
    TBranch        *b_dist_lambda1_pip;   //!
+   TBranch        *b_dist_lambda1_ver_pip_pim;   //!
+   TBranch        *b_dist_lambda2_eVert;   //!
    TBranch        *b_dist_lambda2_pim1;   //!
    TBranch        *b_dist_lambda2_pip;   //!
+   TBranch        *b_dist_lambda2_ver_pip_pim;   //!
+   TBranch        *b_dist_lambda_eVert;   //!
+   TBranch        *b_dist_lambda_ver_pip_pim;   //!
+   TBranch        *b_dist_p1_eVert;   //!
+   TBranch        *b_dist_p2_eVert;   //!
+   TBranch        *b_dist_p_eVert;   //!
    TBranch        *b_dist_p_pim;   //!
    TBranch        *b_dist_p_pim1;   //!
    TBranch        *b_dist_p_pim2;   //!
+   TBranch        *b_dist_pim1_eVert;   //!
+   TBranch        *b_dist_pim2_eVert;   //!
+   TBranch        *b_dist_pim_eVert;   //!
    TBranch        *b_dist_pip_pim;   //!
    TBranch        *b_dist_pip_pim1;   //!
    TBranch        *b_dist_pip_pim2;   //!
@@ -260,9 +284,10 @@ public :
    TBranch        *b_ver_pip_pim_x;   //!
    TBranch        *b_ver_pip_pim_y;   //!
    TBranch        *b_ver_pip_pim_z;   //!
-
-   ppimpippim(TTree *tree=0);
-   virtual ~ppimpippim();
+   TBranch        *b_simon_cuts;
+  
+   temp(TTree *tree=0);
+   virtual ~temp();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -274,15 +299,15 @@ public :
 
 #endif
 
-#ifdef ppimpippim_cxx
-ppimpippim::ppimpippim(TTree *tree) : fChain(0) 
+#ifdef temp_cxx
+temp::temp(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../PPIMPIPPIM_sim/pp_odIzy_pippimL.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_odIzy_pippimL.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../PPIMPIPPIM_sim/pp_odIzy_pippimL.root");
+         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_odIzy_pippimL.root");
       }
       f->GetObject("ppimpippim",tree);
 
@@ -290,19 +315,19 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-ppimpippim::~ppimpippim()
+temp::~temp()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t ppimpippim::GetEntry(Long64_t entry)
+Int_t temp::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ppimpippim::LoadTree(Long64_t entry)
+Long64_t temp::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -315,7 +340,7 @@ Long64_t ppimpippim::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ppimpippim::Init(TTree *tree)
+void temp::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -331,13 +356,25 @@ void ppimpippim::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
+   fChain->SetBranchAddress("dist_lambda1_eVert", &dist_lambda1_eVert, &b_dist_lambda1_eVert);
    fChain->SetBranchAddress("dist_lambda1_pim2", &dist_lambda1_pim2, &b_dist_lambda1_pim2);
    fChain->SetBranchAddress("dist_lambda1_pip", &dist_lambda1_pip, &b_dist_lambda1_pip);
+   fChain->SetBranchAddress("dist_lambda1_ver_pip_pim", &dist_lambda1_ver_pip_pim, &b_dist_lambda1_ver_pip_pim);
+   fChain->SetBranchAddress("dist_lambda2_eVert", &dist_lambda2_eVert, &b_dist_lambda2_eVert);
    fChain->SetBranchAddress("dist_lambda2_pim1", &dist_lambda2_pim1, &b_dist_lambda2_pim1);
    fChain->SetBranchAddress("dist_lambda2_pip", &dist_lambda2_pip, &b_dist_lambda2_pip);
+   fChain->SetBranchAddress("dist_lambda2_ver_pip_pim", &dist_lambda2_ver_pip_pim, &b_dist_lambda2_ver_pip_pim);
+   fChain->SetBranchAddress("dist_lambda_eVert", &dist_lambda_eVert, &b_dist_lambda_eVert);
+   fChain->SetBranchAddress("dist_lambda_ver_pip_pim", &dist_lambda_ver_pip_pim, &b_dist_lambda_ver_pip_pim);
+   fChain->SetBranchAddress("dist_p1_eVert", &dist_p1_eVert, &b_dist_p1_eVert);
+   fChain->SetBranchAddress("dist_p2_eVert", &dist_p2_eVert, &b_dist_p2_eVert);
+   fChain->SetBranchAddress("dist_p_eVert", &dist_p_eVert, &b_dist_p_eVert);
    fChain->SetBranchAddress("dist_p_pim", &dist_p_pim, &b_dist_p_pim);
    fChain->SetBranchAddress("dist_p_pim1", &dist_p_pim1, &b_dist_p_pim1);
    fChain->SetBranchAddress("dist_p_pim2", &dist_p_pim2, &b_dist_p_pim2);
+   fChain->SetBranchAddress("dist_pim1_eVert", &dist_pim1_eVert, &b_dist_pim1_eVert);
+   fChain->SetBranchAddress("dist_pim2_eVert", &dist_pim2_eVert, &b_dist_pim2_eVert);
+   fChain->SetBranchAddress("dist_pim_eVert", &dist_pim_eVert, &b_dist_pim_eVert);
    fChain->SetBranchAddress("dist_pip_pim", &dist_pip_pim, &b_dist_pip_pim);
    fChain->SetBranchAddress("dist_pip_pim1", &dist_pip_pim1, &b_dist_pip_pim1);
    fChain->SetBranchAddress("dist_pip_pim2", &dist_pip_pim2, &b_dist_pip_pim2);
@@ -449,10 +486,11 @@ void ppimpippim::Init(TTree *tree)
    fChain->SetBranchAddress("ver_pip_pim_x", &ver_pip_pim_x, &b_ver_pip_pim_x);
    fChain->SetBranchAddress("ver_pip_pim_y", &ver_pip_pim_y, &b_ver_pip_pim_y);
    fChain->SetBranchAddress("ver_pip_pim_z", &ver_pip_pim_z, &b_ver_pip_pim_z);
+   fChain->SetBranchAddress("simon_cuts", &simon_cuts, &b_simon_cuts);
    Notify();
 }
 
-Bool_t ppimpippim::Notify()
+Bool_t temp::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -463,14 +501,14 @@ Bool_t ppimpippim::Notify()
    return kTRUE;
 }
 
-void ppimpippim::Show(Long64_t entry)
+void temp::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ppimpippim::Cut(Long64_t entry)
+Int_t temp::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
@@ -479,9 +517,11 @@ Int_t ppimpippim::Cut(Long64_t entry)
      p_sim_parentid==18
      && p_sim_id==14
      && pim_sim_parentid==18
+     //&& simon_cuts==1
+     && isBest_new==1
      )
     return 1;
   else
     return 0;
 }
-#endif // #ifdef ppimpippim_cxx
+#endif // #ifdef temp_cxx

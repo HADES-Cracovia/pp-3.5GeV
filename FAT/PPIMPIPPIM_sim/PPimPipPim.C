@@ -9,6 +9,7 @@
 #include <TVector3.h>
 #include "hntuple.h"
 
+#include "TMVA/Reader.h"
 
 using namespace std;
 using namespace PATData;
@@ -25,6 +26,7 @@ void PPimPipPim::Loop()
   std::vector< PPimPipPim_ID_buffer >  buffer;
   std::vector<double> the_best;
   std::vector<int> isBest_vector;
+ 
   event_number=-1;
   event_mult=-1;
 
@@ -136,19 +138,19 @@ void PPimPipPim::Loop()
 	  *miss=*beam-*gammappim1pippim2;
 
 	  
-	  double m_inv_ppim1 = gammappim1->M();
-	  double m_inv_ppim2 = gammappim2->M();
-	  double m_inv_pippim1 = gammapim1pip->M();
-	  double m_inv_pippim2 = gammapim2pip->M();
-	  double m_inv_ppimpippim = gammappim1pippim2->M();
-	  double oa = R2D * openingangle(*p, *pim1);
-	  //double oa_rich = R2D * openingangle(r1, r2);
+	  Float_t m_inv_ppim1 = gammappim1->M();
+	  Float_t m_inv_ppim2 = gammappim2->M();
+	  Float_t m_inv_pippim1 = gammapim1pip->M();
+	  Float_t m_inv_pippim2 = gammapim2pip->M();
+	  Float_t m_inv_ppimpippim = gammappim1pippim2->M();
+	  Float_t oa = R2D * openingangle(*p, *pim1);
+	  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
-	  double p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
-	  double pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
-	  double pip_mass = pip_p*pip_p * (  1. / (pip_beta*pip_beta_new)  - 1. ) ;
-	  double pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
-	  double pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
+	  Float_t p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
+	  Float_t pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+	  Float_t pip_mass = pip_p*pip_p * (  1. / (pip_beta*pip_beta_new)  - 1. ) ;
+	  Float_t pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+	  Float_t pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
 
 	  TVector3 ver_p_pim1=vertex(p_r,p_z,v2,pim1_r,pim1_z,v3);
 	  TVector3 ver_p_pim2=vertex(p_r,p_z,v2,pim2_r,pim2_z,v5);
@@ -158,40 +160,40 @@ void PPimPipPim::Loop()
 	  TVector3 ver_to_ver_1=ver_p_pim1-ver_pip_pim2;
 	  TVector3 ver_to_ver_2=ver_p_pim2-ver_pip_pim1;
 
-	  double oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
-	  double oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
-	  double oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
-	  double oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
-	  double oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
-	  double oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
+	  Float_t oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
+	  Float_t oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
+	  Float_t oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
+	  Float_t oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
+	  Float_t oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
+	  Float_t oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
                   
-	  double oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
-	  double oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
+	  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
+	  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
       
-	  double dist_p_pim1=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  double dist_p_pim2=trackDistance(p_r,p_z,v2,pim2_r,pim2_z,v5);
-	  double dist_pip_pim1=trackDistance(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
-	  double dist_pip_pim2=trackDistance(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
-	  double dist_lambda1_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  double dist_lambda2_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-	  double dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,v5,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  double dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,v3,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-	  double dist_ver_to_ver_1=ver_to_ver_1.Mag();
-	  double dist_ver_to_ver_2=ver_to_ver_2.Mag();
+	  Float_t dist_p_pim1=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
+	  Float_t dist_p_pim2=trackDistance(p_r,p_z,v2,pim2_r,pim2_z,v5);
+	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
+	  Float_t dist_pip_pim2=trackDistance(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
+	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
+	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
+	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,v5,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
+	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,v3,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
+	  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
+	  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       
-	  //double quality=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  //double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
-	  //double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
-	  double quality1=TMath::Power((m_inv_ppim1-1116)/33,2)
+	  //Float_t quality=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
+	  //Float_t quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
+	  //Float_t quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+	  Float_t quality1=TMath::Power(m_inv_ppim1-1116,2)
 	    //+TMath::Power(dist_p_pim1/12,2)
 	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
 	    ;
-	  double quality2=TMath::Power((m_inv_ppim2-1116)/33,2)
+	  Float_t quality2=TMath::Power(m_inv_ppim2-1116,2)
 	    //+TMath::Power(dist_p_pim2/12,2)
 	    //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
 	    ;
 
-	  double quality=std::min(quality1,quality2);
+	  Float_t quality=std::min(quality1,quality2);
 	  
 	  //add hypothesis to buffer and quality measure
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
@@ -293,20 +295,20 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   //*p_delta = *p;
   //*pim1_delta = *pim1;
   //*ppim1_miss = *beam - *p - *pim1;
-  double m_inv_ppip = gammappip->M();
-  double m_inv_ppim1 = gammappim1->M();
-  double m_inv_ppim2 = gammappim2->M();
-  double m_inv_pippim1 = gammapim1pip->M();
-  double m_inv_pippim2 = gammapim2pip->M();
-  double m_inv_ppimpippim = gammappim1pippim2->M();
-  double oa = R2D * openingangle(*p, *pim1);
-  //double oa_rich = R2D * openingangle(r1, r2);
+  Float_t m_inv_ppip = gammappip->M();
+  Float_t m_inv_ppim1 = gammappim1->M();
+  Float_t m_inv_ppim2 = gammappim2->M();
+  Float_t m_inv_pippim1 = gammapim1pip->M();
+  Float_t m_inv_pippim2 = gammapim2pip->M();
+  Float_t m_inv_ppimpippim = gammappim1pippim2->M();
+  Float_t oa = R2D * openingangle(*p, *pim1);
+  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
-  double p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
-  //double pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
-  double pip_mass = s.pip_p*s.pip_p * (  1. / (s.pip_beta*s.pip_beta_new)  - 1. ) ;
-  double pim1_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
-  double pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
+  Float_t p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
+  //Float_t pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
+  Float_t pip_mass = s.pip_p*s.pip_p * (  1. / (s.pip_beta*s.pip_beta_new)  - 1. ) ;
+  Float_t pim1_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
+  Float_t pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
 
   TVector3 eVert(s.eVert_x,s.eVert_y,s.eVert_z);
   TVector3 ver_p_pim1=vertex(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
@@ -318,64 +320,64 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   TVector3 ver_to_ver_1=ver_p_pim1-eVert;//ver_pip_pim2;
   TVector3 ver_to_ver_2=ver_p_pim2-eVert;//ver_pip_pim1;
 
-  double oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
-  double oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
-  double oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
-  double oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
-  double oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
-  double oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
+  Float_t oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
+  Float_t oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
+  Float_t oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
+  Float_t oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
+  Float_t oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
+  Float_t oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
                   
-  double oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
-  double oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
+  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
+  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
       
-  double dist_p_pim1=trackDistance(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
-  double dist_p_pim2=trackDistance(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
-  double dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
-  double dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
-  double dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  double dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
-  double dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,v5,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  double dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,v3,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
-  double dist_ver_to_ver_1=ver_to_ver_1.Mag();
-  double dist_ver_to_ver_2=ver_to_ver_2.Mag();
+  Float_t dist_p_pim1=trackDistance(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
+  Float_t dist_p_pim2=trackDistance(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
+  Float_t dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
+  Float_t dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
+  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
+  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
+  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,v5,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
+  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,v3,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
+  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
+  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
 
-  double dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
-  double dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
-  double dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
-  double dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
+  Float_t dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
+  Float_t dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
+  Float_t dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
+  Float_t dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
 
-  double dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
-  double dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
-  double dist_pim1_eVert=trackToPoint(ver_p_pim1,pim1->Vect(),eVert);
-  double dist_pim2_eVert=trackToPoint(ver_p_pim2,pim2->Vect(),eVert);
+  Float_t dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
+  Float_t dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
+  Float_t dist_pim1_eVert=trackToPoint(ver_p_pim1,pim1->Vect(),eVert);
+  Float_t dist_pim2_eVert=trackToPoint(ver_p_pim2,pim2->Vect(),eVert);
   
-  //double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
-  //double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
-  double quality1=TMath::Power((m_inv_ppim1-1116)/33,2)
+  //Float_t quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
+  //Float_t quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+  Float_t quality1=TMath::Power(m_inv_ppim1-1116,2)
 	    //+TMath::Power(dist_p_pim1/12,2)
 	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
 	    ;
-  double quality2=TMath::Power((m_inv_ppim2-1116)/33,2)
+  Float_t quality2=TMath::Power(m_inv_ppim2-1116,2)
 	    //+TMath::Power(dist_p_pim2/12,2)
             //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
 	    ;
-  double quality=std::min(quality1,quality2);
+  Float_t quality=std::min(quality1,quality2);
   
   int pim_no, pim_sim_id, pim_sim_parentid;
-  double m_inv_ppim;
-  double m_inv_pippim;
-  double dist_p_pim;
-  double dist_pip_pim;
-  double oa_lambda;
-  double oa_p_pim;
-  double dist_ver_to_ver;
+  Float_t m_inv_ppim;
+  Float_t m_inv_pippim;
+  Float_t dist_p_pim;
+  Float_t dist_pip_pim;
+  Float_t oa_lambda;
+  Float_t oa_p_pim;
+  Float_t dist_ver_to_ver;
   TVector3 ver_p_pim;
   TVector3 ver_pip_pim;
-  double dist_lambda_eVert;
-  double dist_lambda_ver_pip_pim;
-  double dist_p_eVert;
-  double dist_pim_eVert;
-  double lambda_mom_z;
+  Float_t dist_lambda_eVert;
+  Float_t dist_lambda_ver_pip_pim;
+  Float_t dist_p_eVert;
+  Float_t dist_pim_eVert;
+  Float_t lambda_mom_z;
   
   if(quality1<quality2)
     {
@@ -425,6 +427,27 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 		  && dist_pim_eVert > 15
 		  );
 
+  //TMVA part
+  /*
+    Float_t eVert_xx=s.eVert_x;
+  Float_t eVert_yy=s.eVert_y;
+  Float_t eVert_zz=s.eVert_z;
+    
+  TMVA::Reader *reader = new TMVA::Reader();
+  reader->AddVariable("dist_p_pim", &dist_p_pim);
+  reader->AddVariable("dist_pip_pim", &dist_pip_pim);
+  reader->AddVariable("eVert_x",  &eVert_xx);
+  reader->AddVariable("eVert_y",  &eVert_yy);
+  reader->AddVariable("eVert_z",  &eVert_zz);
+  reader->AddVariable("dist_p_eVert", &dist_p_eVert);
+  reader->AddVariable("dist_pim_eVert", &dist_pim_eVert);
+  reader->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
+  reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
+  
+  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_noPrecut_kMLP_n_ce.weights.xml" );
+  Double_t mlp_output=reader->EvaluateMVA("kMLP");
+  Double_t mlp_response   = reader->GetMVAError();
+  */
   //save all important variables
   (*n_out)["isBest"]=s.isBest;
   (*n_out)["isBest_new"]=isBest_new;
@@ -582,6 +605,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["miss_mass_kp"]=miss->M();
   (*n_out)["lambda_mom_z"]=lambda_mom_z;
   (*n_out)["simon_cuts"]=simon_cut;
+  //  (*n_out)["mlp_output"]=mlp_output;
+  //(*n_out)["mlp_response"]=mlp_response;
   
   n_out->fill();
 }
