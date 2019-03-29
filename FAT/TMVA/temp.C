@@ -42,25 +42,38 @@ void temp::Loop()
    
    
   // In an n-tuple, we assign each variable to its own branch.
+  signal->Branch("p_p",&p_beta);
+  signal->Branch("pip_p",&pip_p);
   signal->Branch("dist_p_pim", &dist_p_pim);
   signal->Branch("dist_pip_pim", &dist_pip_pim);
   signal->Branch("eVert_x", &eVert_x);
   signal->Branch("eVert_y", &eVert_y);
   signal->Branch("eVert_z", &eVert_z);
-  signal->Branch("dist_ver_to_ver", &dist_ver_to_ver);
+  signal->Branch("ver_pip_pim_x",&ver_pip_pim_x);
+  signal->Branch("ver_pip_pim_y",&ver_pip_pim_y);
+  signal->Branch("ver_pip_pim_z",&ver_pip_pim_z);
   signal->Branch("oa_lambda", &oa_lambda);
+  signal->Branch("oa_pip_p",&oa_pip_p);
+  signal->Branch("lambda_mom_z",&lambda_mom_z);
   signal->Branch("dist_p_eVert",&dist_p_eVert);
   signal->Branch("dist_pim_eVert",&dist_pim_eVert);
   signal->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   signal->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
+
   
+  background->Branch("p_p",&p_beta);
+  background->Branch("pip_p",&pip_p);
   background->Branch("dist_p_pim", &dist_p_pim);
   background->Branch("dist_pip_pim", &dist_pip_pim);
   background->Branch("eVert_x", &eVert_x);
   background->Branch("eVert_y", &eVert_y);
   background->Branch("eVert_z", &eVert_z);
-  background->Branch("dist_lambda_eVert", &dist_ver_to_ver);
+  background->Branch("ver_pip_pim_x",&ver_pip_pim_x);
+  background->Branch("ver_pip_pim_y",&ver_pip_pim_y);
+  background->Branch("ver_pip_pim_z",&ver_pip_pim_z);
   background->Branch("oa_lambda", &oa_lambda);
+  background->Branch("oa_pip_p",&oa_pip_p);
+  background->Branch("lambda_mom_z",&lambda_mom_z);
   background->Branch("dist_p_eVert",&dist_p_eVert);
   background->Branch("dist_pim_eVert",&dist_pim_eVert);
   background->Branch("dist_lambda_eVert",&dist_lambda_eVert);

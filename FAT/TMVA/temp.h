@@ -58,6 +58,7 @@ public :
    Float_t         hypothesis_quality;
    Float_t         isBest;
    Float_t         isBest_new;
+   Float_t         lambda_mom_z;
    Float_t         m_inv_p_pim;
    Float_t         m_inv_p_pim1;
    Float_t         m_inv_p_pim2;
@@ -190,6 +191,7 @@ public :
    TBranch        *b_hypothesis_quality;   //!
    TBranch        *b_isBest;   //!
    TBranch        *b_isBest_new;   //!
+   TBranch        *b_lambda_mom_z;
    TBranch        *b_m_inv_p_pim;   //!
    TBranch        *b_m_inv_p_pim1;   //!
    TBranch        *b_m_inv_p_pim2;   //!
