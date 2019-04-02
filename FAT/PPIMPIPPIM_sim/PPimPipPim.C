@@ -200,7 +200,8 @@ void PPimPipPim::Loop()
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
 	  the_best.push_back(quality);
 	  isBest_vector.push_back(isBest);
-	  	
+
+	  //cout<<"p pim1 dist from main part:"<<dist_p_pim1<<endl;
 	}
 	  
     }
@@ -383,7 +384,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t dist_p_eVert;
   Float_t dist_pim_eVert;
   Float_t lambda_mom_z;
-  
+
+  //cout<<"p pim1 dist from filler part:"<<dist_p_pim1<<endl;
   if(quality1<quality2)
     {
       pim_no=1;

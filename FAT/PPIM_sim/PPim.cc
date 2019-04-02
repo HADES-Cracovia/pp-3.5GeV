@@ -244,16 +244,16 @@ PPim::PPim(TTree *tree)
   if (tree == 0) {
 	  
     TChain * chain = new TChain("PPim_ID","");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k3_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k4_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k5_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k6_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k7_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k8_dst_hadron_out.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k9_dst_hadron_out.root/PPim_ID");    
-  
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k3_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k4_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k5_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k6_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k7_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k8_dst_hadron_out.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k9_dst_hadron_out.root/PPim_ID");    
+    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3/all.root");
     tree = chain; 
   }
 

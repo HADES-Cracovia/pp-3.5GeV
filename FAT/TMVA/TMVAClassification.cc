@@ -45,6 +45,9 @@ void TMVAClassification(TString treeFile, TString extraSuffix = "", Long64_t Des
   factory->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-200,200);
   factory->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-200,200);
   factory->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-200,200);
+  factory->AddVariable("ver_p_pim_x","ver_p_pim_x","mm",'F',-200,200);
+  factory->AddVariable("ver_p_pim_y","ver_p_pim_y","mm",'F',-200,200);
+  factory->AddVariable("ver_p_pim_z","ver_p_pim_z","mm",'F',-200,200);
   factory->AddVariable("dist_p_pim", "dist_p_pim", "mm",'F',0,200);
   factory->AddVariable("dist_pip_pim", "dist_pip_pim", "mm",'F',0,200);
   factory->AddVariable("dist_p_eVert", "dist_p_eVert","mm",'F',0,200);
