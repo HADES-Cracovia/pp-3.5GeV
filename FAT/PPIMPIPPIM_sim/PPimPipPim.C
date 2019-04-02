@@ -43,7 +43,7 @@ void PPimPipPim::Loop()
 	}
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       cout.precision(10);
-      if(jentry%10==0 && isBest!=-1)
+      if(jentry%1000==0 && isBest!=-1)
 	{
 	  cout << "netry no. "<< jentry<<" from "<<nentries;
 	  //cout<<" isBest: "<< isBest<<" event: "<<event;
@@ -79,13 +79,13 @@ void PPimPipPim::Loop()
 		    }
 		}
 	      //cout<<endl;
-	      if(isBest_sum<1)
+	      /*if(isBest_sum<1)
 		{
 		  cout<<"best hipo:"<<best_hipo;
 		  cout<<" isBest sum ="<<isBest_sum <<"for event "<<event_number;
 		  cout<<endl;
 		}
-
+	      */
 	      for(int k=0;k<buffer.size();k++)
 		{
 		  //cout<<"writing event "<< endl <<"best hipo "<<best_hipo<<endl;
@@ -108,8 +108,9 @@ void PPimPipPim::Loop()
 	      if(lambda_in_event>0)
 		real_lambdas++;
 
-	      cout<<"no. of real lambdas in event "<<lambda_in_event<<endl;
-	      cout<<"no. of real labdas is all data "<<real_lambdas<<endl;
+	      //cout<<"no. of real lambdas in event "<<lambda_in_event<<endl;
+	      if(jentry==(nentries-1))
+		cout<<"no. of real labdas is all data "<<real_lambdas<<endl;
 	    }
 	  else
 	    {
@@ -226,6 +227,10 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pi0pi0L/hadron.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pKm/hadron.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/nK0bar/hadron.root/PPimPipPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
       /*
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
