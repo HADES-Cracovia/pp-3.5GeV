@@ -80,7 +80,7 @@ Long64_t MaxEntries = TMath::Min(tSigAll->GetEntries(), tBackAll->GetEntries());
   TTree* tBack = tBackAll->CloneTree();
 
   factory->AddSignalTree    (tSig,  1.);
-  factory->AddBackgroundTree(tBack, 1);
+  factory->AddBackgroundTree(tBack, 1.);
 
   //factory->SetSignalWeightExpression("Weight");
   //factory->SetBackgroundWeightExpression("Weight");

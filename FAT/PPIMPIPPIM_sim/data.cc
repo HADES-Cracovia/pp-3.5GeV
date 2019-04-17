@@ -173,8 +173,8 @@ namespace PATData
     HGeomVector base_1, base_2, dir_1, dir_2;
     HParticleTool p_tool;
 
-    p_tool.calcSegVector(z1,r1,v1.Phi(),v1.Theta(),base_1,dir_1);
-    p_tool.calcSegVector(z2,r2,v2.Phi(),v2.Theta(),base_2,dir_2);
+    p_tool.calcSegVector(z1,r1,v1.Phi()*TMath::DegToRad(),v1.Theta()*TMath::DegToRad(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,v2.Phi()*TMath::DegToRad(),v2.Theta()*TMath::DegToRad(),base_2,dir_2);
 
     dist=p_tool.calculateMinimumDistance(base_1,dir_1,base_2,dir_2);
 
@@ -183,15 +183,15 @@ namespace PATData
 
   TVector3 vertex(double z1,double r1,TVector3 vec1, double z2,double r2,TVector3 vec2)
   {
-    TVector3 out;
+    TVector3 out(0,0,0);
     HGeomVector ver;
     HGeomVector base_1, base_2, dir_1, dir_2;
     HParticleTool p_tool;
 
-    p_tool.calcSegVector(z1,r1,vec1.Phi(),vec1.Theta(),base_1,dir_1);
-    p_tool.calcSegVector(z2,r2,vec2.Phi(),vec2.Theta(),base_2,dir_2);
+    p_tool.calcSegVector(z1,r1,vec1.Phi()*TMath::DegToRad(),vec1.Theta()*TMath::DegToRad(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,vec2.Phi()*TMath::DegToRad(),vec2.Theta()*TMath::DegToRad(),base_2,dir_2);
     ver=p_tool.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
-    out.SetXYZ(ver.X(),ver.Y(),ver.Z());
+    out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
     return out; 
   }
   

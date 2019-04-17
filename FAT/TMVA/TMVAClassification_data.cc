@@ -99,11 +99,11 @@ Long64_t MaxEntries = TMath::Min(tSigAll->GetEntries(), tBackAll->GetEntries());
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_1000_n4_no_ev", "!H:!V:NCycles=1000:HiddenLayers=N,N+5,N+5,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential");
 
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
 
   //factory->PrepareTrainingAndTestTree("", "", "!V:SplitMode=Random:SplitSeed=0:NormMode=EqualNumEvents");
 
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n4_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:UseRegulator=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n4_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:UseRegulator=True");
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_1000_n5_eq_ev", "!H:!V:NCycles=1000:HiddenLayers=N,N,N,N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:UseRegulator=True");
 
