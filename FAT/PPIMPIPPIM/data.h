@@ -127,7 +127,7 @@ namespace PATData {
   TH1* signal(const char* name, TH1* hist, TH1* back1, TH1* back2);
   double parametrization(double y);
   double trackDistance(double r1, double z1, TVector3 v1, double r2, double z2, TVector3 v2);
-  TVector3 vertex(double z1,double r1,TVector3 vec1, double z2,double r2,TVector3 vec2);
+  TVector3 vertex(double z1,double r1,TLorentzVector vec1, double z2,double r2,TLorentzVector vec2);
   double getR(TVector3 vec);
   double trackToPoint(TVector3 base,TVector3 dir, TVector3 point);
 }

@@ -25,15 +25,12 @@ void PPimPipPim::Loop()
   std::vector< PPimPipPim_ID_buffer >  buffer;
   std::vector<double> the_best;
   std::vector<int> isBest_vector;
+ 
   int event_number=-1;
   int event_mult=-1;
 
   int dif_events=1;
-
-  //read graphical cut from external file
-  TFile *f = new TFile("cut_p_pip_miss.root","R");
-  cut_p_pim_miss=(TCutG*)f->Get("CUTG");
-  f->Close();
+  int real_lambdas=0;
     
   for(Long64_t jentry=0; jentry<nentries;jentry++)
     {
@@ -47,7 +44,7 @@ void PPimPipPim::Loop()
       cout.precision(10);
       if(jentry%1000==0 && isBest!=-1)
 	{
-	  cout << "netry no. "<< jentry<<" from "<<nentries<<", "<<(jentry*1.0)/nentries*100<<"%";
+	  cout << "netry no. "<< jentry<<" from "<<nentries;
 	  //cout<<" isBest: "<< isBest<<" event: "<<event;
 	  cout<<endl;
 	}
@@ -68,11 +65,12 @@ void PPimPipPim::Loop()
 	      double min_value=10000000;
 	      int best_hipo=-1;
 	      int isBest_sum=0;
+	      int lambda_in_event=0;
 	      //find the best hypothesis
 	      for(int j=0;j<the_best.size();j++)
 		{
 		  //cout<<the_best[j]<<" ";
-		  //isBest_sum=isBest_sum+isBest_vector[j];
+		  isBest_sum=isBest_sum+isBest_vector[j];
 		  if(the_best[j]<min_value)
 		    {
 		      min_value=the_best[j];
@@ -80,15 +78,13 @@ void PPimPipPim::Loop()
 		    }
 		}
 	      //cout<<endl;
-	      /*
-	      if(isBest_sum<1)
+	      /*if(isBest_sum<1)
 		{
-		  cout<<"best hipo:"<<best_hipo;
-		  cout<<" isBest sum ="<<isBest_sum <<"for event "<<event_number;
-		  cout<<endl;
+		cout<<"best hipo:"<<best_hipo;
+		cout<<" isBest sum ="<<isBest_sum <<"for event "<<event_number;
+		cout<<endl;
 		}
 	      */
-
 	      for(int k=0;k<buffer.size();k++)
 		{
 		  //cout<<"writing event "<< endl <<"best hipo "<<best_hipo<<endl;
@@ -100,10 +96,17 @@ void PPimPipPim::Loop()
       
 	      buffer.clear();
 	      the_best.clear();
-	      //isBest_vector.clear();
+	      isBest_vector.clear();
 
 	      event_number=event;
 	      event_mult=1;
+
+	      if(lambda_in_event>0)
+		real_lambdas++;
+
+	      //cout<<"no. of real lambdas in event "<<lambda_in_event<<endl;
+	      if(jentry==(nentries-1))
+		cout<<"no. of real labdas is all data "<<real_lambdas<<endl;
 	    }
 	  else
 	    {
@@ -111,6 +114,7 @@ void PPimPipPim::Loop()
 	    }
 
 	  double F = 1.006;
+	  //double F=1;
 	  TVector3 v1, v2, v3, v4, v5;
 	  v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
 	  v3.SetXYZ(F*pim1_p*sin(D2R*pim1_theta)*cos(D2R*pim1_phi),F*pim1_p*sin(D2R*pim1_theta)*sin(D2R*pim1_phi),F*pim1_p*cos(D2R*pim1_theta));
@@ -121,7 +125,25 @@ void PPimPipPim::Loop()
 	  pim1->SetVectM( v3, 139.57018 );
 	  pip->SetVectM( v4, 139.57018 );
 	  pim2->SetVectM( v5, 139.57018 );
+	  /*
+	    cout<<"first part"<<endl;
+	    HParticleTool p_tool;  
+	    cout<<"p_phi: "<<p_phi<<endl;
+	    cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
+	    cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
+	    cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
+	    cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
+	    cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
 
+	    cout<<"p_theta: "<<p_theta<<endl;
+	    cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
+	    cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
+	    //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
+	    //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
+	    //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+	    v2.Print();
+	    cout<<endl;
+	  */
 	  *gammappip = *p + *pip;
 	  *gammappim1 = *p + *pim1;
 	  *gammappim2 = *p + *pim2;
@@ -131,64 +153,74 @@ void PPimPipPim::Loop()
 	  *miss=*beam-*gammappim1pippim2;
 
 	  
-	  double m_inv_ppim1 = gammappim1->M();
-	  double m_inv_ppim2 = gammappim2->M();
-	  double m_inv_pippim1 = gammapim1pip->M();
-	  double m_inv_pippim2 = gammapim2pip->M();
-	  double m_inv_ppimpippim = gammappim1pippim2->M();
-	  double oa = R2D * openingangle(*p, *pim1);
-	  //double oa_rich = R2D * openingangle(r1, r2);
+	  Float_t m_inv_ppim1 = gammappim1->M();
+	  Float_t m_inv_ppim2 = gammappim2->M();
+	  Float_t m_inv_pippim1 = gammapim1pip->M();
+	  Float_t m_inv_pippim2 = gammapim2pip->M();
+	  Float_t m_inv_ppimpippim = gammappim1pippim2->M();
+	  Float_t oa = R2D * openingangle(*p, *pim1);
+	  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
-	  double p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
-	  double pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
-	  double pip_mass = pip_p*pip_p * (  1. / (pip_beta*pip_beta_new)  - 1. ) ;
-	  double pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
-	  double pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
+	  Float_t p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
+	  Float_t pi_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+	  Float_t pip_mass = pip_p*pip_p * (  1. / (pip_beta*pip_beta_new)  - 1. ) ;
+	  Float_t pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
+	  Float_t pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
 
-	  TVector3 ver_p_pim1=vertex(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  TVector3 ver_p_pim2=vertex(p_r,p_z,v2,pim2_r,pim2_z,v5);
-	  TVector3 ver_pip_pim1=vertex(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
-	  TVector3 ver_pip_pim2=vertex(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
+	  TVector3 ver_p_pim1=vertex(p_r,p_z,*p,pim1_r,pim1_z,*pim1);
+	  TVector3 ver_p_pim2=vertex(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
+	  TVector3 ver_pip_pim1=vertex(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
+	  TVector3 ver_pip_pim2=vertex(pip_r,pip_z,*pip,pim2_r,pim2_z,*pim2);
 
 	  TVector3 ver_to_ver_1=ver_p_pim1-ver_pip_pim2;
 	  TVector3 ver_to_ver_2=ver_p_pim2-ver_pip_pim1;
 
-	  double oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
-	  double oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
-	  double oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
-	  double oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
-	  double oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
-	  double oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
+	  Float_t oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
+	  Float_t oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
+	  Float_t oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
+	  Float_t oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
+	  Float_t oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
+	  Float_t oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
                   
-	  double oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
-	  double oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
+	  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
+	  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
       
-	  double dist_p_pim1=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  double dist_p_pim2=trackDistance(p_r,p_z,v2,pim2_r,pim2_z,v5);
-	  double dist_pip_pim1=trackDistance(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
-	  double dist_pip_pim2=trackDistance(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
-	  double dist_lambda1_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  double dist_lambda2_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-	  double dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,v5,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  double dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,v3,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-	  double dist_ver_to_ver_1=ver_to_ver_1.Mag();
-	  double dist_ver_to_ver_2=ver_to_ver_2.Mag();
+	  Float_t dist_p_pim1=trackDistance(p_r,p_z,*p,pim1_r,pim1_z,*pim1);
+	  Float_t dist_p_pim2=trackDistance(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
+	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
+	  Float_t dist_pip_pim2=trackDistance(pip_r,pip_z,*pip,pim2_r,pim2_z,*pim2);
+	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+	  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
+	  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       
-	  //double quality=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  double quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
-	  double quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+	  //Float_t quality=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
+	  //Float_t quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
+	  //Float_t quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+	  Float_t quality1=TMath::Power(m_inv_ppim1-1116,2)
+	    //+TMath::Power(dist_p_pim1/12,2)
+	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
+	    ;
+	  Float_t quality2=TMath::Power(m_inv_ppim2-1116,2)
+	    //+TMath::Power(dist_p_pim2/12,2)
+	    //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
+	    ;
 
-	  double quality=std::min(quality1,quality2);
+	  Float_t quality=std::min(quality1,quality2);
 	  
 	  //add hypothesis to buffer and quality measure
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
 	  the_best.push_back(quality);
 	  isBest_vector.push_back(isBest);
-	  	
+
+	  //cout<<"p pim1 dist from main part:"<<dist_p_pim1<<endl;
 	}
 	  
     }
-  cout<<"all different values for \"event\""<<dif_events<<endl;
+  cout<<"all different values for \"event\" "<<dif_events<<endl;
+  cout<<"events with real lambda "<<real_lambdas<<endl;
 }
 
 PPimPipPim::PPimPipPim(TTree *tree)
@@ -237,7 +269,6 @@ PPimPipPim::~PPimPipPim()
 
 void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
 {
-  
   //double F = 1.006;
   double F=1;
   TVector3 v1, v2, v3, v4, v5;
@@ -245,7 +276,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   v3.SetXYZ(F*s.pim1_p*sin(D2R*s.pim1_theta)*cos(D2R*s.pim1_phi),F*s.pim1_p*sin(D2R*s.pim1_theta)*sin(D2R*s.pim1_phi),F*s.pim1_p*cos(D2R*s.pim1_theta));
   v4.SetXYZ(F*s.pip_p*sin(D2R*s.pip_theta)*cos(D2R*s.pip_phi),F*s.pip_p*sin(D2R*s.pip_theta)*sin(D2R*s.pip_phi),F*s.pip_p*cos(D2R*s.pip_theta));
   v5.SetXYZ(F*s.pim2_p*sin(D2R*s.pim2_theta)*cos(D2R*s.pim2_phi),F*s.pim2_p*sin(D2R*s.pim2_theta)*sin(D2R*s.pim2_phi),F*s.pim2_p*cos(D2R*s.pim2_theta));
-
+  /*
+    TVector3 vtemp;
+    vtemp.SetXYZ(F*s.p_p*sin(D2R*90)*cos(D2R*45),F*s.p_p*sin(D2R*90)*sin(D2R*45),F*s.p_p*cos(D2R*90));
+    vtemp.Print();
+  */  
   /*TVector3 r1, r2, r3,r4;
     r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
     r2.SetXYZ(sin(D2R*pim1_theta_rich)*cos(D2R*pim1_phi_rich),sin(D2R*pim1_theta_rich)*sin(D2R*pim1_phi_rich),cos(D2R*pim1_theta_rich));
@@ -256,8 +291,26 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   pim1->SetVectM( v3, 139.57018 );
   pip->SetVectM( v4, 139.57018 );
   pim2->SetVectM( v5, 139.57018 );
+  /*
+    cout<<"save part"<<endl;
+    HParticleTool p_tool;  
+    cout<<"p_phi: "<<s.p_phi<<endl;
+    cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
+    cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
+    cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
+    cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
+    cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
 
-  *gammappip=*p+*pip;
+    cout<<"p_theta: "<<s.p_theta<<endl;
+    cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
+    cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
+    //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
+    //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
+    //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+    v2.Print();
+    cout<<endl;
+  */
+  *gammappip = *p + *pip;
   *gammappim1 = *p + *pim1;
   *gammappim2 = *p + *pim2;
   *gammapim1pip= *pim1 + *pip;
@@ -269,89 +322,98 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   //*p_delta = *p;
   //*pim1_delta = *pim1;
   //*ppim1_miss = *beam - *p - *pim1;
+  Float_t m_inv_ppip = gammappip->M();
+  Float_t m_inv_ppim1 = gammappim1->M();
+  Float_t m_inv_ppim2 = gammappim2->M();
+  Float_t m_inv_pippim1 = gammapim1pip->M();
+  Float_t m_inv_pippim2 = gammapim2pip->M();
+  Float_t m_inv_ppimpippim = gammappim1pippim2->M();
+  Float_t oa = R2D * openingangle(*p, *pim1);
+  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
-  double m_inv_ppip = gammappip->M();
-  double m_inv_ppim1 = gammappim1->M();
-  double m_inv_ppim2 = gammappim2->M();
-  double m_inv_pippim1 = gammapim1pip->M();
-  double m_inv_pippim2 = gammapim2pip->M();
-  double m_inv_ppimpippim = gammappim1pippim2->M();
-  double oa = R2D * openingangle(*p, *pim1);
-  //double oa_rich = R2D * openingangle(r1, r2);
-
-  double p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
-  //double pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
-  double pip_mass = s.pip_p*s.pip_p * (  1. / (s.pip_beta*s.pip_beta_new)  - 1. ) ;
-  double pim1_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
-  double pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
+  Float_t p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
+  //Float_t pi_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
+  Float_t pip_mass = s.pip_p*s.pip_p * (  1. / (s.pip_beta*s.pip_beta_new)  - 1. ) ;
+  Float_t pim1_mass = s.pim1_p*s.pim1_p * (  1. / (s.pim1_beta*s.pim1_beta_new)  - 1. ) ;
+  Float_t pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
 
   TVector3 eVert(s.eVert_x,s.eVert_y,s.eVert_z);
-  TVector3 ver_p_pim1=vertex(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
-  TVector3 ver_p_pim2=vertex(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
-  TVector3 ver_pip_pim1=vertex(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
-  TVector3 ver_pip_pim2=vertex(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
+  TVector3 ver_p_pim1=vertex(s.p_r,s.p_z,*p,s.pim1_r,s.pim1_z,*pim1);
+  TVector3 ver_p_pim2=vertex(s.p_r,s.p_z,*p,s.pim2_r,s.pim2_z,*pim2);
+  TVector3 ver_pip_pim1=vertex(s.pip_r,s.pip_z,*pip,s.pim1_r,s.pim1_z,*pim1);
+  TVector3 ver_pip_pim2=vertex(s.pip_r,s.pip_z,*pip,s.pim2_r,s.pim2_z,*pim2);
+  
+  
+  TVector3 ver_to_ver_1=ver_p_pim1-eVert;//ver_pip_pim2;
+  TVector3 ver_to_ver_2=ver_p_pim2-eVert;//ver_pip_pim1;
 
-  TVector3 ver_to_ver_1=ver_p_pim1-ver_pip_pim2;
-  TVector3 ver_to_ver_2=ver_p_pim2-ver_pip_pim1;
-
-  double oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
-  double oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
-  double oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
-  double oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
-  double oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
-  double oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
+  Float_t oa_pim1_p=R2D*openingangle(pim1->Vect(),p->Vect());
+  Float_t oa_pim2_p=R2D*openingangle(pim2->Vect(),p->Vect());
+  Float_t oa_pip_p=R2D*openingangle(pip->Vect(),p->Vect());
+  Float_t oa_pim1_pim2=R2D*openingangle(pim1->Vect(),pim2->Vect());
+  Float_t oa_pim1_pip=R2D*openingangle(pim1->Vect(),pip->Vect());
+  Float_t oa_pim2_pip=R2D*openingangle(pim2->Vect(),pip->Vect());
                   
-  double oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
-  double oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
-      
-  double dist_p_pim1=trackDistance(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
-  double dist_p_pim2=trackDistance(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
-  double dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
-  double dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
-   double dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  double dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
-  double dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,v5,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  double dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,v3,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
-  double dist_ver_to_ver_1=ver_to_ver_1.Mag();
-  double dist_ver_to_ver_2=ver_to_ver_2.Mag();
+  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
+  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
 
-  double dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
-  double dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
-  double dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
-  double dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
-
-  double dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
-  double dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
-  double dist_pim1_eVert=trackToPoint(ver_p_pim1,pim1->Vect(),eVert);
-  double dist_pim2_eVert=trackToPoint(ver_p_pim2,pim2->Vect(),eVert);
-
-   double quality1=TMath::Power((m_inv_ppim1-1116)/33,2)
-	    //+TMath::Power(dist_p_pim1/12,2)
-	    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
-	    ;
-  double quality2=TMath::Power((m_inv_ppim2-1116)/33,2)
-	    //+TMath::Power(dist_p_pim2/12,2)
-            //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
-	    ;
-  double quality=std::min(quality1,quality2);
+  /*
+    cout<<"vectors to calc"<<endl;
+    cout<<"p_z: "<<p_z<<endl;
+    cout<<"p_r: "<<p_r<<endl;
+    cout<<"v2: "; v2.Print(); cout<<endl;
+  */
   
+  Float_t dist_p_pim1=trackDistance(s.p_r,s.p_z,*p,s.pim1_r,s.pim1_z,*pim1);
+  Float_t dist_p_pim2=trackDistance(s.p_r,s.p_z,*p,s.pim2_r,s.pim2_z,*pim2);
+  Float_t dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,*pip,s.pim1_r,s.pim1_z,*pim1);
+  Float_t dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,*pip,s.pim2_r,s.pim2_z,*pim2);
+  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
+  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
+
+  Float_t dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
+  Float_t dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
+  Float_t dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
+  Float_t dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
+
+  Float_t dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
+  Float_t dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
+  Float_t dist_pim1_eVert=trackToPoint(ver_p_pim1,pim1->Vect(),eVert);
+  Float_t dist_pim2_eVert=trackToPoint(ver_p_pim2,pim2->Vect(),eVert);
   
-  int pim_no;
-  double m_inv_ppim;
-  double m_inv_pippim;
-  double dist_p_pim;
-  double dist_pip_pim;
-  double oa_lambda;
-  double oa_p_pim;
-  double dist_ver_to_ver;
+  //Float_t quality1=dist_p_pim1*dist_p_pim1+dist_pip_pim2*dist_pip_pim2;
+  //Float_t quality2=dist_p_pim2*dist_p_pim2+dist_pip_pim1*dist_pip_pim1;
+  Float_t quality1=TMath::Power(m_inv_ppim1-1116,2)
+    //+TMath::Power(dist_p_pim1/12,2)
+    //TMath::Power(dist_lambda1_pim2,2)+TMath::Power(dist_lambda1_pip,2)
+    ;
+  Float_t quality2=TMath::Power(m_inv_ppim2-1116,2)
+    //+TMath::Power(dist_p_pim2/12,2)
+    //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
+    ;
+  Float_t quality=std::min(quality1,quality2);
+  
+  int pim_no, pim_sim_id, pim_sim_parentid;
+  Float_t m_inv_ppim;
+  Float_t m_inv_pippim;
+  Float_t dist_p_pim;
+  Float_t dist_pip_pim;
+  Float_t oa_lambda;
+  Float_t oa_p_pim;
+  Float_t dist_ver_to_ver;
   TVector3 ver_p_pim;
   TVector3 ver_pip_pim;
-  double dist_lambda_eVert;
-  double dist_lambda_ver_pip_pim;
-  double dist_p_eVert;
-  double dist_pim_eVert;
-  double lambda_mom_z;
-  
+  Float_t dist_lambda_eVert;
+  Float_t dist_lambda_ver_pip_pim;
+  Float_t dist_p_eVert;
+  Float_t dist_pim_eVert;
+  Float_t lambda_mom_z;
+
+  //cout<<"p pim1 dist from filler part:"<<dist_p_pim1<<endl;
   if(quality1<quality2)
     {
       pim_no=1;
@@ -364,8 +426,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_ver_to_ver=dist_ver_to_ver_1;
       ver_p_pim=ver_p_pim1;
       ver_pip_pim=ver_pip_pim2;
-      //pim_sim_id=s.pim1_sim_id;
-      //pim_sim_parentid=s.pim1_sim_parentid;
+      pim_sim_id=s.pim1_sim_id;
+      pim_sim_parentid=s.pim1_sim_parentid;
       dist_lambda_eVert=dist_lambda1_eVert;
       dist_lambda_ver_pip_pim=dist_lambda1_ver_pip_pim;
       dist_p_eVert=dist_p1_eVert;
@@ -384,8 +446,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_ver_to_ver=dist_ver_to_ver_2;
       ver_p_pim=ver_p_pim2;
       ver_pip_pim=ver_pip_pim1;
-      //pim_sim_id=s.pim2_sim_id;
-      //pim_sim_parentid=s.pim2_sim_parentid;
+      pim_sim_id=s.pim2_sim_id;
+      pim_sim_parentid=s.pim2_sim_parentid;
       dist_lambda_eVert=dist_lambda2_eVert;
       dist_lambda_ver_pip_pim=dist_lambda2_ver_pip_pim;
       dist_p_eVert=dist_p2_eVert;
@@ -399,15 +461,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 		  && dist_p_eVert > 5
 		  && dist_pim_eVert > 15
 		  );
- //Final conditions for hypothesis
-  if(isBest_new==1
-     && !cut_p_pim_miss->IsInside(m_inv_ppip,miss->M())
-     )
-    {
-      //cout<<"is outside"<<endl;
-      isBest_new=2;
-      //cout<<isBest_new<<endl;
-    }
+
   //save all important variables
   (*tlo)["isBest"]=s.isBest;
   (*tlo)["isBest_new"]=isBest_new;
@@ -643,26 +697,26 @@ void PPimPipPim::Init(TTree *tree)
   fChain->SetBranchAddress("p_shw_sum1", &p_shw_sum1, &b_p_shw_sum1);
   fChain->SetBranchAddress("p_shw_sum2", &p_shw_sum2, &b_p_shw_sum2);
   /*
-  fChain->SetBranchAddress("p_sim_corrflag", &p_sim_corrflag, &b_p_sim_corrflag);
-  fChain->SetBranchAddress("p_sim_geninfo", &p_sim_geninfo, &b_p_sim_geninfo);
-  fChain->SetBranchAddress("p_sim_geninfo1", &p_sim_geninfo1, &b_p_sim_geninfo1);
-  fChain->SetBranchAddress("p_sim_geninfo2", &p_sim_geninfo2, &b_p_sim_geninfo2);
-  fChain->SetBranchAddress("p_sim_genweight", &p_sim_genweight, &b_p_sim_genweight);
-  fChain->SetBranchAddress("p_sim_id", &p_sim_id, &b_p_sim_id);
-  fChain->SetBranchAddress("p_sim_iscommon", &p_sim_iscommon, &b_p_sim_iscommon);
-  fChain->SetBranchAddress("p_sim_mediumid", &p_sim_mediumid, &b_p_sim_mediumid);
-  fChain->SetBranchAddress("p_sim_p", &p_sim_p, &b_p_sim_p);
-  fChain->SetBranchAddress("p_sim_parentid", &p_sim_parentid, &b_p_sim_parentid);
-  fChain->SetBranchAddress("p_sim_primaryflag", &p_sim_primaryflag, &b_p_sim_primaryflag);
-  fChain->SetBranchAddress("p_sim_processid", &p_sim_processid, &b_p_sim_processid);
-  fChain->SetBranchAddress("p_sim_px", &p_sim_px, &b_p_sim_px);
-  fChain->SetBranchAddress("p_sim_py", &p_sim_py, &b_p_sim_py);
-  fChain->SetBranchAddress("p_sim_pz", &p_sim_pz, &b_p_sim_pz);
-  fChain->SetBranchAddress("p_sim_vertexx", &p_sim_vertexx, &b_p_sim_vertexx);
-  fChain->SetBranchAddress("p_sim_vertexy", &p_sim_vertexy, &b_p_sim_vertexy);
-  fChain->SetBranchAddress("p_sim_vertexz", &p_sim_vertexz, &b_p_sim_vertexz);
+    fChain->SetBranchAddress("p_sim_corrflag", &p_sim_corrflag, &b_p_sim_corrflag);
+    fChain->SetBranchAddress("p_sim_geninfo", &p_sim_geninfo, &b_p_sim_geninfo);
+    fChain->SetBranchAddress("p_sim_geninfo1", &p_sim_geninfo1, &b_p_sim_geninfo1);
+    fChain->SetBranchAddress("p_sim_geninfo2", &p_sim_geninfo2, &b_p_sim_geninfo2);
+    fChain->SetBranchAddress("p_sim_genweight", &p_sim_genweight, &b_p_sim_genweight);
+    fChain->SetBranchAddress("p_sim_id", &p_sim_id, &b_p_sim_id);
+    fChain->SetBranchAddress("p_sim_iscommon", &p_sim_iscommon, &b_p_sim_iscommon);
+    fChain->SetBranchAddress("p_sim_mediumid", &p_sim_mediumid, &b_p_sim_mediumid);
+    fChain->SetBranchAddress("p_sim_p", &p_sim_p, &b_p_sim_p);
+    fChain->SetBranchAddress("p_sim_parentid", &p_sim_parentid, &b_p_sim_parentid);
+    fChain->SetBranchAddress("p_sim_primaryflag", &p_sim_primaryflag, &b_p_sim_primaryflag);
+    fChain->SetBranchAddress("p_sim_processid", &p_sim_processid, &b_p_sim_processid);
+    fChain->SetBranchAddress("p_sim_px", &p_sim_px, &b_p_sim_px);
+    fChain->SetBranchAddress("p_sim_py", &p_sim_py, &b_p_sim_py);
+    fChain->SetBranchAddress("p_sim_pz", &p_sim_pz, &b_p_sim_pz);
+    fChain->SetBranchAddress("p_sim_vertexx", &p_sim_vertexx, &b_p_sim_vertexx);
+    fChain->SetBranchAddress("p_sim_vertexy", &p_sim_vertexy, &b_p_sim_vertexy);
+    fChain->SetBranchAddress("p_sim_vertexz", &p_sim_vertexz, &b_p_sim_vertexz);
   */  
-fChain->SetBranchAddress("p_system", &p_system, &b_p_system);
+  fChain->SetBranchAddress("p_system", &p_system, &b_p_system);
   fChain->SetBranchAddress("p_theta", &p_theta, &b_p_theta);
   fChain->SetBranchAddress("p_tof_exp", &p_tof_exp, &b_p_tof_exp);
   fChain->SetBranchAddress("p_tof_mom", &p_tof_mom, &b_p_tof_mom);
@@ -697,26 +751,26 @@ fChain->SetBranchAddress("p_system", &p_system, &b_p_system);
   fChain->SetBranchAddress("pim1_shw_sum1", &pim1_shw_sum1, &b_pim1_shw_sum1);
   fChain->SetBranchAddress("pim1_shw_sum2", &pim1_shw_sum2, &b_pim1_shw_sum2);
   /*
-  fChain->SetBranchAddress("pim1_sim_corrflag", &pim1_sim_corrflag, &b_pim1_sim_corrflag);
-  fChain->SetBranchAddress("pim1_sim_geninfo", &pim1_sim_geninfo, &b_pim1_sim_geninfo);
-  fChain->SetBranchAddress("pim1_sim_geninfo1", &pim1_sim_geninfo1, &b_pim1_sim_geninfo1);
-  fChain->SetBranchAddress("pim1_sim_geninfo2", &pim1_sim_geninfo2, &b_pim1_sim_geninfo2);
-  fChain->SetBranchAddress("pim1_sim_genweight", &pim1_sim_genweight, &b_pim1_sim_genweight);
-  fChain->SetBranchAddress("pim1_sim_id", &pim1_sim_id, &b_pim1_sim_id);
-  fChain->SetBranchAddress("pim1_sim_iscommon", &pim1_sim_iscommon, &b_pim1_sim_iscommon);
-  fChain->SetBranchAddress("pim1_sim_mediumid", &pim1_sim_mediumid, &b_pim1_sim_mediumid);
-  fChain->SetBranchAddress("pim1_sim_p", &pim1_sim_p, &b_pim1_sim_p);
-  fChain->SetBranchAddress("pim1_sim_parentid", &pim1_sim_parentid, &b_pim1_sim_parentid);
-  fChain->SetBranchAddress("pim1_sim_primaryflag", &pim1_sim_primaryflag, &b_pim1_sim_primaryflag);
-  fChain->SetBranchAddress("pim1_sim_processid", &pim1_sim_processid, &b_pim1_sim_processid);
-  fChain->SetBranchAddress("pim1_sim_px", &pim1_sim_px, &b_pim1_sim_px);
-  fChain->SetBranchAddress("pim1_sim_py", &pim1_sim_py, &b_pim1_sim_py);
-  fChain->SetBranchAddress("pim1_sim_pz", &pim1_sim_pz, &b_pim1_sim_pz);
-  fChain->SetBranchAddress("pim1_sim_vertexx", &pim1_sim_vertexx, &b_pim1_sim_vertexx);
-  fChain->SetBranchAddress("pim1_sim_vertexy", &pim1_sim_vertexy, &b_pim1_sim_vertexy);
-  fChain->SetBranchAddress("pim1_sim_vertexz", &pim1_sim_vertexz, &b_pim1_sim_vertexz);
+    fChain->SetBranchAddress("pim1_sim_corrflag", &pim1_sim_corrflag, &b_pim1_sim_corrflag);
+    fChain->SetBranchAddress("pim1_sim_geninfo", &pim1_sim_geninfo, &b_pim1_sim_geninfo);
+    fChain->SetBranchAddress("pim1_sim_geninfo1", &pim1_sim_geninfo1, &b_pim1_sim_geninfo1);
+    fChain->SetBranchAddress("pim1_sim_geninfo2", &pim1_sim_geninfo2, &b_pim1_sim_geninfo2);
+    fChain->SetBranchAddress("pim1_sim_genweight", &pim1_sim_genweight, &b_pim1_sim_genweight);
+    fChain->SetBranchAddress("pim1_sim_id", &pim1_sim_id, &b_pim1_sim_id);
+    fChain->SetBranchAddress("pim1_sim_iscommon", &pim1_sim_iscommon, &b_pim1_sim_iscommon);
+    fChain->SetBranchAddress("pim1_sim_mediumid", &pim1_sim_mediumid, &b_pim1_sim_mediumid);
+    fChain->SetBranchAddress("pim1_sim_p", &pim1_sim_p, &b_pim1_sim_p);
+    fChain->SetBranchAddress("pim1_sim_parentid", &pim1_sim_parentid, &b_pim1_sim_parentid);
+    fChain->SetBranchAddress("pim1_sim_primaryflag", &pim1_sim_primaryflag, &b_pim1_sim_primaryflag);
+    fChain->SetBranchAddress("pim1_sim_processid", &pim1_sim_processid, &b_pim1_sim_processid);
+    fChain->SetBranchAddress("pim1_sim_px", &pim1_sim_px, &b_pim1_sim_px);
+    fChain->SetBranchAddress("pim1_sim_py", &pim1_sim_py, &b_pim1_sim_py);
+    fChain->SetBranchAddress("pim1_sim_pz", &pim1_sim_pz, &b_pim1_sim_pz);
+    fChain->SetBranchAddress("pim1_sim_vertexx", &pim1_sim_vertexx, &b_pim1_sim_vertexx);
+    fChain->SetBranchAddress("pim1_sim_vertexy", &pim1_sim_vertexy, &b_pim1_sim_vertexy);
+    fChain->SetBranchAddress("pim1_sim_vertexz", &pim1_sim_vertexz, &b_pim1_sim_vertexz);
   */  
-fChain->SetBranchAddress("pim1_system", &pim1_system, &b_pim1_system);
+  fChain->SetBranchAddress("pim1_system", &pim1_system, &b_pim1_system);
   fChain->SetBranchAddress("pim1_theta", &pim1_theta, &b_pim1_theta);
   fChain->SetBranchAddress("pim1_tof_exp", &pim1_tof_exp, &b_pim1_tof_exp);
   fChain->SetBranchAddress("pim1_tof_mom", &pim1_tof_mom, &b_pim1_tof_mom);
@@ -751,26 +805,26 @@ fChain->SetBranchAddress("pim1_system", &pim1_system, &b_pim1_system);
   fChain->SetBranchAddress("pim2_shw_sum1", &pim2_shw_sum1, &b_pim2_shw_sum1);
   fChain->SetBranchAddress("pim2_shw_sum2", &pim2_shw_sum2, &b_pim2_shw_sum2);
   /*
-  fChain->SetBranchAddress("pim2_sim_corrflag", &pim2_sim_corrflag, &b_pim2_sim_corrflag);
-  fChain->SetBranchAddress("pim2_sim_geninfo", &pim2_sim_geninfo, &b_pim2_sim_geninfo);
-  fChain->SetBranchAddress("pim2_sim_geninfo1", &pim2_sim_geninfo1, &b_pim2_sim_geninfo1);
-  fChain->SetBranchAddress("pim2_sim_geninfo2", &pim2_sim_geninfo2, &b_pim2_sim_geninfo2);
-  fChain->SetBranchAddress("pim2_sim_genweight", &pim2_sim_genweight, &b_pim2_sim_genweight);
-  fChain->SetBranchAddress("pim2_sim_id", &pim2_sim_id, &b_pim2_sim_id);
-  fChain->SetBranchAddress("pim2_sim_iscommon", &pim2_sim_iscommon, &b_pim2_sim_iscommon);
-  fChain->SetBranchAddress("pim2_sim_mediumid", &pim2_sim_mediumid, &b_pim2_sim_mediumid);
-  fChain->SetBranchAddress("pim2_sim_p", &pim2_sim_p, &b_pim2_sim_p);
-  fChain->SetBranchAddress("pim2_sim_parentid", &pim2_sim_parentid, &b_pim2_sim_parentid);
-  fChain->SetBranchAddress("pim2_sim_primaryflag", &pim2_sim_primaryflag, &b_pim2_sim_primaryflag);
-  fChain->SetBranchAddress("pim2_sim_processid", &pim2_sim_processid, &b_pim2_sim_processid);
-  fChain->SetBranchAddress("pim2_sim_px", &pim2_sim_px, &b_pim2_sim_px);
-  fChain->SetBranchAddress("pim2_sim_py", &pim2_sim_py, &b_pim2_sim_py);
-  fChain->SetBranchAddress("pim2_sim_pz", &pim2_sim_pz, &b_pim2_sim_pz);
-  fChain->SetBranchAddress("pim2_sim_vertexx", &pim2_sim_vertexx, &b_pim2_sim_vertexx);
-  fChain->SetBranchAddress("pim2_sim_vertexy", &pim2_sim_vertexy, &b_pim2_sim_vertexy);
-  fChain->SetBranchAddress("pim2_sim_vertexz", &pim2_sim_vertexz, &b_pim2_sim_vertexz);
+    fChain->SetBranchAddress("pim2_sim_corrflag", &pim2_sim_corrflag, &b_pim2_sim_corrflag);
+    fChain->SetBranchAddress("pim2_sim_geninfo", &pim2_sim_geninfo, &b_pim2_sim_geninfo);
+    fChain->SetBranchAddress("pim2_sim_geninfo1", &pim2_sim_geninfo1, &b_pim2_sim_geninfo1);
+    fChain->SetBranchAddress("pim2_sim_geninfo2", &pim2_sim_geninfo2, &b_pim2_sim_geninfo2);
+    fChain->SetBranchAddress("pim2_sim_genweight", &pim2_sim_genweight, &b_pim2_sim_genweight);
+    fChain->SetBranchAddress("pim2_sim_id", &pim2_sim_id, &b_pim2_sim_id);
+    fChain->SetBranchAddress("pim2_sim_iscommon", &pim2_sim_iscommon, &b_pim2_sim_iscommon);
+    fChain->SetBranchAddress("pim2_sim_mediumid", &pim2_sim_mediumid, &b_pim2_sim_mediumid);
+    fChain->SetBranchAddress("pim2_sim_p", &pim2_sim_p, &b_pim2_sim_p);
+    fChain->SetBranchAddress("pim2_sim_parentid", &pim2_sim_parentid, &b_pim2_sim_parentid);
+    fChain->SetBranchAddress("pim2_sim_primaryflag", &pim2_sim_primaryflag, &b_pim2_sim_primaryflag);
+    fChain->SetBranchAddress("pim2_sim_processid", &pim2_sim_processid, &b_pim2_sim_processid);
+    fChain->SetBranchAddress("pim2_sim_px", &pim2_sim_px, &b_pim2_sim_px);
+    fChain->SetBranchAddress("pim2_sim_py", &pim2_sim_py, &b_pim2_sim_py);
+    fChain->SetBranchAddress("pim2_sim_pz", &pim2_sim_pz, &b_pim2_sim_pz);
+    fChain->SetBranchAddress("pim2_sim_vertexx", &pim2_sim_vertexx, &b_pim2_sim_vertexx);
+    fChain->SetBranchAddress("pim2_sim_vertexy", &pim2_sim_vertexy, &b_pim2_sim_vertexy);
+    fChain->SetBranchAddress("pim2_sim_vertexz", &pim2_sim_vertexz, &b_pim2_sim_vertexz);
   */  
-fChain->SetBranchAddress("pim2_system", &pim2_system, &b_pim2_system);
+  fChain->SetBranchAddress("pim2_system", &pim2_system, &b_pim2_system);
   fChain->SetBranchAddress("pim2_theta", &pim2_theta, &b_pim2_theta);
   fChain->SetBranchAddress("pim2_tof_exp", &pim2_tof_exp, &b_pim2_tof_exp);
   fChain->SetBranchAddress("pim2_tof_mom", &pim2_tof_mom, &b_pim2_tof_mom);
@@ -805,26 +859,26 @@ fChain->SetBranchAddress("pim2_system", &pim2_system, &b_pim2_system);
   fChain->SetBranchAddress("pip_shw_sum1", &pip_shw_sum1, &b_pip_shw_sum1);
   fChain->SetBranchAddress("pip_shw_sum2", &pip_shw_sum2, &b_pip_shw_sum2);
   /*
-  fChain->SetBranchAddress("pip_sim_corrflag", &pip_sim_corrflag, &b_pip_sim_corrflag);
-  fChain->SetBranchAddress("pip_sim_geninfo", &pip_sim_geninfo, &b_pip_sim_geninfo);
-  fChain->SetBranchAddress("pip_sim_geninfo1", &pip_sim_geninfo1, &b_pip_sim_geninfo1);
-  fChain->SetBranchAddress("pip_sim_geninfo2", &pip_sim_geninfo2, &b_pip_sim_geninfo2);
-  fChain->SetBranchAddress("pip_sim_genweight", &pip_sim_genweight, &b_pip_sim_genweight);
-  fChain->SetBranchAddress("pip_sim_id", &pip_sim_id, &b_pip_sim_id);
-  fChain->SetBranchAddress("pip_sim_iscommon", &pip_sim_iscommon, &b_pip_sim_iscommon);
-  fChain->SetBranchAddress("pip_sim_mediumid", &pip_sim_mediumid, &b_pip_sim_mediumid);
-  fChain->SetBranchAddress("pip_sim_p", &pip_sim_p, &b_pip_sim_p);
-  fChain->SetBranchAddress("pip_sim_parentid", &pip_sim_parentid, &b_pip_sim_parentid);
-  fChain->SetBranchAddress("pip_sim_primaryflag", &pip_sim_primaryflag, &b_pip_sim_primaryflag);
-  fChain->SetBranchAddress("pip_sim_processid", &pip_sim_processid, &b_pip_sim_processid);
-  fChain->SetBranchAddress("pip_sim_px", &pip_sim_px, &b_pip_sim_px);
-  fChain->SetBranchAddress("pip_sim_py", &pip_sim_py, &b_pip_sim_py);
-  fChain->SetBranchAddress("pip_sim_pz", &pip_sim_pz, &b_pip_sim_pz);
-  fChain->SetBranchAddress("pip_sim_vertexx", &pip_sim_vertexx, &b_pip_sim_vertexx);
-  fChain->SetBranchAddress("pip_sim_vertexy", &pip_sim_vertexy, &b_pip_sim_vertexy);
-  fChain->SetBranchAddress("pip_sim_vertexz", &pip_sim_vertexz, &b_pip_sim_vertexz);
+    fChain->SetBranchAddress("pip_sim_corrflag", &pip_sim_corrflag, &b_pip_sim_corrflag);
+    fChain->SetBranchAddress("pip_sim_geninfo", &pip_sim_geninfo, &b_pip_sim_geninfo);
+    fChain->SetBranchAddress("pip_sim_geninfo1", &pip_sim_geninfo1, &b_pip_sim_geninfo1);
+    fChain->SetBranchAddress("pip_sim_geninfo2", &pip_sim_geninfo2, &b_pip_sim_geninfo2);
+    fChain->SetBranchAddress("pip_sim_genweight", &pip_sim_genweight, &b_pip_sim_genweight);
+    fChain->SetBranchAddress("pip_sim_id", &pip_sim_id, &b_pip_sim_id);
+    fChain->SetBranchAddress("pip_sim_iscommon", &pip_sim_iscommon, &b_pip_sim_iscommon);
+    fChain->SetBranchAddress("pip_sim_mediumid", &pip_sim_mediumid, &b_pip_sim_mediumid);
+    fChain->SetBranchAddress("pip_sim_p", &pip_sim_p, &b_pip_sim_p);
+    fChain->SetBranchAddress("pip_sim_parentid", &pip_sim_parentid, &b_pip_sim_parentid);
+    fChain->SetBranchAddress("pip_sim_primaryflag", &pip_sim_primaryflag, &b_pip_sim_primaryflag);
+    fChain->SetBranchAddress("pip_sim_processid", &pip_sim_processid, &b_pip_sim_processid);
+    fChain->SetBranchAddress("pip_sim_px", &pip_sim_px, &b_pip_sim_px);
+    fChain->SetBranchAddress("pip_sim_py", &pip_sim_py, &b_pip_sim_py);
+    fChain->SetBranchAddress("pip_sim_pz", &pip_sim_pz, &b_pip_sim_pz);
+    fChain->SetBranchAddress("pip_sim_vertexx", &pip_sim_vertexx, &b_pip_sim_vertexx);
+    fChain->SetBranchAddress("pip_sim_vertexy", &pip_sim_vertexy, &b_pip_sim_vertexy);
+    fChain->SetBranchAddress("pip_sim_vertexz", &pip_sim_vertexz, &b_pip_sim_vertexz);
   */  
-fChain->SetBranchAddress("pip_system", &pip_system, &b_pip_system);
+  fChain->SetBranchAddress("pip_system", &pip_system, &b_pip_system);
   fChain->SetBranchAddress("pip_theta", &pip_theta, &b_pip_theta);
   fChain->SetBranchAddress("pip_tof_exp", &pip_tof_exp, &b_pip_tof_exp);
   fChain->SetBranchAddress("pip_tof_mom", &pip_tof_mom, &b_pip_tof_mom);

@@ -8,7 +8,8 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include "hntuple.h"
-
+//#include <hparticletool.h>
+#include "/lustre/nyx/hades/user/rlalik/fwdet/install/hydra2-fwdet/include/hparticletool.h"
 #include "TMVA/Reader.h"
 
 using namespace std;
@@ -117,8 +118,8 @@ void PPimPipPim::Loop()
 	      event_mult++;
 	    }
 
-	  //double F = 1.006;
-	  double F=1;
+	  double F = 1.006;
+	  //double F=1;
 	  TVector3 v1, v2, v3, v4, v5;
 	  v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
 	  v3.SetXYZ(F*pim1_p*sin(D2R*pim1_theta)*cos(D2R*pim1_phi),F*pim1_p*sin(D2R*pim1_theta)*sin(D2R*pim1_phi),F*pim1_p*cos(D2R*pim1_theta));
@@ -129,7 +130,25 @@ void PPimPipPim::Loop()
 	  pim1->SetVectM( v3, 139.57018 );
 	  pip->SetVectM( v4, 139.57018 );
 	  pim2->SetVectM( v5, 139.57018 );
+	  /*
+	  cout<<"first part"<<endl;
+	  HParticleTool p_tool;  
+	  cout<<"p_phi: "<<p_phi<<endl;
+	  cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
+	  cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
+	  cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
+	  cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
+	  cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
 
+	  cout<<"p_theta: "<<p_theta<<endl;
+	  cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
+	  cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
+	  //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
+	  //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
+	  //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+	  v2.Print();
+	  cout<<endl;
+	  */
 	  *gammappip = *p + *pip;
 	  *gammappim1 = *p + *pim1;
 	  *gammappim2 = *p + *pim2;
@@ -153,10 +172,10 @@ void PPimPipPim::Loop()
 	  Float_t pim1_mass = pim1_p*pim1_p * (  1. / (pim1_beta*pim1_beta_new)  - 1. ) ;
 	  Float_t pim2_mass = pim2_p*pim2_p * (  1. / (pim2_beta*pim2_beta_new)  - 1. ) ;
 
-	  TVector3 ver_p_pim1=vertex(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  TVector3 ver_p_pim2=vertex(p_r,p_z,v2,pim2_r,pim2_z,v5);
-	  TVector3 ver_pip_pim1=vertex(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
-	  TVector3 ver_pip_pim2=vertex(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
+	  TVector3 ver_p_pim1=vertex(p_r,p_z,*p,pim1_r,pim1_z,*pim1);
+	  TVector3 ver_p_pim2=vertex(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
+	  TVector3 ver_pip_pim1=vertex(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
+	  TVector3 ver_pip_pim2=vertex(pip_r,pip_z,*pip,pim2_r,pim2_z,*pim2);
 
 	  TVector3 ver_to_ver_1=ver_p_pim1-ver_pip_pim2;
 	  TVector3 ver_to_ver_2=ver_p_pim2-ver_pip_pim1;
@@ -171,14 +190,14 @@ void PPimPipPim::Loop()
 	  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
 	  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
       
-	  Float_t dist_p_pim1=trackDistance(p_r,p_z,v2,pim1_r,pim1_z,v3);
-	  Float_t dist_p_pim2=trackDistance(p_r,p_z,v2,pim2_r,pim2_z,v5);
-	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,v4,pim1_r,pim1_z,v3);
-	  Float_t dist_pip_pim2=trackDistance(pip_r,pip_z,v4,pim2_r,pim2_z,v5);
-	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,v4,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
-	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,v5,ver_pip_pim1.Z(),getR(ver_pip_pim1),gammappim1->Vect());
-	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,v3,ver_pip_pim2.Z(),getR(ver_pip_pim2),gammappim2->Vect());
+	  Float_t dist_p_pim1=trackDistance(p_r,p_z,*p,pim1_r,pim1_z,*pim1);
+	  Float_t dist_p_pim2=trackDistance(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
+	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
+	  Float_t dist_pip_pim2=trackDistance(pip_r,pip_z,*pip,pim2_r,pim2_z,*pim2);
+	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
 	  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
 	  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       
@@ -277,7 +296,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   v3.SetXYZ(F*s.pim1_p*sin(D2R*s.pim1_theta)*cos(D2R*s.pim1_phi),F*s.pim1_p*sin(D2R*s.pim1_theta)*sin(D2R*s.pim1_phi),F*s.pim1_p*cos(D2R*s.pim1_theta));
   v4.SetXYZ(F*s.pip_p*sin(D2R*s.pip_theta)*cos(D2R*s.pip_phi),F*s.pip_p*sin(D2R*s.pip_theta)*sin(D2R*s.pip_phi),F*s.pip_p*cos(D2R*s.pip_theta));
   v5.SetXYZ(F*s.pim2_p*sin(D2R*s.pim2_theta)*cos(D2R*s.pim2_phi),F*s.pim2_p*sin(D2R*s.pim2_theta)*sin(D2R*s.pim2_phi),F*s.pim2_p*cos(D2R*s.pim2_theta));
-
+  /*
+  TVector3 vtemp;
+  vtemp.SetXYZ(F*s.p_p*sin(D2R*90)*cos(D2R*45),F*s.p_p*sin(D2R*90)*sin(D2R*45),F*s.p_p*cos(D2R*90));
+  vtemp.Print();
+  */  
   /*TVector3 r1, r2, r3,r4;
     r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
     r2.SetXYZ(sin(D2R*pim1_theta_rich)*cos(D2R*pim1_phi_rich),sin(D2R*pim1_theta_rich)*sin(D2R*pim1_phi_rich),cos(D2R*pim1_theta_rich));
@@ -288,7 +311,25 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   pim1->SetVectM( v3, 139.57018 );
   pip->SetVectM( v4, 139.57018 );
   pim2->SetVectM( v5, 139.57018 );
+  /*
+  cout<<"save part"<<endl;
+  HParticleTool p_tool;  
+  cout<<"p_phi: "<<s.p_phi<<endl;
+  cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
+  cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
+  cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
+  cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
+  cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
 
+  cout<<"p_theta: "<<s.p_theta<<endl;
+  cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
+  cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
+  //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
+  //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
+  //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+  v2.Print();
+  cout<<endl;
+  */
   *gammappip = *p + *pip;
   *gammappim1 = *p + *pim1;
   *gammappim2 = *p + *pim2;
@@ -317,10 +358,10 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t pim2_mass = s.pim2_p*s.pim2_p * (  1. / (s.pim2_beta*s.pim2_beta_new)  - 1. ) ;
 
   TVector3 eVert(s.eVert_x,s.eVert_y,s.eVert_z);
-  TVector3 ver_p_pim1=vertex(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
-  TVector3 ver_p_pim2=vertex(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
-  TVector3 ver_pip_pim1=vertex(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
-  TVector3 ver_pip_pim2=vertex(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
+  TVector3 ver_p_pim1=vertex(s.p_r,s.p_z,*p,s.pim1_r,s.pim1_z,*pim1);
+  TVector3 ver_p_pim2=vertex(s.p_r,s.p_z,*p,s.pim2_r,s.pim2_z,*pim2);
+  TVector3 ver_pip_pim1=vertex(s.pip_r,s.pip_z,*pip,s.pim1_r,s.pim1_z,*pim1);
+  TVector3 ver_pip_pim2=vertex(s.pip_r,s.pip_z,*pip,s.pim2_r,s.pim2_z,*pim2);
   
   
   TVector3 ver_to_ver_1=ver_p_pim1-eVert;//ver_pip_pim2;
@@ -335,15 +376,22 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
                   
   Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
   Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
-      
-  Float_t dist_p_pim1=trackDistance(s.p_r,s.p_z,v2,s.pim1_r,s.pim1_z,v3);
-  Float_t dist_p_pim2=trackDistance(s.p_r,s.p_z,v2,s.pim2_r,s.pim2_z,v5);
-  Float_t dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,v4,s.pim1_r,s.pim1_z,v3);
-  Float_t dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,v4,s.pim2_r,s.pim2_z,v5);
-  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,v4,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
-  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,v5,ver_p_pim1.Z(),getR(ver_p_pim1),gammappim1->Vect());
-  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,v3,ver_p_pim2.Z(),getR(ver_p_pim2),gammappim2->Vect());
+
+  /*
+  cout<<"vectors to calc"<<endl;
+  cout<<"p_z: "<<p_z<<endl;
+  cout<<"p_r: "<<p_r<<endl;
+  cout<<"v2: "; v2.Print(); cout<<endl;
+  */
+  
+  Float_t dist_p_pim1=trackDistance(s.p_r,s.p_z,*p,s.pim1_r,s.pim1_z,*pim1);
+  Float_t dist_p_pim2=trackDistance(s.p_r,s.p_z,*p,s.pim2_r,s.pim2_z,*pim2);
+  Float_t dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,*pip,s.pim1_r,s.pim1_z,*pim1);
+  Float_t dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,*pip,s.pim2_r,s.pim2_z,*pim2);
+  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
+  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
   Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
   Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
 
@@ -434,6 +482,12 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 		  && dist_pim_eVert > 15
 		  );
 
+  /*if(p_sim_parentid==18 && pim_sim_parentid==18)
+    {
+      ver_p_pim.Print();
+      cout<<s.p_sim_vertexx<<" "<<s.p_sim_vertexy<<" "<<s.p_sim_vertexz<<endl<<endl;
+    }
+  */
   //TMVA part
   /*
     Float_t eVert_xx=s.eVert_x;

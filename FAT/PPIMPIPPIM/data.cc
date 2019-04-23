@@ -167,31 +167,56 @@ namespace PATData
     return (-40.0-(0.0583*y)+(0.000208333*y*y));
   }
   
-  double trackDistance(double r1, double z1, TVector3 v1, double r2, double z2, TVector3 v2)
+  double trackDistance(double r1, double z1, TLorentzVector v1, double r2, double z2, TLorentzVector v2)
   {
     double dist;
     HGeomVector base_1, base_2, dir_1, dir_2;
     HParticleTool p_tool;
+    double phi1, phi2;
 
-    p_tool.calcSegVector(z1,r1,v1.Phi(),v1.Theta(),base_1,dir_1);
-    p_tool.calcSegVector(z2,r2,v2.Phi(),v2.Theta(),base_2,dir_2);
+    phi1=p_tool.getLabPhiDeg(v1)*D2R;
+    phi2=p_tool.getLabPhiDeg(v2)*D2R;
+    //HGeomVector temp1(v1.X(),v1.Y(),v1.Z());
+    //HGeomVector temp2(v2.X(),v2.Y(),v2.Z());
+    //     v1.Print();
+    //    v2.Print();
+    //r1=TMath::Abs(r1);
+    //r2=TMath::Abs(r2);
+    
+        
+    p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
 
     dist=p_tool.calculateMinimumDistance(base_1,dir_1,base_2,dir_2);
 
     return dist;
   }
 
-  TVector3 vertex(double z1,double r1,TVector3 vec1, double z2,double r2,TVector3 vec2)
+  TVector3 vertex(double z1,double r1,TLorentzVector v1, double z2,double r2,TLorentzVector v2)
   {
     TVector3 out;
     HGeomVector ver;
     HGeomVector base_1, base_2, dir_1, dir_2;
     HParticleTool p_tool;
+    double phi1, phi2;
+    //r1=TMath::Abs(r1);
+    //r2=TMath::Abs(r2);
 
-    p_tool.calcSegVector(z1,r1,vec1.Phi(),vec1.Theta(),base_1,dir_1);
-    p_tool.calcSegVector(z2,r2,vec2.Phi(),vec2.Theta(),base_2,dir_2);
+    phi1=p_tool.getLabPhiDeg(v1)*D2R;
+    phi2=p_tool.getLabPhiDeg(v2)*D2R;
+    
+    p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
+
+    //cout <<z1<<" "<<r1<<" "<<phi1<<" "<<v1.Theta()<<endl;
+    //cout<<base_1.getX()<<" "<<base_1.getY()<<" "<<base_1.getZ()<<endl;
+    //cout<<dir_1.getX()<<" "<<dir_1.getY()<<" "<<dir_1.getZ()<<endl;
+    //cout<<endl<<endl;
+
     ver=p_tool.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
-    out.SetXYZ(ver.X(),ver.Y(),ver.Z());
+    //cout<<"HGeomVector: "<<ver.getX()<<" " <<ver.getY()<<" "<<ver.getZ()<<endl;
+    out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
+    //cout<<"out vector"; out.Print(); cout<<endl;
     return out; 
   }
   
@@ -214,7 +239,9 @@ namespace PATData
     //cout<<res.X()<<" "<<res.Z()<<endl;
     //res1.SetXYZ(res.X(),res.Y(),res.Z());
     return result;
+
   }
+
 
 }
 
