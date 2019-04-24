@@ -128,7 +128,7 @@ int main(Int_t argc, Char_t **argv)
     //myHyps.add("HpHp", eHadronPos,eHadronPos);
     //myHyps.add("HpHm", eHadronPos,eHadronNeg);
     myHyps.add("HpHm", eHadronPos,eHadronNeg);
-    myHyps.add("HpHmHp", eHadronPos,eHadronPos,eHadronPos);
+    myHyps.add("HpHmHp", eHadronPos,eHadronNeg,eHadronPos);
     myHyps.add("HpHmHpHm", eHadronPos,eHadronNeg,eHadronPos,eHadronNeg);
 #endif
     //***************************************************

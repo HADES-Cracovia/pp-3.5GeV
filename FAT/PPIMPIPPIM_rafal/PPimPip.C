@@ -56,7 +56,7 @@ void PPimPip::Loop()
       ++licznik;
       //      if ((licznik % 100000)==0) cout << "Events: " << licznik << endl;
 
-      if(jentry%10000==0 && isBest!=-1)
+      if(jentry%1000==0 && isBest!=-1)
 	{
 	  cout << "netry no. "<< jentry<<" from "<<nentries;
 	  //cout<<" isBest: "<< isBest<<" event: "<<event;
