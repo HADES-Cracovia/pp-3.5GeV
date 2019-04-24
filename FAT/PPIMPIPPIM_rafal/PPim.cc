@@ -36,7 +36,8 @@ void PPim::Loop()
       if(isBest!=1)
 	continue;
 
-      double F = 1.006;
+      //double F = 1.006;
+      double F=1.0;
       TVector3 v1, v2, v3;
       v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
       v3.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
@@ -131,61 +132,63 @@ void PPim::Loop()
 	NoHadronPI = 1;
       */
 
-      (*n_ppim)["isBest"]=isBest;
-      //(*n_ppim)["isBest_new"]=isBest_new;
-      (*n_ppim)["event"]=event;
-      (*n_ppim)["hneg_mult"]=hneg_mult;
-      (*n_ppim)["hpos_mult"]=hpos_mult;
-      (*n_ppim)["eVert_x"]=eVert_x;
-      (*n_ppim)["eVert_y"]=eVert_y;
-      (*n_ppim)["eVert_z"]=eVert_z;
-      (*n_ppim)["totalmult"]=totalmult;
-      (*n_ppim)["trigdownscaleflag"]=trigdownscaleflag;
-      (*n_ppim)["trigdownscale"]=trigdownscale;
-      //(*n_ppim)["event_mult"]=event_mult;
-      //(*n_ppim)["hypothesis"]=pim_no;
-      //(*n_ppim)["hypothesis_quality"]=quality;
+
+      (*n_ppimpip)["isBest"]=isBest;
+      //(*n_ppimpip)["isBest_new"]=isBest_new;
+      (*n_ppimpip)["event"]=event;
+      (*n_ppimpip)["hneg_mult"]=hneg_mult;
+      (*n_ppimpip)["hpos_mult"]=hpos_mult;
+      (*n_ppimpip)["eVert_x"]=eVert_x;
+      (*n_ppimpip)["eVert_y"]=eVert_y;
+      (*n_ppimpip)["eVert_z"]=eVert_z;
+      (*n_ppimpip)["totalmult"]=totalmult;
+      (*n_ppimpip)["trigdownscaleflag"]=trigdownscaleflag;
+      (*n_ppimpip)["trigdownscale"]=trigdownscale;
+      //(*n_ppimpip)["event_mult"]=event_mult;
+      //(*n_ppimpip)["hypothesis"]=pim_no;
+      //(*n_ppimpip)["hypothesis_quality"]=quality;
   
-      (*n_ppim)["p_p"]=p_p;
-      (*n_ppim)["p_theta"] = p_theta;
-      (*n_ppim)["p_phi"] = p_phi;
-      (*n_ppim)["p_beta"] = p_beta_new;
-      (*n_ppim)["p_m"] = p_mass;
-      (*n_ppim)["p_dedx"]=p_dedx_mdc;
-      (*n_ppim)["p_q"]=p_q;
+      (*n_ppimpip)["p_p"]=p_p;
+      (*n_ppimpip)["p_theta"] = p_theta;
+      (*n_ppimpip)["p_phi"] = p_phi;
+      (*n_ppimpip)["p_beta"] = p_beta_new;
+      (*n_ppimpip)["p_m"] = p_mass;
+      (*n_ppimpip)["p_dedx"]=p_dedx_mdc;
+      (*n_ppimpip)["p_q"]=p_q;
 	  
-      (*n_ppim)["p_sim_p"]=p_sim_p;
-      (*n_ppim)["p_sim_id"]=p_sim_id;
-      (*n_ppim)["p_sim_parentid"]=p_sim_parentid;
-      (*n_ppim)["p_sim_vertex_x"]=p_sim_vertexx;
-      (*n_ppim)["p_sim_vertex_y"]=p_sim_vertexy;
-      (*n_ppim)["p_sim_vertex_z"]=p_sim_vertexz;
+      (*n_ppimpip)["p_sim_p"]=p_sim_p;
+      (*n_ppimpip)["p_sim_iscommon"]=p_sim_iscommon;
+      (*n_ppimpip)["p_sim_id"]=p_sim_id;
+      (*n_ppimpip)["p_sim_parentid"]=p_sim_parentid;
+      (*n_ppimpip)["p_sim_vertex_x"]=p_sim_vertexx;
+      (*n_ppimpip)["p_sim_vertex_y"]=p_sim_vertexy;
+      (*n_ppimpip)["p_sim_vertex_z"]=p_sim_vertexz;
 	  
-      (*n_ppim)["pim_p"]=pim_p;
-      (*n_ppim)["pim_theta"] = pim_theta;
-      (*n_ppim)["pim_phi"] = pim_phi;
-      (*n_ppim)["pim_beta"] = pim_beta_new;
-      (*n_ppim)["pim_m"] = pi_mass;
-      (*n_ppim)["pim_dedx"]=pim_dedx_mdc;
-      (*n_ppim)["pim_q"]=pim_q;
+      (*n_ppimpip)["pim_p"]=pim_p;
+      (*n_ppimpip)["pim_theta"] = pim_theta;
+      (*n_ppimpip)["pim_phi"] = pim_phi;
+      (*n_ppimpip)["pim_beta"] = pim_beta_new;
+      (*n_ppimpip)["pim_m"] = pi_mass;
+      (*n_ppimpip)["pim_dedx"]=pim_dedx_mdc;
+      (*n_ppimpip)["pim_q"]=pim_q;
 	  
-      (*n_ppim)["pim_sim_p"]=pim_sim_p;
-      (*n_ppim)["pim_sim_id"]=pim_sim_id;
-      (*n_ppim)["pim_sim_parentid"]=pim_sim_parentid;
-      (*n_ppim)["pim_sim_vertex_x"]=pim_sim_vertexx;
-      (*n_ppim)["pim_sim_vertex_y"]=pim_sim_vertexy;
-      (*n_ppim)["pim_sim_vertex_z"]=pim_sim_vertexz;
+      (*n_ppimpip)["pim_sim_p"]=pim_sim_p;
+      (*n_ppimpip)["pim_sim_iscommon"]=pim_sim_iscommon;
+      (*n_ppimpip)["pim_sim_id"]=pim_sim_id;
+      (*n_ppimpip)["pim_sim_parentid"]=pim_sim_parentid;
+      (*n_ppimpip)["pim_sim_vertex_x"]=pim_sim_vertexx;
+      (*n_ppimpip)["pim_sim_vertex_y"]=pim_sim_vertexy;
+      (*n_ppimpip)["pim_sim_vertex_z"]=pim_sim_vertexz;
 	  	  
   
-      (*n_ppim)["m_inv_p_pim"] = m_inv_ppim;
+      (*n_ppimpip)["m_inv_p_pim"] = m_inv_ppim;
   
-      (*n_ppim)["ver_p_pim_x"]=ver_p_pim.X();
-      (*n_ppim)["ver_p_pim_y"]=ver_p_pim.Y();
-      (*n_ppim)["ver_p_pim_z"]=ver_p_pim.Z();
+      (*n_ppimpip)["ver_p_pim_x"]=ver_p_pim.X();
+      (*n_ppimpip)["ver_p_pim_y"]=ver_p_pim.Y();
+      (*n_ppimpip)["ver_p_pim_z"]=ver_p_pim.Z();
   
-      //  (*n_ppim)["mlp_output"]=mlp_output;
-      //(*n_ppim)["mlp_response"]=mlp_response;
-  
+      //  (*n_ppimpip)["mlp_output"]=mlp_output;
+      //(*n_ppimpip)["mlp_response"]=mlp_response;  
       n_ppim->fill();
     } // end of main loop
 } // eof Loop 
@@ -210,18 +213,18 @@ PPim::PPim(TTree *tree)
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT/FILES/sep08_all/list2/sum2.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PNB/PAT_ppim/FILES/day280/hadron.root/PPim_ID");
     /*
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron00.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron01.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron02.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron03.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron04.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron05.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron06.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron07.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron08.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron09.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron10.root/PPim_ID");
-    chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron00.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron01.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron02.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron03.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron04.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron05.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron06.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron07.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron08.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron09.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron10.root/PPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPim_ID");
     */
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_35_Rafal/FILES/all.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron12.root/PPim_ID");

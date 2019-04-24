@@ -1,4 +1,5 @@
 #include "PPim.h"
+#include "PPimPip.h"
 #include "PPimPipPim.h"
 //#include "EpEp.h"
 //#include "EmEm.h"
@@ -101,9 +102,11 @@ int main()
 
   /************************** control ntuple ***************************/
   n_out = new HNtuple("ppimpippim","ppimpippim");
-  //n_ppim = new HNtuple("ppim","ppim");
+  n_ppim = new HNtuple("ppim","ppim");
+  n_ppimpip = new HNtuple("ppimpip","ppimpip");
   n_out->setFile( outFileData );
-  //n_ppim->setFile( outFileData );
+  n_ppim->setFile( outFileData );
+  n_ppimpip->setFile( outFileData );
   /*********************************************************************/
 
   int beta_min=0;
@@ -191,15 +194,20 @@ int main()
   */
   /**************************** M A I N   P A R T ****************************************/
 
-  //PPim t;
+  PPim t;
   PPimPipPim t2;
-  //cout << "START PPIM!" << endl;
-  //t.Loop();
-  //cout << "STOP PPIM!" << endl;
+  PPimPip t3;
+  cout << "START PPIM!" << endl;
+  t.Loop();
+  cout << "STOP PPIM!" << endl;
 
   cout << "START PPimPipPim!" << endl;
   t2.Loop();
   cout << "STOP PPimPipPim!!" << endl;
+
+  cout << "START PPimPip!" << endl;
+  t3.Loop();
+  cout << "STOP PPimPip!!" << endl;
   
   /*EpEp t_back1;
     t_back1.Loop();
@@ -226,6 +234,12 @@ int main()
     n_ppim->Write();
   else
     cout<<"n_out pointer empty"<<endl;
+
+  if(n_ppimpip!=0)
+    n_ppimpip->Write();
+  else
+    cout<<"n_out pointer empty"<<endl;
+ 
   /*
   p_p_beta->Write();
   pim_p_beta->Write();

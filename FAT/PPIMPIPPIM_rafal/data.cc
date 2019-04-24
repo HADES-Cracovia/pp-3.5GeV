@@ -11,7 +11,7 @@ namespace PATData
 
   TFile         *outFileData;
 
-  HNtuple       *tlo, *n_out, *n_ppim;
+  HNtuple       *tlo, *n_out, *n_ppim, *n_ppimpip;
 
   HFilter       *filter;
   float         EFF, ACC;
