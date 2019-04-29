@@ -426,8 +426,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_ver_to_ver=dist_ver_to_ver_1;
       ver_p_pim=ver_p_pim1;
       ver_pip_pim=ver_pip_pim2;
-      pim_sim_id=s.pim1_sim_id;
-      pim_sim_parentid=s.pim1_sim_parentid;
+      //pim_sim_id=s.pim1_sim_id;
+      //pim_sim_parentid=s.pim1_sim_parentid;
       dist_lambda_eVert=dist_lambda1_eVert;
       dist_lambda_ver_pip_pim=dist_lambda1_ver_pip_pim;
       dist_p_eVert=dist_p1_eVert;
@@ -446,8 +446,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_ver_to_ver=dist_ver_to_ver_2;
       ver_p_pim=ver_p_pim2;
       ver_pip_pim=ver_pip_pim1;
-      pim_sim_id=s.pim2_sim_id;
-      pim_sim_parentid=s.pim2_sim_parentid;
+      //pim_sim_id=s.pim2_sim_id;
+      //pim_sim_parentid=s.pim2_sim_parentid;
       dist_lambda_eVert=dist_lambda2_eVert;
       dist_lambda_ver_pip_pim=dist_lambda2_ver_pip_pim;
       dist_p_eVert=dist_p2_eVert;

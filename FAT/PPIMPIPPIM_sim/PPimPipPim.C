@@ -8,8 +8,7 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include "hntuple.h"
-//#include <hparticletool.h>
-#include "/lustre/nyx/hades/user/rlalik/fwdet/install/hydra2-fwdet/include/hparticletool.h"
+#include "hparticletool.h"
 #include "TMVA/Reader.h"
 
 using namespace std;

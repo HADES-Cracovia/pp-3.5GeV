@@ -2,7 +2,7 @@
 #include <TVector3.h>
 #include <hgeomvector.h>
 #include <hparticletool.h>  
-//#include <hgeomvector.h>
+#include <hgeomvector.h>
 /**************************** Global histograms repository ***********************************/
 
 
@@ -11,16 +11,16 @@ namespace PATData
 
   TFile         *outFileData;
 
-  HNtuple       *tlo;
+  HNtuple       *tlo, *n_out, *n_ppim;
 
   HFilter       *filter;
   float         EFF, ACC;
 
+  int event_number, event_mult;
   //PPimPipPim*******************************
   TH2F *p_p_beta, *pim_p_beta, *pip_p_beta;
   TH1F *p_pim_mass, *p_mass, *pim_mass;
 
-  TCutG *cut_p_pim_miss;
   
   TH1F *p_pim1_mass, *p_pim2_mass, *pim_pip_mass,*pim1_pip_mass,*pim2_pip_mass, *p_pim_pip_pim_mass;
   TH2F *dist_p_pim_pim_pip;
@@ -82,6 +82,7 @@ namespace PATData
   TLorentzVector *beam, *miss;
   TLorentzVector *proj;
   TLorentzVector *targ;
+  TLorentzVector *gammappi;
   TLorentzVector *gammappip;
   TLorentzVector *gammappim1;
   TLorentzVector *gammappim2;
@@ -192,7 +193,7 @@ namespace PATData
     return dist;
   }
 
-  TVector3 vertex(double z1,double r1,TLorentzVector v1, double z2,double r2,TLorentzVector v2)
+  TVector3 vertex(double r1,double z1,TLorentzVector v1, double r2,double z2,TLorentzVector v2)
   {
     TVector3 out;
     HGeomVector ver;
@@ -204,7 +205,10 @@ namespace PATData
 
     phi1=p_tool.getLabPhiDeg(v1)*D2R;
     phi2=p_tool.getLabPhiDeg(v2)*D2R;
-    
+
+    //cout<<phi1<<" "<<v1.Theta()<<endl;
+    //cout<<phi2<<" "<<v2.Theta()<<endl;
+
     p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
     p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
 
@@ -241,7 +245,7 @@ namespace PATData
     return result;
 
   }
-
+  
 
 }
 

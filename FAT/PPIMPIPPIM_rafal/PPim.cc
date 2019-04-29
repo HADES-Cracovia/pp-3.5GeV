@@ -4,10 +4,51 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include "hntuple.h"
-
+#include "hparticletool.h"
+#include <hgeomvector.h>
 
 using namespace std;
 using namespace PATData;
+
+TVector3 vertex_new(Double_t z1,Double_t r1,TLorentzVector v1, Double_t z2,Double_t r2,TLorentzVector v2)
+{
+  TVector3 out;
+  HGeomVector ver;
+  HGeomVector base_1, base_2, dir_1, dir_2;
+  HParticleTool p_tool_1;
+  double phi1, phi2;
+  //r1=TMath::Abs(r1);
+  //r2=TMath::Abs(r2);
+
+  phi1=(p_tool_1.getLabPhiDeg(v1))*D2R;
+  phi2=(p_tool_1.getLabPhiDeg(v2))*D2R;
+
+  cout<<"przy liczeniu odleglosci :"<<endl;
+  cout<<"phi1 :"<<phi1*R2D<<" theta1 "<<v1.Theta()*R2D<<endl;
+  cout<<"phi2 :"<<phi2*R2D<<" theta2 "<<v2.Theta()*R2D<<endl;
+  cout<<"r1: "<<r1<<" z1: "<<z1<<endl;
+  cout<<"r2: "<<r2<<" z2: "<<z2<<endl;
+  
+  p_tool_1.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+  p_tool_1.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
+
+  cout<<"base_1 "<<endl;
+  cout<<base_1.getX()<<" "<<base_1.getY()<<" "<<base_1.getZ()<<endl;
+  cout<<"dir_1 "<<endl;
+  cout<<dir_1.getX()<<" "<<dir_1.getY()<<" "<<dir_1.getZ()<<endl;
+  cout<<"base_2 "<<endl;
+  cout<<base_2.getX()<<" "<<base_2.getY()<<" "<<base_2.getZ()<<endl;
+  cout<<"dir_2 "<<endl;
+  cout<<dir_2.getX()<<" "<<dir_2.getY()<<" "<<dir_2.getZ()<<endl;
+ 
+  ver=p_tool_1.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
+  cout<<"vertex in function: "<<ver.getX()<<" " <<ver.getY()<<" "<<ver.getZ()<<endl;
+  
+  out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
+  //cout<<"out vector"; out.Print(); cout<<endl;
+  return out; 
+}
+
 
 void PPim::Loop()
 {
@@ -42,6 +83,9 @@ void PPim::Loop()
       v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
       v3.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
 
+
+      //cout<<"v2.X(),Y(),Z() :"<<v2.X()<<" "<<v2.Y()<<" "<<v2.Z()<<endl;
+      //cout<<"px,py,pz       :"<<p_sim_px<<" "<<p_sim_py<<" "<<p_sim_pz<<endl<<endl;
       //TVector3 r1, r2;
       //      r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
       //r2.SetXYZ(sin(D2R*pim_theta_rich)*cos(D2R*pim_phi_rich),sin(D2R*pim_theta_rich)*sin(D2R*pim_phi_rich),cos(D2R*pim_theta_rich));
@@ -66,7 +110,26 @@ void PPim::Loop()
       TVector3 ver_p_pim=vertex(p_r,p_z,*p,pim_r,pim_z,*pi);
       double dist_p_pim=trackDistance(p_r,p_z,*p,pim_r,pim_z,*pi);
       //	  cout << "opening angle = " << oa << endl;
+      /*
+	cout<<"main part"<<endl;
+	HParticleTool p_tool;  
+	cout<<"p_phi: "<<p_phi<<endl;
+	cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
+	cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
+	cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
+	cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
+	cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+	cout<<"p_phi by Atan(px_sim/py_sim): "<<TMath::ATan(p_sim_py/p_sim_px)*R2D<<endl;
 
+	cout<<"p_theta: "<<p_theta<<endl;
+	cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
+	cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
+	//cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
+	//cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
+	//cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+	v2.Print();
+	cout<<endl;
+      */
       ACC = 1.;
       EFF = 1.;
 
@@ -88,8 +151,29 @@ void PPim::Loop()
       //double close_cut = 0.;
       //double nonfit_close_cut = 0.;
       //double close_cut = 4.;
-
-
+      /*if(event==1018 ||
+	 event==1048 ||
+	 event==1111 ||
+	 event==1943 ||
+	 event==1988 ||
+	 event==4464 ||
+	 event==4471 ||
+	 event==4487 ||
+	 event==4498 */
+	 /*
+	 p_sim_parentid==18 && pim_sim_parentid==18 && p_sim_id==14 && pim_sim_id==9)
+	{
+	  cout<<"!!!!!!!!!!!!!!!!!!!!!"<<endl;
+	  cout<<"event number: "<<event<<endl;
+	  cout<<"p phi: "<<p_phi<<" p theta: "<<p_theta<<endl;
+	  cout<<"p z: "<<p_z<<" p r: "<<p_r<<endl;
+	  cout<<"pim phi: "<<pim_phi<<" pim theta: "<<pim_theta<<endl;
+	  cout<<"pim z: "<<pim_z<<" pim r: "<<pim_r<<endl;
+	  cout<<"vertex rec"; ver_p_pim.Print();
+	  cout<<"distance: "<<dist_p_pim<<endl;
+	  cout<<"ideal vertex p: "<<p_sim_vertexx<<" "<<p_sim_vertexy<<" "<<p_sim_vertexz<<endl;
+	  cout<<"ideal vertex pim: "<<pim_sim_vertexx<<" "<<pim_sim_vertexy<<" "<<pim_sim_vertexz<<endl<<endl;
+	  }*/
 #ifdef FLANCH
       //insidePimS0 = (pPimS0 == 0) ? 0 : pPimS0->IsInside(pim_z,pim_theta);
       //insidePimS1 = (pPimS1 == 0) ? 0 : pPimS1->IsInside(pim_z,pim_theta);
@@ -227,6 +311,7 @@ PPim::PPim(TTree *tree)
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPim_ID");
     */
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_35_Rafal/FILES/all.root/PPim_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_35_Rafal/FILES/pp35Sigmap_chan_001_evt_50000_nfile_007_hgeant1_dst_hadron_out.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron12.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron13.root/PPim_ID");
     

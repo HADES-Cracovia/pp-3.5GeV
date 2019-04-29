@@ -160,6 +160,7 @@ void PPimPip::Loop()
 	NoLeptonPI = 1;
 	NoHadronPI = 1;
       */
+     
 
       (*n_ppimpip)["isBest"]=isBest;
       //(*n_ppimpip)["isBest_new"]=isBest_new;
@@ -177,6 +178,9 @@ void PPimPip::Loop()
       //(*n_ppimpip)["hypothesis_quality"]=quality;
   
       (*n_ppimpip)["p_p"]=p_p;
+      (*n_ppimpip)["p_px"]=v2.X();
+      (*n_ppimpip)["p_py"]=v2.Y();
+      (*n_ppimpip)["p_pz"]=v2.Z();
       (*n_ppimpip)["p_theta"] = p_theta;
       (*n_ppimpip)["p_phi"] = p_phi;
       (*n_ppimpip)["p_beta"] = p_beta_new;
@@ -191,7 +195,11 @@ void PPimPip::Loop()
       (*n_ppimpip)["p_sim_vertex_x"]=p_sim_vertexx;
       (*n_ppimpip)["p_sim_vertex_y"]=p_sim_vertexy;
       (*n_ppimpip)["p_sim_vertex_z"]=p_sim_vertexz;
-	  
+      (*n_ppimpip)["p_sim_px"]=p_sim_px;
+      (*n_ppimpip)["p_sim_py"]=p_sim_py;
+      (*n_ppimpip)["p_sim_pz"]=p_sim_pz;
+
+      
       (*n_ppimpip)["pim_p"]=pim_p;
       (*n_ppimpip)["pim_theta"] = pim_theta;
       (*n_ppimpip)["pim_phi"] = pim_phi;
@@ -256,6 +264,7 @@ PPimPip::PPimPip(TTree *tree) : fChain(0)
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx/hadron11.root/PPim_ID");
     */
     chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_35_Rafal/FILES/all.root/PPimPip_ID");
+    //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_35_Rafal/FILES/pp35Sigmap_chan_001_evt_50000_nfile_007_hgeant1_dst_hadron_out.root/PPimPip_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron12.root/PPim_ID");
     //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim/hadron13.root/PPim_ID");
     

@@ -89,7 +89,7 @@ int main()
   ppi_miss = new TLorentzVector(0,0,0,0);
 
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_rafal_sigma.root","recreate");
+  outFileData = new TFile("pp_rafal_sigma_ver2.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -101,10 +101,10 @@ int main()
   /*******************************************************************************************************/
 
   /************************** control ntuple ***************************/
-  n_out = new HNtuple("ppimpippim","ppimpippim");
+  //n_out = new HNtuple("ppimpippim","ppimpippim");
   n_ppim = new HNtuple("ppim","ppim");
   n_ppimpip = new HNtuple("ppimpip","ppimpip");
-  n_out->setFile( outFileData );
+  //n_out->setFile( outFileData );
   n_ppim->setFile( outFileData );
   n_ppimpip->setFile( outFileData );
   /*********************************************************************/
@@ -195,15 +195,15 @@ int main()
   /**************************** M A I N   P A R T ****************************************/
 
   PPim t;
-  PPimPipPim t2;
+  //PPimPipPim t2;
   PPimPip t3;
   cout << "START PPIM!" << endl;
   t.Loop();
   cout << "STOP PPIM!" << endl;
 
-  cout << "START PPimPipPim!" << endl;
-  t2.Loop();
-  cout << "STOP PPimPipPim!!" << endl;
+  //cout << "START PPimPipPim!" << endl;
+  //t2.Loop();
+  //cout << "STOP PPimPipPim!!" << endl;
 
   cout << "START PPimPip!" << endl;
   t3.Loop();
@@ -225,10 +225,10 @@ int main()
 
   outFileData->cd();
 
-  if(n_out!=0)
-    n_out->Write();
-  else
-    cout<<"n_out pointer empty"<<endl;
+  //if(n_out!=0)
+  //n_out->Write();
+  //else
+  //cout<<"n_out pointer empty"<<endl;
 
   if(n_ppim!=0)
     n_ppim->Write();

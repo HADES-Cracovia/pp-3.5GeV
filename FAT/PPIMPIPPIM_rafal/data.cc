@@ -193,7 +193,7 @@ namespace PATData
     return dist;
   }
 
-  TVector3 vertex(double z1,double r1,TLorentzVector v1, double z2,double r2,TLorentzVector v2)
+  TVector3 vertex(double r1,double z1,TLorentzVector v1, double r2,double z2,TLorentzVector v2)
   {
     TVector3 out;
     HGeomVector ver;
