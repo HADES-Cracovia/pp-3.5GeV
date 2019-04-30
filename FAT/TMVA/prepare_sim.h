@@ -309,7 +309,7 @@ prepare_sim::prepare_sim(TTree *tree) : fChain(0)
    if (tree == 0) {
       TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_odIzy_all.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_pippimL_more_files.root");
+         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_new_vertex.root");
       }
       f->GetObject("ppimpippim",tree);
 
