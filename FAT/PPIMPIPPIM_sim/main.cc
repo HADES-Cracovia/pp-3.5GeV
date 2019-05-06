@@ -87,6 +87,7 @@ int main()
   pi_delta = new TLorentzVector(0,0,0,0);
   ppi_miss = new TLorentzVector(0,0,0,0);
 
+  //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_kMLP_ce_600_n4_no_ev.weights.xml" );
   /************************************** O U T P U T   F I L E ******************************************/
   outFileData = new TFile("pp_new_vertex.root","recreate");
   //ofstream myfile;

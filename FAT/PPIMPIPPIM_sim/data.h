@@ -11,7 +11,7 @@
 #include <TVector3.h>
 #include "hntuple.h"
 #include "HFilter.h"
-
+#include "TMVA/Reader.h"
 
 
 /**************************** global histograms repository ***********************************/
@@ -57,6 +57,7 @@ namespace PATData {
 
   extern TH2F *vertex_lambda, *vertex_target, *DL_vertex_lambda, *DL_vertex_target, *DLM_vertex_lambda, *DLM_vertex_target;
 
+  //extern TMVA::Reader *reader;
   //*****************************************
 
   extern TCutG *pEpS0, *pEpS1, *pEmS0, *pEmS1;

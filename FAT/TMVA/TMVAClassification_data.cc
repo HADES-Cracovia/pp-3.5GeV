@@ -34,10 +34,10 @@ void TMVAClassification_data(TString treeFile, TString extraSuffix = "", Long64_
   //TMVA::DataLoader* dataloader = new TMVA::DataLoader("dataset");
 
 
-  factory->AddVariable("oa_lambda","oa_lambda","deg",'F',0,180);
-  factory->AddVariable("oa_pip_p","oa_pip_p","deg",'F',0,180);
-  factory->AddVariable("p_p","p_p","MeV",'F');
-  factory->AddVariable("pip_p","pip_p","MeV",'F');
+  //factory->AddVariable("oa_lambda","oa_lambda","deg",'F',0,180);
+  //factory->AddVariable("oa_pip_p","oa_pip_p","deg",'F',0,180);
+  //factory->AddVariable("p_p","p_p","MeV",'F');
+  //factory->AddVariable("pip_p","pip_p","MeV",'F');
   //factory->AddVariable("lambda_mom_z","lambda_mom_z","MeV",'F');
   factory->AddVariable("eVert_x",  "eVert_x",  "mm",    'F',-200,200);
   factory->AddVariable("eVert_y",  "eVert_y",  "mm",    'F',-200,200);
@@ -65,23 +65,27 @@ void TMVAClassification_data(TString treeFile, TString extraSuffix = "", Long64_
   //#warning Momentum diabled!
 
   TFile* input    = TFile::Open(treeFile, "UPDATE");
+  TFile* input2    = TFile::Open("input_from_data.root", "UPDATE");
   TTree* tSigAll  = (TTree*) input->Get("signal");
   TTree* tBackAll = (TTree*) input->Get("background");
-
-  /*
-Long64_t MaxEntries = TMath::Min(tSigAll->GetEntries(), tBackAll->GetEntries());
-  if (DesEntries > 0 && DesEntries < MaxEntries)
-    MaxEntries = DesEntries;
+  TTree* tBackData= (TTree*) input2->Get("background_data");
+  if(tBackData==0)
+    cout<<"uninicialized pointer!"<<endl;
+  
+  Long64_t MaxEntries = TMath::Min(TMath::Min(tSigAll->GetEntries(), tBackAll->GetEntries()),tBackData->GetEntries());
+//if (DesEntries > 0 && DesEntries < MaxEntries)
+//  MaxEntries = DesEntries;
   
   TTree* tSig  = tSigAll ->CloneTree(MaxEntries);
   TTree* tBack = tBackAll->CloneTree(MaxEntries);
-  */
-  TTree* tSig  = tSigAll ->CloneTree();
-  TTree* tBack = tBackAll->CloneTree();
+  
+  TTree* tBackDataSel =tBackData-> CloneTree(MaxEntries);
+  //TTree* tSig  = tSigAll ->CloneTree();
+  //TTree* tBack = tBackAll->CloneTree();
 
   factory->AddSignalTree    (tSig,  1.);
   factory->AddBackgroundTree(tBack, 1);
-
+  factory->AddBackgroundTree(tBackDataSel, 1);
   //factory->SetSignalWeightExpression("Weight");
   //factory->SetBackgroundWeightExpression("Weight");
 
@@ -99,12 +103,15 @@ Long64_t MaxEntries = TMath::Min(tSigAll->GetEntries(), tBackAll->GetEntries());
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_1000_n4_no_ev", "!H:!V:NCycles=1000:HiddenLayers=N,N+5,N+5,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential");
 
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N:BPMode=sequential:CalculateErrors=True");
+
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
 
   //factory->PrepareTrainingAndTestTree("", "", "!V:SplitMode=Random:SplitSeed=0:NormMode=EqualNumEvents");
 
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n4_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:UseRegulator=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_ce_600_n4_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N,N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N:BPMode=sequential:UseRegulator=True");
 
+  factory->BookMethod( TMVA::Types::kCuts,"RecCuts","!V:FitMethod=GA");
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_1000_n5_eq_ev", "!H:!V:NCycles=1000:HiddenLayers=N,N,N,N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:UseRegulator=True");
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_eq_ev", "!H:!V:NCycles=300:HiddenLayers=N,N+1:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
