@@ -7,6 +7,7 @@
 #include <TH1F.h>
 #include "hntuple.h"
 #include "TMVA/Reader.h"
+#include <TGraph.h>
 
 void ppimpippim::Loop()
 {
@@ -73,6 +74,13 @@ void ppimpippim::Loop()
   char bg_name[20];
   char sig_bg_name[20];
   char spectrum_name[20];
+  double sig_int[steps];
+  double bg_int[steps];
+  double sig_eff[steps];
+  double bg_eff[steps];
+  double bg_rej[steps];
+  double cut[steps];
+  
   for(int k=0;k<steps;k++)
     {
       sprintf(sig_name,"sig_%d",k);
@@ -80,16 +88,18 @@ void ppimpippim::Loop()
       sprintf(sig_bg_name,"sig_bg_%d",k);
       sprintf(spectrum_name,"spectrum_%d",k);
 
-      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,2000,1000,2000);
+      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,4000,1000,2000);
       sig[k]=new TF1(sig_name,"gaus(0)+[3]",1105,1126);
-      bg[k]= new TF1(bg_name,"pol3",1080,1350);
-      sig_bg[k]= new TF1(sig_bg_name,"gaus(0)+pol3(3)",1100,1200);
+      bg[k]= new TF1(bg_name,"pol4",1080,1350);
+      sig_bg[k]= new TF1(sig_bg_name,"gaus(0)+pol4(3)",1080,1250);
+
+      cut[k]=(double)k/steps;
     }
   
   for (Long64_t jentry=0; jentry<nentries;jentry++)
     {
       Long64_t ientry = LoadTree(jentry);
-      if(jentry%500==0)
+      if(jentry%5000==0)
 	cout<<(double)jentry/nentries *100<<"%"<<endl;
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -283,11 +293,49 @@ void ppimpippim::Loop()
       sig_bg[k]->SetParameter(4,bg[k]->GetParameter(1));
       sig_bg[k]->SetParameter(5,bg[k]->GetParameter(2));
       sig_bg[k]->SetParameter(6,bg[k]->GetParameter(3));
+      sig_bg[k]->SetParameter(7,bg[k]->GetParameter(4));
 
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+
+      sig[k]->SetParameters(sig_bg[k]->GetParameter(0),
+			    sig_bg[k]->GetParameter(1),
+			    sig_bg[k]->GetParameter(2)
+			    );
+      bg[k]->SetParameters(sig_bg[k]->GetParameter(3),
+			   sig_bg[k]->GetParameter(4),
+			   sig_bg[k]->GetParameter(5),
+			   sig_bg[k]->GetParameter(6),
+			   sig_bg[k]->GetParameter(7)
+			   );
+
+      sig_int[k]=sig[k]->Integral(1110,1120)/p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
+      bg_int[k]=bg[k]->Integral(1110,1120)/p_pim_spectrum[k]->GetBinWidth(10);
+
+      bg_eff[k]=bg_int[k]/bg_int[0];
+      sig_eff[k]=sig_int[k]/sig_int[0];
+      bg_rej[k]=1-bg_eff[k];      
     }
   
+  
+
+  TGraph* gRoc=new TGraph(steps,sig_eff,bg_rej);
+  gRoc->SetTitle("ROC curve");
+  gRoc->SetName("ROCcurve");
+  gRoc->Draw("AC*");
+  TGraph* gSigEff=new TGraph(steps,cut,sig_eff);
+  gSigEff->SetTitle("signal efficiency");
+  gSigEff->SetName("EigEff");
+  gSigEff->Draw("AC*");
+  TGraph* gBgEff=new TGraph(steps,cut,bg_eff);
+  gBgEff->SetTitle("background efficiency");
+  gBgEff->SetName("BgEff");
+  gBgEff->Draw("AC*");
+
   cout<<"Writing the files"<<endl;
+  
+  gRoc->Write();
+  gSigEff->Write();
+  gBgEff->Write();
   
   n_out->Write();
   for(int l=0; l<steps; l++)

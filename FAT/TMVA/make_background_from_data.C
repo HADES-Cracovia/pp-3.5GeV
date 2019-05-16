@@ -44,6 +44,7 @@ void make_background_from_data::Loop()
     }
  
   TTree* background_data = new TTree("background_data","background reactions from data file");
+  TTree* signal_data = new TTree("signal_data","sigbal and background reactions from data file");
    
   //background_data->Branch("p_p",&p_beta);
   //background_data->Branch("pip_p",&pip_p);
@@ -66,6 +67,29 @@ void make_background_from_data::Loop()
   background_data->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   background_data->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   background_data->Branch("dist_ver_to_ver",&dist_ver_to_ver);
+
+
+  //signal_data->Branch("p_p",&p_beta);
+  //signal_data->Branch("pip_p",&pip_p);
+  signal_data->Branch("dist_p_pim", &dist_p_pim);
+  signal_data->Branch("dist_pip_pim", &dist_pip_pim);
+  signal_data->Branch("eVert_x", &eVert_x);
+  signal_data->Branch("eVert_y", &eVert_y);
+  signal_data->Branch("eVert_z", &eVert_z);
+  signal_data->Branch("ver_pip_pim_x",&ver_pip_pim_x);
+  signal_data->Branch("ver_pip_pim_y",&ver_pip_pim_y);
+  signal_data->Branch("ver_pip_pim_z",&ver_pip_pim_z);
+  signal_data->Branch("ver_p_pim_x",&ver_p_pim_x);
+  signal_data->Branch("ver_p_pim_y",&ver_p_pim_y);
+  signal_data->Branch("ver_p_pim_z",&ver_p_pim_z);
+  signal_data->Branch("oa_lambda", &oa_lambda);
+  //signal_data->Branch("oa_pip_p",&oa_pip_p);
+  //signal_data->Branch("lambda_mom_z",&lambda_mom_z);
+  signal_data->Branch("dist_p_eVert",&dist_p_eVert);
+  signal_data->Branch("dist_pim_eVert",&dist_pim_eVert);
+  signal_data->Branch("dist_lambda_eVert",&dist_lambda_eVert);
+  signal_data->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
+  signal_data->Branch("dist_ver_to_ver",&dist_ver_to_ver);
   
    
   Long64_t nentries = fChain->GetEntriesFast();
@@ -85,6 +109,11 @@ void make_background_from_data::Loop()
     
     if (Cut(ientry))
       background_data->Fill();
+    else
+      {
+	if(isBest_new==1)
+	  signal_data->Fill();
+      }
   }
   
   background_data->Print();
