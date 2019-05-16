@@ -488,7 +488,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
     }
   */
   //TMVA part********************************************************
-  
+  /*
   Float_t eVert_xx=s.eVert_x;
   Float_t eVert_yy=s.eVert_y;
   Float_t eVert_zz=s.eVert_z;
@@ -500,19 +500,9 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t ver_p_pim_xx=ver_p_pim.X();
   Float_t ver_p_pim_yy=ver_p_pim.Y();
   Float_t ver_p_pim_zz=ver_p_pim.Z();
+  
   TMVA::Reader *reader = new TMVA::Reader();
 
-  /*
-  reader->AddVariable("dist_p_pim", &dist_p_pim);
-  reader->AddVariable("dist_pip_pim", &dist_pip_pim);
-  reader->AddVariable("eVert_x",  &eVert_xx);
-  reader->AddVariable("eVert_y",  &eVert_yy);
-  reader->AddVariable("eVert_z",  &eVert_zz);
-  reader->AddVariable("dist_p_eVert", &dist_p_eVert);
-  reader->AddVariable("dist_pim_eVert", &dist_pim_eVert);
-  reader->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
-  reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
-  */
   
   reader->AddVariable("eVert_x",  &eVert_xx);
   reader->AddVariable("eVert_y",  &eVert_yy);
@@ -531,9 +521,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   
   reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_kMLP_ce_600_n4_no_ev.weights.xml" );
+  
   Double_t mlp_output=reader->EvaluateMVA("kMLP");
   Double_t mlp_response   = reader->GetMVAError();
-  //edn of TMVA part *************************************
+  */  
+  //end of TMVA part *************************************
   
   //save all important variables
   (*n_out)["isBest"]=s.isBest;
@@ -692,8 +684,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["miss_mass_kp"]=miss->M();
   (*n_out)["lambda_mom_z"]=lambda_mom_z;
   (*n_out)["simon_cuts"]=simon_cut;
-  (*n_out)["mlp_output"]=mlp_output;
-  (*n_out)["mlp_response"]=mlp_response;
+  //(*n_out)["mlp_output"]=mlp_output;
+  //(*n_out)["mlp_response"]=mlp_response;
   
   n_out->fill();
 }
