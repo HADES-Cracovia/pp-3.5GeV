@@ -39,7 +39,7 @@ void ppimpippim::Loop()
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
 
-  TFile* outFileData = new TFile("pp_after_TMVA.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -63,7 +63,7 @@ void ppimpippim::Loop()
   reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   reader->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
   
-  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_norm_kMLP_pca_ce_600_n2_no_ev.weights.xml" );
+  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml" );
 
   const int steps=10;
   const double xmin=1110;
@@ -93,7 +93,7 @@ void ppimpippim::Loop()
       sprintf(spectrum_name,"spectrum_%d",k);
       sprintf(gaus_name,"gauss_%d",k);
       
-      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,2000,1000,2000);
+      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,4000,1000,2000);
       gaus[k]=new TF1(gaus_name,"gaus",1110,1120);
       sig[k]=new TF1(sig_name,"gaus(0)+pol1(3)",xmin,xmax);
       bg[k]= new TF1(bg_name,"pol4",1080,1350);
@@ -114,7 +114,7 @@ void ppimpippim::Loop()
       Double_t mlp_response   = reader->GetMVAError();
       
       (*n_out)["isBest"]=isBest;
-      (*n_out)["isBest_new"]=isBest_new;
+      (*n_out)["isBest_new"]=isBest;
       (*n_out)["event"]=event;
       (*n_out)["hneg_mult"]=hneg_mult;
       (*n_out)["hpos_mult"]=hpos_mult;
@@ -276,7 +276,7 @@ void ppimpippim::Loop()
 
       for(int j=0;j<steps;j++)
 	{
-	  if(isBest_new==1 && mlp_output>((double)j/steps))
+	  if(isBest_new==1 && mlp_output>(double)j/steps)
 	    p_pim_spectrum[j]->Fill(m_inv_p_pim);
 	}
     }
