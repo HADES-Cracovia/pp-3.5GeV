@@ -8,6 +8,7 @@
 #include "hntuple.h"
 #include "TMVA/Reader.h"
 #include <TGraph.h>
+#include <TMath.h>
 
 void ppimpippim::Loop()
 {
@@ -65,7 +66,7 @@ void ppimpippim::Loop()
   
   reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_norm_kMLP_pca_ce_600_n2_no_ev.weights.xml" );
 
-  const int steps=10;
+  const int steps=100;
   const double xmin=1110;
   const double xmax=1120;
   TH1F *p_pim_spectrum[steps];
@@ -83,6 +84,8 @@ void ppimpippim::Loop()
   double sig_eff[steps];
   double bg_eff[steps];
   double bg_rej[steps];
+  double signif[steps];
+  double sig_to_bg[steps];
   double cut[steps];
   
   for(int k=0;k<steps;k++)
@@ -93,11 +96,11 @@ void ppimpippim::Loop()
       sprintf(spectrum_name,"spectrum_%d",k);
       sprintf(gaus_name,"gauss_%d",k);
       
-      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,2000,1000,2000);
+      p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,1000,1000,2000);
       gaus[k]=new TF1(gaus_name,"gaus",1110,1120);
       sig[k]=new TF1(sig_name,"gaus(0)+pol1(3)",xmin,xmax);
       bg[k]= new TF1(bg_name,"pol4",1080,1350);
-      sig_bg[k]= new TF1(sig_bg_name,"gaus(0)+pol2(3)",1105,1130);
+      sig_bg[k]= new TF1(sig_bg_name,"gaus(0)+pol4(3)",1105,1125);
 
       cut[k]=(double)k/steps;
     }
@@ -276,7 +279,7 @@ void ppimpippim::Loop()
 
       for(int j=0;j<steps;j++)
 	{
-	  if(isBest_new==1 && mlp_output>((double)j/steps))
+	  if(isBest_new==1 && mlp_output>((double)j/steps) && miss_mass_kp>1077)
 	    p_pim_spectrum[j]->Fill(m_inv_p_pim);
 	}
     }
@@ -292,38 +295,42 @@ void ppimpippim::Loop()
       
       p_pim_spectrum[k]->Fit(gaus[k]);
       
-      sig[k]->SetParameter(0,p_pim_spectrum[k]->GetMaximum()-ymean);
-      sig[k]->SetParameter(1,1116);
+      sig[k]->SetParameter(0,gaus[k]->GetParameter(0));
+      sig[k]->SetParameter(1,gaus[k]->GetParameter(1));
       sig[k]->SetParameter(2,gaus[k]->GetParameter(2));
-      sig[k]->SetParameter(3,ymean-(ymax-ymin)/(xmax-xmin));
-      sig[k]->SetParameter(4,(ymax-ymin)/(xmax-xmin));
+      //sig[k]->SetParameter(3,ymean-(ymax-ymin)/(xmax-xmin));
+      //sig[k]->SetParameter(4,(ymax-ymin)/(xmax-xmin));
       
       p_pim_spectrum[k]->Fit(sig[k],"R");
 
-      p_pim_spectrum[k]->Fit(bg[k],"R");
+      //p_pim_spectrum[k]->Fit(bg[k],"R");
       
       sig_bg[k]->SetParameter(0,sig[k]->GetParameter(0));
       sig_bg[k]->SetParameter(1,sig[k]->GetParameter(1));
       sig_bg[k]->SetParameter(2,sig[k]->GetParameter(2));
-      sig_bg[k]->SetParameter(3,sig[k]->GetParameter(3));
-      sig_bg[k]->SetParameter(4,sig[k]->GetParameter(4));
+      //sig_bg[k]->SetParameter(3,sig[k]->GetParameter(3));
+      //sig_bg[k]->SetParameter(4,sig[k]->GetParameter(4));
 
       //sig_bg[k]->SetParameter(5,bg[k]->GetParameter(2));
       //sig_bg[k]->SetParameter(6,bg[k]->GetParameter(3));
       //sig_bg[k]->SetParameter(7,bg[k]->GetParameter(4));
 
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+      sig_bg[k]->SetRange(1100,1135);
+      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+      sig_bg[k]->SetRange(1097,1138);
+      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
 
       sig[k]->SetParameters(sig_bg[k]->GetParameter(0),
 			    sig_bg[k]->GetParameter(1),
 			    sig_bg[k]->GetParameter(2)
 			    );
-      bg[k]->SetParameters(sig_bg[k]->GetParameter(3),
-			   sig_bg[k]->GetParameter(4),
-			   sig_bg[k]->GetParameter(5)
-			   //sig_bg[k]->GetParameter(6),
-			   //sig_bg[k]->GetParameter(7),
-			   //sig_bg[k]->GetParameter(8)
+      bg[k]->SetParameters(sig_bg[k]->GetParameter(3)
+			   ,sig_bg[k]->GetParameter(4)
+			   ,sig_bg[k]->GetParameter(5)
+			   ,sig_bg[k]->GetParameter(6)
+			   ,sig_bg[k]->GetParameter(7)
+			   //,sig_bg[k]->GetParameter(8)
 			   );
 
       sig_int[k]=sig[k]->Integral(1110,1120)/p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
@@ -331,7 +338,9 @@ void ppimpippim::Loop()
 
       bg_eff[k]=bg_int[k]/bg_int[0];
       sig_eff[k]=sig_int[k]/sig_int[0];
-      bg_rej[k]=1-bg_eff[k];      
+      bg_rej[k]=1-bg_eff[k];
+      signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
+      sig_to_bg[k]=sig_int[k]/bg_int[k];
     }
   
   
@@ -342,20 +351,31 @@ void ppimpippim::Loop()
   gRoc->Draw("AC*");
   TGraph* gSigEff=new TGraph(steps,cut,sig_eff);
   gSigEff->SetTitle("signal efficiency");
-  gSigEff->SetName("EigEff");
+  gSigEff->SetName("SigEff");
   gSigEff->Draw("AC*");
   TGraph* gBgEff=new TGraph(steps,cut,bg_eff);
   gBgEff->SetTitle("background efficiency");
   gBgEff->SetName("BgEff");
   gBgEff->Draw("AC*");
-
+  TGraph* gSignif=new TGraph(steps,cut,signif);
+  gSignif->SetTitle("S/Sqrt(S+B)");
+  gSignif->SetName("Significance");
+  gSignif->Draw("AC*");
+  TGraph* gSigToBack=new TGraph(steps,cut,sig_to_bg);
+  gSigToBack->SetTitle("S/B");
+  gSigToBack->SetName("signal_to_background");
+  gSigToBack->Draw("AC*");
+  
+  
   cout<<"Writing the files"<<endl;
   
   gRoc->Write();
   gSigEff->Write();
   gBgEff->Write();
-  
+  gSignif->Write();
+  gSigToBack->Write();
   n_out->Write();
+  
   for(int l=0; l<steps; l++)
     {
       p_pim_spectrum[l]->Write();
