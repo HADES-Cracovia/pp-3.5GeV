@@ -93,7 +93,7 @@ void TMVAClassification_data_driven(TString extraSuffix = "", Long64_t DesEntrie
   //#warning Momentum diabled!
 
   //TFile* input    = TFile::Open(treeFile, "UPDATE");
-  TFile* input2   = TFile::Open("input_from_data_miss_mass.root", "UPDATE");
+  TFile* input2   = TFile::Open("input_from_data_miss_mass_3.root", "UPDATE");
   cout<<"load input file"<<endl;
   //TTree* tSigAll  = (TTree*) input->Get("signal");
   //TTree* tBackAll = (TTree*) input->Get("background");
@@ -108,8 +108,8 @@ void TMVAClassification_data_driven(TString extraSuffix = "", Long64_t DesEntrie
 //if (DesEntries > 0 && DesEntries < MaxEntries)
 //  MaxEntries = DesEntries;
   
-  TTree* tSig  = tSignalData -> CloneTree(MaxEntries);
-  TTree* tBack = tBackData -> CloneTree(MaxEntries);
+  TTree* tSig  = tSignalData -> CloneTree();
+  TTree* tBack = tBackData -> CloneTree();
   
   //TTree* tBackDataSel =tBackData-> CloneTree(MaxEntries);
   //TTree* tSig  = tSigAll ->CloneTree();
@@ -125,11 +125,11 @@ void TMVAClassification_data_driven(TString extraSuffix = "", Long64_t DesEntrie
 
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N:BPMode=sequential:CalculateErrors=True");
-factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N-2,N-2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N-2,N-2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
   
   factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
 
-  //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n+2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n+2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
   
   factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
 
@@ -137,7 +137,9 @@ factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NC
   
   factory->BookMethod( TMVA::Types::kCuts,"RecCuts","!V:FitMethod=GA");
   
-
+  //factory->BookMethod( TMVA::Types::kDNN, "DNN_d_0.1", "Layout:RELU|N,RELU|N,TANH:TrainingStrategy = LearningRate=1e-1, BatchSize=256| LearningRate=1e-2, BatchSize=256| LearningRate=1e-3, BatchSize=256:DropConfig=0.1:VarTransform=N,P");
+  //factory->BookMethod( TMVA::Types::kDNN, "DNN_d_0.2", "Layout:RELU|N,RELU|N,TANH:TrainingStrategy = LearningRate=1e-1, BatchSize=256| LearningRate=1e-2, BatchSize=256| LearningRate=1e-3, BatchSize=256:DropConfig=0.2:VarTransform=N,P");
+  //factory->BookMethod( TMVA::Types::kDNN, "DNN_d_0.0", "Layout:RELU|N,RELU|N,TANH:TrainingStrategy = LearningRate=1e-1, BatchSize=256| LearningRate=1e-2, BatchSize=256| LearningRate=1e-3, BatchSize=256:DropConfig=0.0:VarTransform=N,P");
   // Keras - TensorFlow
   //factory->BookMethod(factory, TMVA::Types::kPyKeras, "PyKeras", "H:!V:VarTransform=N:FilenameModel=model.h5:NumEpochs=20:BatchSize=32");
 

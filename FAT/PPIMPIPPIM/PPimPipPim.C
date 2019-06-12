@@ -412,7 +412,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t dist_p_eVert;
   Float_t dist_pim_eVert;
   Float_t lambda_mom_z;
-
+  TLorentzVector lorentz_lambda1115;
+  TLorentzVector lorentz_k0;
   //cout<<"p pim1 dist from filler part:"<<dist_p_pim1<<endl;
   if(quality1<quality2)
     {
@@ -433,6 +434,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_p_eVert=dist_p1_eVert;
       dist_pim_eVert=dist_pim1_eVert;
       lambda_mom_z=gammappim1->Z();
+      lorentz_lambda1115=*gammappim1;
+      lorentz_k0=*gammapim2pip;
     }
   else
     {
@@ -453,6 +456,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       dist_p_eVert=dist_p2_eVert;
       dist_pim_eVert=dist_pim2_eVert;
       lambda_mom_z=gammappim2->Z();
+      lorentz_lambda1115=*gammappim2;
+      lorentz_k0=*gammapim1pip;
     }
 
   bool simon_cut=(oa_p_pim > 15
@@ -462,6 +467,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
 		  && dist_pim_eVert > 15
 		  );
 
+  Float_t lambda_pt=lorentz_lambda1115.Pt();
+  Float_t lambda_w=lorentz_lambda1115.Rapidity();
+  Float_t k0_pt=lorentz_k0.Pt();
+  Float_t k0_w=lorentz_k0.Rapidity();
+  
   //save all important variables
   (*tlo)["isBest"]=s.isBest;
   (*tlo)["isBest_new"]=isBest_new;
@@ -621,6 +631,18 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*tlo)["simon_cuts"]=simon_cut;
 	 
   (*tlo)["miss_mass_kp"]=miss->M();
+
+  (*tlo)["lambda_pt"]=lambda_pt;
+  (*tlo)["lambda_w"]=lambda_w;
+  (*tlo)["lambda_p"]=lorentz_lambda1115.P();
+  lorentz_lambda1115.Boost(-1*(beam->Vect()));
+  (*tlo)["lambda_theta"]=lorentz_lambda1115.Theta();
+  
+  (*tlo)["k0_pt"]=k0_pt;
+  (*tlo)["k0_w"]=k0_w;
+  (*tlo)["k0_p"]=lorentz_k0.P();
+  lorentz_k0.Boost(-1*(beam->Vect()));
+  (*tlo)["k0_theta"]=lorentz_k0.Theta();
     
   tlo->fill();
 }

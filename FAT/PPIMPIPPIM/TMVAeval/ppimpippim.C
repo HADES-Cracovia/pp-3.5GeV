@@ -86,6 +86,7 @@ void ppimpippim::Loop()
   double bg_rej[steps];
   double signif[steps];
   double sig_to_bg[steps];
+  double sig2_to_bg[steps];
   double cut[steps];
   
   for(int k=0;k<steps;k++)
@@ -320,7 +321,9 @@ void ppimpippim::Loop()
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
       sig_bg[k]->SetRange(1097,1138);
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
-
+      sig_bg[k]->SetRange(1085,1145);
+      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+      
       sig[k]->SetParameters(sig_bg[k]->GetParameter(0),
 			    sig_bg[k]->GetParameter(1),
 			    sig_bg[k]->GetParameter(2)
@@ -341,6 +344,7 @@ void ppimpippim::Loop()
       bg_rej[k]=1-bg_eff[k];
       signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
       sig_to_bg[k]=sig_int[k]/bg_int[k];
+      sig2_to_bg[k]=(sig_int[k]*sig_int[k])/bg_int[k];
     }
   
   
@@ -365,6 +369,10 @@ void ppimpippim::Loop()
   gSigToBack->SetTitle("S/B");
   gSigToBack->SetName("signal_to_background");
   gSigToBack->Draw("AC*");
+  TGraph* gSig2ToBack=new TGraph(steps,cut,sig2_to_bg);
+  gSig2ToBack->SetTitle("S^{2}/B");
+  gSig2ToBack->SetName("signal2_to_background");
+  gSig2ToBack->Draw("AC*");
   
   
   cout<<"Writing the files"<<endl;
@@ -375,6 +383,7 @@ void ppimpippim::Loop()
   gSignif->Write();
   gSigToBack->Write();
   n_out->Write();
+  gSig2ToBack->Write();
   
   for(int l=0; l<steps; l++)
     {

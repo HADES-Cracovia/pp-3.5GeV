@@ -36,7 +36,7 @@ void make_background_from_data::Loop()
   if(fChain == 0)
     return;
 
-  TFile* outputFile = new TFile("input_from_data_miss_mass.root","recreate");
+  TFile* outputFile = new TFile("input_from_data_miss_mass_3.root","recreate");
   if( outputFile == 0 )
     {
       cout << "Error: file exampleEvents.root not found" << endl;
@@ -107,11 +107,18 @@ void make_background_from_data::Loop()
     if(jentry%100000==0)
       cout<<(double)jentry/((double)nentries_true/100)<<" %"<<endl;
     
-    if (Cut(ientry) && miss_mass_kp>1077)
+    if ((m_inv_p_pim<1110 ||m_inv_p_pim>1120)
+        && isBest_new==1
+	&& miss_mass_kp>1077)
       background_data->Fill();
+    
     else
       {
-	if(isBest_new==1 && miss_mass_kp>1077)
+	if(isBest_new==1
+	   && miss_mass_kp>1077
+	   &&m_inv_p_pim<1135
+	   &&m_inv_p_pim>995)
+	  
 	  signal_data->Fill();
       }
   }

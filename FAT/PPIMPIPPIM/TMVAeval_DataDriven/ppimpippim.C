@@ -64,7 +64,7 @@ void ppimpippim::Loop()
   reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   reader->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
   
-  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml" );
+  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
 
   const int steps=100;
   const double xmin=1110;
@@ -86,6 +86,7 @@ void ppimpippim::Loop()
   double bg_rej[steps];
   double signif[steps];
   double sig_to_bg[steps];
+  double sig2_to_bg[steps];
   double cut[steps];
   
   for(int k=0;k<steps;k++)
@@ -274,7 +275,17 @@ void ppimpippim::Loop()
       (*n_out)["simon_cuts"]=simon_cuts;
       (*n_out)["mlp_output"]=mlp_output;
       (*n_out)["mlp_response"]=mlp_response;
+
+      (*n_out)["lambda_pt"]=lambda_pt;
+      (*n_out)["lambda_w"]=lambda_w;
+      (*n_out)["lambda_p"]=lambda_p;
+      (*n_out)["lambda_theta"]=lambda_theta;
   
+      (*n_out)["k0_pt"]=k0_pt;
+      (*n_out)["k0_w"]=k0_w;
+      (*n_out)["k0_p"]=k0_p;
+      (*n_out)["k0_theta"]=k0_theta;
+      
       n_out->fill();
 
       for(int j=0;j<steps;j++)
@@ -319,7 +330,12 @@ void ppimpippim::Loop()
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
       sig_bg[k]->SetRange(1100,1135);
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+      sig_bg[k]->SetRange(1080,1145);
+      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+      //sig_bg[k]->SetRange(1080,1160);
+      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
 
+      
       sig[k]->SetParameters(sig_bg[k]->GetParameter(0),
 			    sig_bg[k]->GetParameter(1),
 			    sig_bg[k]->GetParameter(2)
@@ -340,6 +356,7 @@ void ppimpippim::Loop()
       bg_rej[k]=1-bg_eff[k];
       signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
       sig_to_bg[k]=sig_int[k]/bg_int[k];
+      sig2_to_bg[k]=(sig_int[k]*sig_int[k])/bg_int[k];
     }
   
   
@@ -364,6 +381,10 @@ void ppimpippim::Loop()
   gSigToBack->SetTitle("S/B");
   gSigToBack->SetName("signal_to_background");
   gSigToBack->Draw("AC*");
+  TGraph* gSig2ToBack=new TGraph(steps,cut,sig2_to_bg);
+  gSig2ToBack->SetTitle("S^{2}/B");
+  gSig2ToBack->SetName("signal2_to_background");
+  gSig2ToBack->Draw("AC*");
   
   
   cout<<"Writing the files"<<endl;
@@ -373,6 +394,7 @@ void ppimpippim::Loop()
   gBgEff->Write();
   gSignif->Write();
   gSigToBack->Write();
+  gSig2ToBack->Write();
   
   n_out->Write();
   for(int l=0; l<steps; l++)
