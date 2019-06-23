@@ -22,7 +22,7 @@
 using namespace std;
 
 //______________________________________________________________________________
-void TMVAClassification_data_driven(TString extraSuffix = "", Long64_t DesEntries = -1) {
+void TMVAClassification_data_driven(TString extraSuffix = "big_network", Long64_t DesEntries = -1) {
   TMVA::Tools::Instance();
 
   cout << "==> Start TMVAClassification" << endl;
@@ -125,15 +125,18 @@ void TMVAClassification_data_driven(TString extraSuffix = "", Long64_t DesEntrie
 
 
   //factory->BookMethod(TMVA::Types::kMLP, "kMLP_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N:BPMode=sequential:CalculateErrors=True");
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N-2,N-2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N-2,N-2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
   
   factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
 
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n+2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
-  
-  factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
+  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_4(n+2)_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2,N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
 
-  factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
+factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_6(n+4)_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4,N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  
+  
+//factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
+
+  //factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
   
   factory->BookMethod( TMVA::Types::kCuts,"RecCuts","!V:FitMethod=GA");
   

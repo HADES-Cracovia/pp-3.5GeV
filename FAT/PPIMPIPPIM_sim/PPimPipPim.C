@@ -215,7 +215,9 @@ void PPimPipPim::Loop()
 	  Float_t quality=std::min(quality1,quality2);
 	  
 	  //add hypothesis to buffer and quality measure
+	  //cout<<"aaa"<<endl;
 	  buffer.push_back( PPimPipPim_ID_buffer( this ));
+	  //cout<<"bbb"<<endl;
 	  the_best.push_back(quality);
 	  isBest_vector.push_back(isBest);
 
@@ -245,11 +247,11 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pi0pi0L/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pKm/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/nK0bar/hadron.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
       /*
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
 	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
@@ -415,6 +417,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
             //TMath::Power(dist_lambda2_pim1,2)+TMath::Power(dist_lambda2_pip,2)
 	    ;
   Float_t quality=std::min(quality1,quality2);
+
+  //cout<<"ccc"<<endl;
   
   int pim_no, pim_sim_id, pim_sim_parentid;
   Float_t m_inv_ppim;
@@ -433,7 +437,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t lambda_mom_z;
   TLorentzVector lorentz_lambda1115;
   TLorentzVector lorentz_k0;
-
+  //cout<<"ddd"<<endl;
   //cout<<"p pim1 dist from filler part:"<<dist_p_pim1<<endl;
   if(quality1<quality2)
     {
@@ -539,176 +543,174 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   //end of TMVA part *************************************
   
   //save all important variables
-  (*tlo)["isBest"]=s.isBest;
-  (*tlo)["isBest_new"]=isBest_new;
-  (*tlo)["event"]=s.event;
-  (*tlo)["hneg_mult"]=s.hneg_mult;
-  (*tlo)["hpos_mult"]=s.hpos_mult;
-  (*tlo)["eVert_x"]=s.eVert_x;
-  (*tlo)["eVert_y"]=s.eVert_y;
-  (*tlo)["eVert_z"]=s.eVert_z;
-  (*tlo)["totalmult"]=s.totalmult;
-  (*tlo)["trigdownscaleflag"]=s.trigdownscaleflag;
-  (*tlo)["trigdownscale"]=s.trigdownscale;
-  (*tlo)["event_mult"]=event_mult;
-  (*tlo)["hypothesis"]=pim_no;
-  (*tlo)["hypothesis_quality"]=quality;
+  (*n_out)["isBest"]=s.isBest;
+  (*n_out)["isBest_new"]=isBest_new;
+  (*n_out)["event"]=s.event;
+  (*n_out)["hneg_mult"]=s.hneg_mult;
+  (*n_out)["hpos_mult"]=s.hpos_mult;
+  (*n_out)["eVert_x"]=s.eVert_x;
+  (*n_out)["eVert_y"]=s.eVert_y;
+  (*n_out)["eVert_z"]=s.eVert_z;
+  (*n_out)["totalmult"]=s.totalmult;
+  (*n_out)["trigdownscaleflag"]=s.trigdownscaleflag;
+  (*n_out)["trigdownscale"]=s.trigdownscale;
+  (*n_out)["event_mult"]=event_mult;
+  (*n_out)["hypothesis"]=pim_no;
+  (*n_out)["hypothesis_quality"]=quality;
   
-  (*tlo)["p_p"]=s.p_p;
-  (*tlo)["p_theta"] = s.p_theta;
-  (*tlo)["p_phi"] = s.p_phi;
-  (*tlo)["p_beta"] = s.p_beta_new;
-  (*tlo)["p_m"] = p_mass;
-  (*tlo)["p_dedx"]=s.p_dedx_mdc;
-  (*tlo)["p_q"]=s.p_q;
+  (*n_out)["p_p"]=s.p_p;
+  (*n_out)["p_theta"] = s.p_theta;
+  (*n_out)["p_phi"] = s.p_phi;
+  (*n_out)["p_beta"] = s.p_beta_new;
+  (*n_out)["p_m"] = p_mass;
+  (*n_out)["p_dedx"]=s.p_dedx_mdc;
+  (*n_out)["p_q"]=s.p_q;
 	  
-  (*tlo)["p_sim_p"]=s.p_sim_p;
-  (*tlo)["p_sim_id"]=s.p_sim_id;
-  (*tlo)["p_sim_parentid"]=s.p_sim_parentid;
-  (*tlo)["p_sim_vertex_x"]=s.p_sim_vertexx;
-  (*tlo)["p_sim_vertex_y"]=s.p_sim_vertexy;
-  (*tlo)["p_sim_vertex_z"]=s.p_sim_vertexz;
+  (*n_out)["p_sim_p"]=s.p_sim_p;
+  (*n_out)["p_sim_id"]=s.p_sim_id;
+  (*n_out)["p_sim_parentid"]=s.p_sim_parentid;
+  (*n_out)["p_sim_vertex_x"]=s.p_sim_vertexx;
+  (*n_out)["p_sim_vertex_y"]=s.p_sim_vertexy;
+  (*n_out)["p_sim_vertex_z"]=s.p_sim_vertexz;
 	  
-  (*tlo)["pip_p"]=s.pip_p;
-  (*tlo)["pip_theta"] = s.pip_theta;
-  (*tlo)["pip_phi"] = s.pip_phi;
-  (*tlo)["pip_beta"] = s.pip_beta_new;
-  (*tlo)["pip_m"] = pip_mass;
-  (*tlo)["pip_dedx"]=s.pip_dedx_mdc;
-  (*tlo)["pip_q"]=s.pip_q;
+  (*n_out)["pip_p"]=s.pip_p;
+  (*n_out)["pip_theta"] = s.pip_theta;
+  (*n_out)["pip_phi"] = s.pip_phi;
+  (*n_out)["pip_beta"] = s.pip_beta_new;
+  (*n_out)["pip_m"] = pip_mass;
+  (*n_out)["pip_dedx"]=s.pip_dedx_mdc;
+  (*n_out)["pip_q"]=s.pip_q;
 	  
-  (*tlo)["pip_sim_p"]=s.pip_sim_p;
-  (*tlo)["pip_sim_id"]=s.pip_sim_id;
-  (*tlo)["pip_sim_parentid"]=s.pip_sim_parentid;
-  (*tlo)["pip_sim_vertex_x"]=s.pip_sim_vertexx;
-  (*tlo)["pip_sim_vertex_y"]=s.pip_sim_vertexy;
-  (*tlo)["pip_sim_vertex_z"]=s.pip_sim_vertexz;
-	  
-	  
-  (*tlo)["pim1_p"]=s.pim1_p;
-  (*tlo)["pim1_theta"] = s.pim1_theta;
-  (*tlo)["pim1_phi"] = s.pim1_phi;
-  (*tlo)["pim1_beta"] = s.pim1_beta_new;
-  (*tlo)["pim1_m"] = pim1_mass;
-  (*tlo)["pim1_dedx"]=s.pim1_dedx_mdc;
-  (*tlo)["pim1_q"]=s.pim1_q;
-	  
-  (*tlo)["pim1_sim_p"]=s.pim1_sim_p;
-  (*tlo)["pim1_sim_id"]=s.pim1_sim_id;
-  (*tlo)["pim1_sim_parentid"]=s.pim1_sim_parentid;
-  (*tlo)["pim1_sim_vertex_x"]=s.pim1_sim_vertexx;
-  (*tlo)["pim1_sim_vertex_y"]=s.pim1_sim_vertexy;
-  (*tlo)["pim1_sim_vertex_z"]=s.pim1_sim_vertexz;
+  (*n_out)["pip_sim_p"]=s.pip_sim_p;
+  (*n_out)["pip_sim_id"]=s.pip_sim_id;
+  (*n_out)["pip_sim_parentid"]=s.pip_sim_parentid;
+  (*n_out)["pip_sim_vertex_x"]=s.pip_sim_vertexx;
+  (*n_out)["pip_sim_vertex_y"]=s.pip_sim_vertexy;
+  (*n_out)["pip_sim_vertex_z"]=s.pip_sim_vertexz;
 	  
 	  
-  (*tlo)["pim2_p"]=s.pim2_p;
-  (*tlo)["pim2_theta"] = s.pim2_theta;
-  (*tlo)["pim2_phi"] = s.pim2_phi;
-  (*tlo)["pim2_beta"] = s.pim2_beta_new;
-  (*tlo)["pim2_m"] = pim2_mass;
-  (*tlo)["pim2_dedx"]=s.pim2_dedx_mdc;
-  (*tlo)["pim2_q"]=s.pim2_q;
+  (*n_out)["pim1_p"]=s.pim1_p;
+  (*n_out)["pim1_theta"] = s.pim1_theta;
+  (*n_out)["pim1_phi"] = s.pim1_phi;
+  (*n_out)["pim1_beta"] = s.pim1_beta_new;
+  (*n_out)["pim1_m"] = pim1_mass;
+  (*n_out)["pim1_dedx"]=s.pim1_dedx_mdc;
+  (*n_out)["pim1_q"]=s.pim1_q;
 	  
-  (*tlo)["pim2_sim_p"]=s.pim2_sim_p;
-  (*tlo)["pim2_sim_id"]=s.pim2_sim_id;
-  (*tlo)["pim2_sim_parentid"]=s.pim2_sim_parentid;
-  (*tlo)["pim2_sim_vertex_x"]=s.pim2_sim_vertexx;
-  (*tlo)["pim2_sim_vertex_y"]=s.pim2_sim_vertexy;
-  (*tlo)["pim2_sim_vertex_z"]=s.pim2_sim_vertexz;
+  (*n_out)["pim1_sim_p"]=s.pim1_sim_p;
+  (*n_out)["pim1_sim_id"]=s.pim1_sim_id;
+  (*n_out)["pim1_sim_parentid"]=s.pim1_sim_parentid;
+  (*n_out)["pim1_sim_vertex_x"]=s.pim1_sim_vertexx;
+  (*n_out)["pim1_sim_vertex_y"]=s.pim1_sim_vertexy;
+  (*n_out)["pim1_sim_vertex_z"]=s.pim1_sim_vertexz;
+	  
+	  
+  (*n_out)["pim2_p"]=s.pim2_p;
+  (*n_out)["pim2_theta"] = s.pim2_theta;
+  (*n_out)["pim2_phi"] = s.pim2_phi;
+  (*n_out)["pim2_beta"] = s.pim2_beta_new;
+  (*n_out)["pim2_m"] = pim2_mass;
+  (*n_out)["pim2_dedx"]=s.pim2_dedx_mdc;
+  (*n_out)["pim2_q"]=s.pim2_q;
+	  
+  (*n_out)["pim2_sim_p"]=s.pim2_sim_p;
+  (*n_out)["pim2_sim_id"]=s.pim2_sim_id;
+  (*n_out)["pim2_sim_parentid"]=s.pim2_sim_parentid;
+  (*n_out)["pim2_sim_vertex_x"]=s.pim2_sim_vertexx;
+  (*n_out)["pim2_sim_vertex_y"]=s.pim2_sim_vertexy;
+  (*n_out)["pim2_sim_vertex_z"]=s.pim2_sim_vertexz;
 	  	  
-  (*tlo)["pim_sim_id"]=pim_sim_id;
-  (*tlo)["pim_sim_parentid"]=pim_sim_parentid;
+  (*n_out)["pim_sim_id"]=pim_sim_id;
+  (*n_out)["pim_sim_parentid"]=pim_sim_parentid;
 
-  (*tlo)["dist_pip_pim1"]=dist_pip_pim1;
-  (*tlo)["dist_pip_pim2"] = dist_pip_pim2;
-  (*tlo)["dist_pip_pim"] = dist_pip_pim;
-  (*tlo)["dist_p_pim1"] = dist_p_pim1;
-  (*tlo)["dist_p_pim2"] = dist_p_pim2;
-  (*tlo)["dist_p_pim"] = dist_p_pim;
-  (*tlo)["dist_lambda1_pim2"] = dist_lambda1_pim2;
-  (*tlo)["dist_lambda1_pip"] = dist_lambda1_pip;
-  (*tlo)["dist_lambda2_pim1"] = dist_lambda2_pim1;
-  (*tlo)["dist_lambda2_pip"] = dist_lambda2_pip;
-  (*tlo)["dist_ver_to_ver_1"]=dist_ver_to_ver_1;
-  (*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
-  (*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
-  (*tlo)["dist_lambda1_eVert"]=dist_lambda1_eVert;
-  (*tlo)["dist_lambda1_ver_pip_pim"]=dist_lambda1_ver_pip_pim;
-  (*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
-  (*tlo)["dist_lambda2_ver_pip_pim"]=dist_lambda2_ver_pip_pim;
-  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-  (*tlo)["dist_lambda_ver_pip_pim"]=dist_lambda_ver_pip_pim;
-  (*tlo)["dist_p1_eVert"]=dist_p1_eVert;
-  (*tlo)["dist_pim1_eVert"]=dist_pim1_eVert;
-  (*tlo)["dist_p2_eVert"]=dist_p2_eVert;
-  (*tlo)["dist_pim2_eVert"]=dist_pim2_eVert;
-  (*tlo)["dist_p_eVert"]=dist_p_eVert;
-  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
+  (*n_out)["dist_pip_pim1"]=dist_pip_pim1;
+  (*n_out)["dist_pip_pim2"] = dist_pip_pim2;
+  (*n_out)["dist_pip_pim"] = dist_pip_pim;
+  (*n_out)["dist_p_pim1"] = dist_p_pim1;
+  (*n_out)["dist_p_pim2"] = dist_p_pim2;
+  (*n_out)["dist_p_pim"] = dist_p_pim;
+  (*n_out)["dist_lambda1_pim2"] = dist_lambda1_pim2;
+  (*n_out)["dist_lambda1_pip"] = dist_lambda1_pip;
+  (*n_out)["dist_lambda2_pim1"] = dist_lambda2_pim1;
+  (*n_out)["dist_lambda2_pip"] = dist_lambda2_pip;
+  (*n_out)["dist_ver_to_ver_1"]=dist_ver_to_ver_1;
+  (*n_out)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
+  (*n_out)["dist_ver_to_ver"]=dist_ver_to_ver;
+  (*n_out)["dist_lambda1_eVert"]=dist_lambda1_eVert;
+  (*n_out)["dist_lambda1_ver_pip_pim"]=dist_lambda1_ver_pip_pim;
+  (*n_out)["dist_lambda2_eVert"]=dist_lambda2_eVert;
+  (*n_out)["dist_lambda2_ver_pip_pim"]=dist_lambda2_ver_pip_pim;
+  (*n_out)["dist_lambda_eVert"]=dist_lambda_eVert;
+  (*n_out)["dist_lambda_ver_pip_pim"]=dist_lambda_ver_pip_pim;
+  (*n_out)["dist_p1_eVert"]=dist_p1_eVert;
+  (*n_out)["dist_pim1_eVert"]=dist_pim1_eVert;
+  (*n_out)["dist_p2_eVert"]=dist_p2_eVert;
+  (*n_out)["dist_pim2_eVert"]=dist_pim2_eVert;
+  (*n_out)["dist_p_eVert"]=dist_p_eVert;
+  (*n_out)["dist_pim_eVert"]=dist_pim_eVert;
   
 	  
-  (*tlo)["m_inv_p_pim1"] = m_inv_ppim1;
-  (*tlo)["m_inv_p_pim2"] = m_inv_ppim2;
-  (*tlo)["m_inv_p_pim"]=m_inv_ppim;
+  (*n_out)["m_inv_p_pim1"] = m_inv_ppim1;
+  (*n_out)["m_inv_p_pim2"] = m_inv_ppim2;
+  (*n_out)["m_inv_p_pim"]=m_inv_ppim;
 
-  (*tlo)["m_inv_pip_pim1"] = m_inv_pippim1;
-  (*tlo)["m_inv_pip_pim2"] = m_inv_pippim2;
-  (*tlo)["m_inv_pip_pim"] = m_inv_pippim;
-  (*tlo)["m_inv_p_pim_pip_pim"] = m_inv_ppimpippim;
-  (*tlo)["m_inv_p_pip"] = m_inv_ppip;
+  (*n_out)["m_inv_pip_pim1"] = m_inv_pippim1;
+  (*n_out)["m_inv_pip_pim2"] = m_inv_pippim2;
+  (*n_out)["m_inv_pip_pim"] = m_inv_pippim;
+  (*n_out)["m_inv_p_pim_pip_pim"] = m_inv_ppimpippim;
+  (*n_out)["m_inv_p_pip"] = m_inv_ppip;
   
-  (*tlo)["ver_p_pim1_x"]=ver_p_pim1.X();
-  (*tlo)["ver_p_pim1_y"]=ver_p_pim1.Y();
-  (*tlo)["ver_p_pim1_z"]=ver_p_pim1.Z();
+  (*n_out)["ver_p_pim1_x"]=ver_p_pim1.X();
+  (*n_out)["ver_p_pim1_y"]=ver_p_pim1.Y();
+  (*n_out)["ver_p_pim1_z"]=ver_p_pim1.Z();
 
-  (*tlo)["ver_p_pim2_x"]=ver_p_pim2.X();
-  (*tlo)["ver_p_pim2_y"]=ver_p_pim2.Y();
-  (*tlo)["ver_p_pim2_z"]=ver_p_pim2.Z();
+  (*n_out)["ver_p_pim2_x"]=ver_p_pim2.X();
+  (*n_out)["ver_p_pim2_y"]=ver_p_pim2.Y();
+  (*n_out)["ver_p_pim2_z"]=ver_p_pim2.Z();
 
-  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
-  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
-  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
+  (*n_out)["ver_p_pim_x"]=ver_p_pim.X();
+  (*n_out)["ver_p_pim_y"]=ver_p_pim.Y();
+  (*n_out)["ver_p_pim_z"]=ver_p_pim.Z();
 
   
-  (*tlo)["ver_pip_pim1_x"]=ver_pip_pim1.X();
-  (*tlo)["ver_pip_pim1_y"]=ver_pip_pim1.Y();
-  (*tlo)["ver_pip_pim1_z"]=ver_pip_pim1.Z();
+  (*n_out)["ver_pip_pim1_x"]=ver_pip_pim1.X();
+  (*n_out)["ver_pip_pim1_y"]=ver_pip_pim1.Y();
+  (*n_out)["ver_pip_pim1_z"]=ver_pip_pim1.Z();
 
-  (*tlo)["ver_pip_pim2_x"]=ver_pip_pim2.X();
-  (*tlo)["ver_pip_pim2_y"]=ver_pip_pim2.Y();
-  (*tlo)["ver_pip_pim2_z"]=ver_pip_pim2.Z();
+  (*n_out)["ver_pip_pim2_x"]=ver_pip_pim2.X();
+  (*n_out)["ver_pip_pim2_y"]=ver_pip_pim2.Y();
+  (*n_out)["ver_pip_pim2_z"]=ver_pip_pim2.Z();
 
-  (*tlo)["ver_pip_pim_x"]=ver_pip_pim.X();
-  (*tlo)["ver_pip_pim_y"]=ver_pip_pim.Y();
-  (*tlo)["ver_pip_pim_z"]=ver_pip_pim.Z();
+  (*n_out)["ver_pip_pim_x"]=ver_pip_pim.X();
+  (*n_out)["ver_pip_pim_y"]=ver_pip_pim.Y();
+  (*n_out)["ver_pip_pim_z"]=ver_pip_pim.Z();
 
-  (*tlo)["oa_lambda_1"]=oa_lambda_1;
-  (*tlo)["oa_lambda_2"]=oa_lambda_2;
-  (*tlo)["oa_lambda"]=oa_lambda;
-  (*tlo)["oa_pim1_p"]=oa_pim1_p;
-  (*tlo)["oa_pim2_p"]=oa_pim2_p;
-  (*tlo)["oa_pim_p"]=oa_p_pim;
-  (*tlo)["oa_pip_p"]=oa_pip_p;
-  (*tlo)["oa_pim1_pim2"]=oa_pim1_pim2;
-  (*tlo)["oa_pim1_pip"]=oa_pim1_pip;
-  (*tlo)["oa_pim2_pip"]=oa_pim2_pip;
+  (*n_out)["oa_lambda_1"]=oa_lambda_1;
+  (*n_out)["oa_lambda_2"]=oa_lambda_2;
+  (*n_out)["oa_lambda"]=oa_lambda;
+  (*n_out)["oa_pim1_p"]=oa_pim1_p;
+  (*n_out)["oa_pim2_p"]=oa_pim2_p;
+  (*n_out)["oa_pim_p"]=oa_p_pim;
+  (*n_out)["oa_pip_p"]=oa_pip_p;
+  (*n_out)["oa_pim1_pim2"]=oa_pim1_pim2;
+  (*n_out)["oa_pim1_pip"]=oa_pim1_pip;
+  (*n_out)["oa_pim2_pip"]=oa_pim2_pip;
 	 
-  (*tlo)["miss_mass_kp"]=miss->M();
-  (*tlo)["lambda_mom_z"]=lambda_mom_z;
-  (*tlo)["simon_cuts"]=simon_cut;
+  (*n_out)["miss_mass_kp"]=miss->M();
+  (*n_out)["lambda_mom_z"]=lambda_mom_z;
+  (*n_out)["simon_cuts"]=simon_cut;
 	 
-  (*tlo)["miss_mass_kp"]=miss->M();
-
-  (*tlo)["lambda_pt"]=lambda_pt;
-  (*tlo)["lambda_w"]=lambda_w;
-  (*tlo)["lambda_p"]=lorentz_lambda1115.P();
+  (*n_out)["lambda_pt"]=lambda_pt;
+  (*n_out)["lambda_w"]=lambda_w;
+  (*n_out)["lambda_p"]=lorentz_lambda1115.P();
   lorentz_lambda1115.Boost(-1*(beam->Vect()));
-  (*tlo)["lambda_theta"]=lorentz_lambda1115.Theta();
+  (*n_out)["lambda_theta"]=lorentz_lambda1115.Theta();
   
-  (*tlo)["k0_pt"]=k0_pt;
-  (*tlo)["k0_w"]=k0_w;
-  (*tlo)["k0_p"]=lorentz_k0.P();
+  (*n_out)["k0_pt"]=k0_pt;
+  (*n_out)["k0_w"]=k0_w;
+  (*n_out)["k0_p"]=lorentz_k0.P();
   lorentz_k0.Boost(-1*(beam->Vect()));
-  (*tlo)["k0_theta"]=lorentz_k0.Theta();
+  (*n_out)["k0_theta"]=lorentz_k0.Theta();
   
   n_out->fill();
 }
