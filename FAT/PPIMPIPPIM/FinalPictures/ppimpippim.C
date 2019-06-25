@@ -43,26 +43,28 @@ void ppimpippim::Loop()
   double ptmax=1600;
   double wmax=2;
 
-  char L_pt_name[30];
-  char L_w_name[30];
-  char L_pt_title[30];
-  char L_w_title[30];
+  char L_pt_name[50];
+  char L_w_name[50];
+  char L_pt_title[50];
+  char L_w_title[50];
 
-  char K0_pt_name[30];
-  char K0_w_name[30];
-  char K0_pt_title[30];
-  char K0_w_title[30];
+  char K0_pt_name[50];
+  char K0_w_name[50];
+  char K0_pt_title[50];
+  char K0_w_title[50];
     
-  TH1F *h1Lambda_pt[npt];
-  TH1F *h1Lambda_w[nw];
-  TH1F *h1Lambda_w_k0cut[nw];
-  TH1F *h1K0_pt[npt];
-  TH1F *h1K0_w[nw];
-  TH1F *h1K0_w_Lcut[nw];
+  TH1F* h1Lambda_pt[npt];
+  TH1F* h1Lambda_pt_k0cut[nw];
+  TH1F* h1Lambda_w[nw];
+  TH1F* h1Lambda_w_k0cut[nw];
+  TH1F* h1K0_pt[npt];
+  TH1F* h1K0_pt_Lcut[nw];
+  TH1F* h1K0_w[nw];
+  TH1F* h1K0_w_Lcut[nw];
 
   TH2F *h2Lambda_wpt=new TH2F("h2Lambda_wpt","Rapidity vs. p_{t} for #Lambda",w_points,0,wmax,pt_points,0,ptmax);
   TH2F *h2K0_wpt=new TH2F("h2K0_wpt","Rapidity vs. p_{t} for K^{0}",w_points,0,wmax,pt_points,0,ptmax);
-  TH2F *h2_m_inv=new TH2F("h2_m_inv","M^{inv}_{#pi^{-} #pi^{+}} vs. M^{inv}_{#pi^{-} p}",1000,1000,2000,1000,200,1200); 
+  TH2F *h2_m_inv=new TH2F("h2_m_inv","M^{inv}_{#pi^{-} #pi^{+}} vs. M^{inv}_{#pi^{-} p}",300,1000,1600,300,200,800); 
   
   TH1F *h1Lambda_pt_all=new TH1F("h1lambda_pt_all","p_{t} for #Lambda",pt_points,0,ptmax);
   TH1F *h1K0_pt_all=new TH1F("h1K0_pt_all","p_{t} for K^{0}",pt_points,0,ptmax);
@@ -76,10 +78,10 @@ void ppimpippim::Loop()
   cout<<endl<<"Init pt histograms"<<endl;
   for(int i=0;i<npt;i++)
     {
-      sprintf(L_pt_name,"Lambda_pt_%.1f_%.1f",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
+      sprintf(L_pt_name,"Lambda_pt_%.0f_%.0f",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
       sprintf(L_pt_title,"P^{T}_{#Lambda(1116)} (%.2f, %.2f)",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
 
-      sprintf(K0_pt_name,"K0_pt_%.1f_%.1f",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
+      sprintf(K0_pt_name,"K0_pt_%.0f_%.0f",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
       sprintf(K0_pt_title,"P^{T}_{K^{0}} (%.2f, %.2f)",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
 
       cout<<"pt_name: "<<L_pt_name<<" "<<K0_pt_name<<endl;
@@ -88,16 +90,30 @@ void ppimpippim::Loop()
       h1Lambda_pt[i]=new TH1F(L_pt_name,L_pt_title,pt_points,0,ptmax);
       h1K0_pt[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,ptmax);
 
-      h1Lambda_pt[i]->Print();
-    }
+      sprintf(L_pt_name,"Lambda_pt_%.2f_%.2f_k0cut",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
+      sprintf(L_pt_title,"pt_{#Lambda(1116)}(%.2f, %.2f) K^{0} cut;M^{inv}_{p #pim^{-}}[MeV]",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
+      
+      sprintf(K0_pt_name,"K0_pt_%.2f_%.2f_Lcut",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
+      sprintf(K0_pt_title,"pt_{K^{0}} (%.2f, %.2f) L(1116) cut; M^{inv}_{p #pim^{-}}[MeV]",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
 
+      h1Lambda_pt_k0cut[i]=new TH1F(L_pt_name,L_pt_title,pt_points,0,ptmax);
+      h1K0_pt_Lcut[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,ptmax);
+    }
+  /*
+  for(int i=0;i<npt;i++)
+    {
+      cout<<"i: "<<i<<endl;
+      h1Lambda_pt[i]->Print();
+      h1K0_pt[i]->Print();
+    }
+  */
   cout<<endl<<"Init w histograms"<<endl;
   for(int i=0;i<nw;i++)
     {
-      sprintf(L_w_name,"Lambda_w_%.1f_%.1f",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      sprintf(L_w_name,"Lambda_w_%.2f_%.2f",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       sprintf(L_w_title,"w_{#Lambda(1116)} (%.2f, %.2f)",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       
-      sprintf(K0_w_name,"K0_w_%.1f_%.1f",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      sprintf(K0_w_name,"K0_w_%.2f_%.2f",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       sprintf(K0_w_title,"w_{K^{0}} (%.2f, %.2f)",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
 
       cout<<"w_name: "<<L_w_name<<" "<<K0_w_name<<endl;
@@ -105,23 +121,34 @@ void ppimpippim::Loop()
       
       h1Lambda_w[i]=new TH1F(L_w_name,L_w_title,w_points,0,wmax);
       h1K0_w[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,wmax);
-
-      sprintf(L_w_name,"Lambda_w_%.1f_%.1f_k0cut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
-      sprintf(L_w_title,"w_{#Lambda(1116)}(%.2f, %.2f) K^{0} cut;M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       
-      sprintf(K0_w_name,"K0_w_%.1f_%.1f_Lcut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
-      sprintf(K0_w_title,"w_{K^{0}} (%.2f, %.2f) L(1116) cut;M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      sprintf(L_w_name,"Lambda_w_%.2f_%.2f_k0cut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      sprintf(L_w_title,"w_{#Lambda(1116)}(%.2f, %.2f) K^{0} cut; M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      
+      sprintf(K0_w_name,"K0_w_%.2f_%.2f_Lcut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
+      sprintf(K0_w_title,"w_{K^{0}} (%.2f, %.2f) L(1116) cut; M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
 
       h1Lambda_w_k0cut[i]=new TH1F(L_w_name,L_w_title,w_points,0,wmax);
       h1K0_w_Lcut[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,wmax);
+          
     }
-
+  /*
+  for(int ii=0;ii<nw;ii++)
+    {
+      cout<<"ii: "<<ii<<endl;
+      h1K0_w[ii]->Print();
+      h1Lambda_w[ii]->Print();
+      //h1K0_w_Lcut[ii]->Print();
+      //h1Lambda_w_k0cut[ii]->Print();
+    }
+  */
   //Main loop
   cout<<"start main loop"<<endl;
   if (fChain == 0) return;
   Long64_t nentries = fChain->GetEntriesFast();
   Long64_t nbytes = 0, nb = 0;
 
+  
   for (Long64_t jentry=0; jentry<nentries;jentry++)
     {
       Long64_t ientry = LoadTree(jentry);
@@ -129,13 +156,14 @@ void ppimpippim::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       if (Cut(ientry) < 0
 	  || isBest_new!=1
-	  || mlp_output<0.4
+	  || mlp_output<0.6
+	  || miss_mass_kp<1077
 	  )
 	continue;
 
       if(jentry%10000==0)
 	std::cout<<(double)jentry/nentries*100<<"% "<<endl;
-
+      
       h2Lambda_wpt->Fill(lambda_w,lambda_pt);
       h2K0_wpt->Fill(k0_w,k0_pt);
 
@@ -152,20 +180,30 @@ void ppimpippim::Loop()
       //fill histograms for pt and w slides
       for(int i=0; i<npt; i++)
 	{
-	  //cout<<"aaa"<<endl;
+	  //cout<<"m_inv_p_pim: "<<m_inv_p_pim<<endl;
+	  //cout<<"npt:"<<npt<<" i:"<<i<<endl;
 	  double pt_min=(double)i/npt*ptmax;
 	  double pt_max=(double)(i+1)/npt*ptmax;
-
+	  //h1Lambda_pt[i]->Print();
+	  //h1K0_pt[i]->Print();
 	  
 	  if(lambda_pt<pt_max && lambda_pt>pt_min)
-	    h1Lambda_pt[i]->Fill(m_inv_p_pim);
+	    {
+	      h1Lambda_pt[i]->Fill(m_inv_p_pim);
+	      if(m_inv_pip_pim<510 && m_inv_pip_pim>490)
+		h1Lambda_pt_k0cut[i]->Fill(m_inv_p_pim);
+	    }
 	  //cout<<"aab"<<endl;
 	  if(k0_pt<pt_max && k0_pt>pt_min)
-	    h1K0_pt[i]->Fill(m_inv_pip_pim);
+	    {
+	      h1K0_pt[i]->Fill(m_inv_pip_pim);
+	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
+		h1K0_pt_Lcut[i]->Fill(m_inv_pip_pim);
+	    }
 	}
       for(int i=0;i<nw;i++)
 	{
-	  //cout<<"bbb"<<endl;
+	  
 	  double w_min=(double)i/nw*wmax;
 	  double w_max=(double)(i+1)/nw*wmax;
 	  if(lambda_w<w_max && lambda_w>w_min)
@@ -178,7 +216,7 @@ void ppimpippim::Loop()
 	    {
 	      h1K0_w[i]->Fill(m_inv_pip_pim);
 	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
-		h1K0_w_Lcut[i]->Fill(m_inv_p_pim);
+		h1K0_w_Lcut[i]->Fill(m_inv_pip_pim);
 	    }
 	}
     }
@@ -207,6 +245,8 @@ void ppimpippim::Loop()
     {
       h1K0_pt[i]->Write();
       h1Lambda_pt[i]->Write();
+      h1K0_pt_Lcut[i]->Write();
+      h1Lambda_pt_k0cut[i]->Write();
     }
   
   for(int i=0;i<nw;i++)
