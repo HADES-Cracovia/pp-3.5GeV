@@ -269,8 +269,8 @@ PPimPipPim::~PPimPipPim()
 
 void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
 {
-  //double F = 1.006;
-  double F=1;
+  double F = 1.006;
+  //double F=1;
   TVector3 v1, v2, v3, v4, v5;
   v2.SetXYZ(F*s.p_p*sin(D2R*s.p_theta)*cos(D2R*s.p_phi),F*s.p_p*sin(D2R*s.p_theta)*sin(D2R*s.p_phi),F*s.p_p*cos(D2R*s.p_theta));
   v3.SetXYZ(F*s.pim1_p*sin(D2R*s.pim1_theta)*cos(D2R*s.pim1_phi),F*s.pim1_p*sin(D2R*s.pim1_theta)*sin(D2R*s.pim1_phi),F*s.pim1_p*cos(D2R*s.pim1_theta));

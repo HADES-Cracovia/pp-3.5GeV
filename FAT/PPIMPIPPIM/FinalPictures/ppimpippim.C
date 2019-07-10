@@ -156,7 +156,7 @@ void ppimpippim::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       if (Cut(ientry) < 0
 	  || isBest_new!=1
-	  || mlp_output<0.6
+	  || mlp_output<0.58
 	  || miss_mass_kp<1077
 	  )
 	continue;

@@ -41,7 +41,7 @@ void ppimpippim::Loop()
   Long64_t nbytes = 0, nb = 0;
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pp.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pp_bis.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -345,7 +345,7 @@ void ppimpippim::Loop()
       p_pim_spectrum[k]->Fit(sig_bg[k],"R");
 
       
-      sig[k]->SetParameters(sig_bg[k]->GetParameter(0),
+      gaus[k]->SetParameters(sig_bg[k]->GetParameter(0),
 			    sig_bg[k]->GetParameter(1),
 			    sig_bg[k]->GetParameter(2)
 			    );
@@ -364,13 +364,18 @@ void ppimpippim::Loop()
       voigt_bg[k]->SetParameter(5,sig_bg[k]->GetParameter(4));
 
       
-      sig_int[k]=sig[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
+      sig_int[k]=gaus[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
       bg_int[k]=bg[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);
 
+      cout<<"sig: "<<sig_int[k]<<endl;
+      cout<<"bg: "<<bg_int[k]<<endl;
+      
       bg_eff[k]=bg_int[k]/bg_int[0];
       sig_eff[k]=sig_int[k]/sig_int[0];
       bg_rej[k]=1-bg_eff[k];
       signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
+      cout<<"signif: "<<signif[k]<<endl;
+      
       sig_to_bg[k]=sig_int[k]/bg_int[k];
       sig2_to_bg[k]=(sig_int[k]*sig_int[k])/bg_int[k];
     }

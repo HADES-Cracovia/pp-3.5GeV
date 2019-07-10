@@ -40,33 +40,59 @@ void ppimpippim::Loop()
   Long64_t nentries = fChain->GetEntriesFast();
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4).root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4)_pp_Lpippim.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
   
-  TMVA::Reader *reader = new TMVA::Reader();
-  reader->AddVariable("dist_p_pim", &dist_p_pim);
-  reader->AddVariable("dist_pip_pim", &dist_pip_pim);
-  reader->AddVariable("eVert_x",  &eVert_x);
-  reader->AddVariable("eVert_y",  &eVert_y);
-  reader->AddVariable("eVert_z",  &eVert_z);
-  reader->AddVariable("ver_pip_pim_x", &ver_pip_pim_x);
-  reader->AddVariable("ver_pip_pim_y", &ver_pip_pim_y);
-  reader->AddVariable("ver_pip_pim_z", &ver_pip_pim_z);
-  reader->AddVariable("ver_p_pim_x",&ver_p_pim_x);
-  reader->AddVariable("ver_p_pim_y",&ver_p_pim_y);
-  reader->AddVariable("ver_p_pim_z",&ver_p_pim_z);
-  reader->AddVariable("oa_lambda",&oa_lambda);
-  reader->AddVariable("dist_p_eVert", &dist_p_eVert);
-  reader->AddVariable("dist_pim_eVert", &dist_pim_eVert);
-  reader->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
-  reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
-  reader->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
+  TMVA::Reader *reader1 = new TMVA::Reader();
+  reader1->AddVariable("dist_p_pim", &dist_p_pim);
+  reader1->AddVariable("dist_pip_pim", &dist_pip_pim);
+  reader1->AddVariable("eVert_x",  &eVert_x);
+  reader1->AddVariable("eVert_y",  &eVert_y);
+  reader1->AddVariable("eVert_z",  &eVert_z);
+  reader1->AddVariable("ver_pip_pim_x", &ver_pip_pim_x);
+  reader1->AddVariable("ver_pip_pim_y", &ver_pip_pim_y);
+  reader1->AddVariable("ver_pip_pim_z", &ver_pip_pim_z);
+  reader1->AddVariable("ver_p_pim_x",&ver_p_pim_x);
+  reader1->AddVariable("ver_p_pim_y",&ver_p_pim_y);
+  reader1->AddVariable("ver_p_pim_z",&ver_p_pim_z);
+  reader1->AddVariable("oa_lambda",&oa_lambda);
+  reader1->AddVariable("dist_p_eVert", &dist_p_eVert);
+  reader1->AddVariable("dist_pim_eVert", &dist_pim_eVert);
+  reader1->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
+  reader1->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
+  reader1->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
   
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
-  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  reader1->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
 
+  TMVA::Reader *reader2 = new TMVA::Reader();
+  reader2->AddVariable("dist_p_pim", &dist_p_pim);
+  reader2->AddVariable("dist_pip_pim", &dist_pip_pim);
+  reader2->AddVariable("eVert_x",  &eVert_x);
+  reader2->AddVariable("eVert_y",  &eVert_y);
+  reader2->AddVariable("eVert_z",  &eVert_z);
+  reader2->AddVariable("ver_pip_pim_x", &ver_pip_pim_x);
+  reader2->AddVariable("ver_pip_pim_y", &ver_pip_pim_y);
+  reader2->AddVariable("ver_pip_pim_z", &ver_pip_pim_z);
+  reader2->AddVariable("ver_p_pim_x",&ver_p_pim_x);
+  reader2->AddVariable("ver_p_pim_y",&ver_p_pim_y);
+  reader2->AddVariable("ver_p_pim_z",&ver_p_pim_z);
+  reader2->AddVariable("oa_lambda",&oa_lambda);
+  reader2->AddVariable("dist_p_eVert", &dist_p_eVert);
+  reader2->AddVariable("dist_pim_eVert", &dist_pim_eVert);
+  reader2->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
+  reader2->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
+  reader2->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
+
+  //reader2->BookMVA("kMLP","");
+  //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
+  //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  //reader2->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
+
+  
   const int steps=100;
   const double xmin=1110;
   const double xmax=1120;
@@ -75,11 +101,14 @@ void ppimpippim::Loop()
   TF1 *sig[steps];
   TF1 *bg[steps];
   TF1 *sig_bg[steps];
+  TF1 *voigt_bg[steps];
+  
   char gaus_name[20];
   char sig_name[20];
   char bg_name[20];
   char sig_bg_name[20];
   char spectrum_name[20];
+  char voigt_bg_name[20];
   double sig_int[steps];
   double bg_int[steps];
   double sig_eff[steps];
@@ -97,13 +126,15 @@ void ppimpippim::Loop()
       sprintf(sig_bg_name,"sig_bg_%d",k);
       sprintf(spectrum_name,"spectrum_%d",k);
       sprintf(gaus_name,"gauss_%d",k);
+      sprintf(voigt_bg_name,"voigt_bg_name_%d",k);
       
       p_pim_spectrum[k]=new TH1F(spectrum_name,spectrum_name,1000,1000,2000);
       gaus[k]=new TF1(gaus_name,"gaus",1110,1120);
       sig[k]=new TF1(sig_name,"gaus(0)+pol1(3)",xmin,xmax);
       bg[k]= new TF1(bg_name,"pol4(0)",1080,1350);
       sig_bg[k]= new TF1(sig_bg_name,"gaus(0)+pol4(3)",1100,1135);
-
+      voigt_bg[k]=new TF1(voigt_bg_name,"[0]*TMath::Voigt((x-[1]),[2],[3],4)+pol4(4)",1100,1135);
+      
       cut[k]=(double)k/steps;
     }
    
@@ -113,8 +144,8 @@ void ppimpippim::Loop()
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     // if (Cut(ientry) < 0) continue;
-    Double_t mlp_output=reader->EvaluateMVA("kMLP");
-    Double_t mlp_response   = reader->GetMVAError();
+    Double_t mlp_output=reader1->EvaluateMVA("kMLP");
+    Double_t mlp_response   = reader1->GetMVAError();
       
     (*n_out)["isBest"]=isBest;
     (*n_out)["isBest_new"]=isBest_new;
@@ -310,10 +341,12 @@ void ppimpippim::Loop()
       sig[k]->SetParameter(2,gaus[k]->GetParameter(2));
       //sig[k]->SetParameter(3,ymean-(ymax-ymin)/(xmax-xmin));
       //sig[k]->SetParameter(4,(ymax-ymin)/(xmax-xmin));
-      
+
       p_pim_spectrum[k]->Fit(sig[k],"R");
 
       p_pim_spectrum[k]->Fit(bg[k],"R");
+
+      p_pim_spectrum[k]->Fit(voigt_bg[k],"R");
       
       sig_bg[k]->SetParameter(0,sig[k]->GetParameter(0));
       sig_bg[k]->SetParameter(1,sig[k]->GetParameter(1));
@@ -346,9 +379,16 @@ void ppimpippim::Loop()
 			   ,sig_bg[k]->GetParameter(7)
 			   //,sig_bg[k]->GetParameter(8)
 			   );
+      //****Voigt fit****
+      voigt_bg[k]->SetParameter(0,sig_bg[k]->GetParameter(0));
+      voigt_bg[k]->SetParameter(1,sig_bg[k]->GetParameter(1));
+      voigt_bg[k]->SetParameter(2,sig_bg[k]->GetParameter(2));
+      voigt_bg[k]->SetParameter(4,sig_bg[k]->GetParameter(3));
+      voigt_bg[k]->SetParameter(5,sig_bg[k]->GetParameter(4));
 
-      sig_int[k]=sig[k]->Integral(1110,1120)/p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
-      bg_int[k]=bg[k]->Integral(1110,1120)/p_pim_spectrum[k]->GetBinWidth(10);
+      
+      sig_int[k]=sig[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
+      bg_int[k]=bg[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);
 
       bg_eff[k]=bg_int[k]/bg_int[0];
       sig_eff[k]=sig_int[k]/sig_int[0];
@@ -402,6 +442,7 @@ void ppimpippim::Loop()
       sig[l]->Write();
       bg[l]->Write();
       sig_bg[l]->Write();
+      voigt_bg[l]->Write();
     }
   outFileData->Close();
 }

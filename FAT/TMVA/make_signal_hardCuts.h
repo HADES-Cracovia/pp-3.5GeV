@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Jun 17 15:42:41 2019 by ROOT version 5.34/34
+// Thu Mar 21 04:16:59 2019 by ROOT version 5.34/34
 // from TTree ppimpippim/ppimpippim
-// found on file: ../pp_new_vertex.root
+// found on file: /lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_odIzy_pippimL.root
 //////////////////////////////////////////////////////////
 
-#ifndef ppimpippim_h
-#define ppimpippim_h
+#ifndef make_signal_hardCuts_h
+#define make_signal_hardCuts_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,7 +16,7 @@
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
-class ppimpippim {
+class make_signal_hardCuts {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -58,15 +58,7 @@ public :
    Float_t         hypothesis_quality;
    Float_t         isBest;
    Float_t         isBest_new;
-   Float_t         k0_p;
-   Float_t         k0_pt;
-   Float_t         k0_theta;
-   Float_t         k0_w;
    Float_t         lambda_mom_z;
-   Float_t         lambda_p;
-   Float_t         lambda_pt;
-   Float_t         lambda_theta;
-   Float_t         lambda_w;
    Float_t         m_inv_p_pim;
    Float_t         m_inv_p_pim1;
    Float_t         m_inv_p_pim2;
@@ -140,7 +132,6 @@ public :
    Float_t         pip_sim_vertex_y;
    Float_t         pip_sim_vertex_z;
    Float_t         pip_theta;
-   Float_t         simon_cuts;
    Float_t         totalmult;
    Float_t         trigdownscale;
    Float_t         trigdownscaleflag;
@@ -162,8 +153,9 @@ public :
    Float_t         ver_pip_pim_x;
    Float_t         ver_pip_pim_y;
    Float_t         ver_pip_pim_z;
-
-   // List of branches
+   Float_t         simon_cuts;
+  Float_t         mlp_output;
+  // List of branches
    TBranch        *b_dist_lambda1_eVert;   //!
    TBranch        *b_dist_lambda1_pim2;   //!
    TBranch        *b_dist_lambda1_pip;   //!
@@ -200,15 +192,7 @@ public :
    TBranch        *b_hypothesis_quality;   //!
    TBranch        *b_isBest;   //!
    TBranch        *b_isBest_new;   //!
-   TBranch        *b_k0_p;   //!
-   TBranch        *b_k0_pt;   //!
-   TBranch        *b_k0_theta;   //!
-   TBranch        *b_k0_w;   //!
-   TBranch        *b_lambda_mom_z;   //!
-   TBranch        *b_lambda_p;   //!
-   TBranch        *b_lambda_pt;   //!
-   TBranch        *b_lambda_theta;   //!
-   TBranch        *b_lambda_w;   //!
+   TBranch        *b_lambda_mom_z;
    TBranch        *b_m_inv_p_pim;   //!
    TBranch        *b_m_inv_p_pim1;   //!
    TBranch        *b_m_inv_p_pim2;   //!
@@ -282,7 +266,6 @@ public :
    TBranch        *b_pip_sim_vertex_y;   //!
    TBranch        *b_pip_sim_vertex_z;   //!
    TBranch        *b_pip_theta;   //!
-   TBranch        *b_simon_cuts;   //!
    TBranch        *b_totalmult;   //!
    TBranch        *b_trigdownscale;   //!
    TBranch        *b_trigdownscaleflag;   //!
@@ -304,9 +287,11 @@ public :
    TBranch        *b_ver_pip_pim_x;   //!
    TBranch        *b_ver_pip_pim_y;   //!
    TBranch        *b_ver_pip_pim_z;   //!
-
-   ppimpippim(TTree *tree=0);
-   virtual ~ppimpippim();
+   TBranch        *b_simon_cuts;
+   TBranch        *b_mlp_output;
+  
+   make_signal_hardCuts(TTree *tree=0);
+   virtual ~make_signal_hardCuts();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -318,17 +303,15 @@ public :
 
 #endif
 
-#ifdef ppimpippim_cxx
-ppimpippim::ppimpippim(TTree *tree) : fChain(0) 
+#ifdef make_signal_hardCuts_cxx
+make_signal_hardCuts::make_signal_hardCuts(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-     //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_new_vertex.root");
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_Lpippim_ver3_bis_check.root");
-
-     if (!f || !f->IsOpen()) {
-         f = new TFile("../pp_Lpippim_ver3_bis_check.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim.root");
+      if (!f || !f->IsOpen()) {
+         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim.root");
       }
       f->GetObject("ppimpippim",tree);
 
@@ -336,19 +319,19 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-ppimpippim::~ppimpippim()
+make_signal_hardCuts::~make_signal_hardCuts()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t ppimpippim::GetEntry(Long64_t entry)
+Int_t make_signal_hardCuts::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ppimpippim::LoadTree(Long64_t entry)
+Long64_t make_signal_hardCuts::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -361,7 +344,7 @@ Long64_t ppimpippim::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ppimpippim::Init(TTree *tree)
+void make_signal_hardCuts::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -413,15 +396,6 @@ void ppimpippim::Init(TTree *tree)
    fChain->SetBranchAddress("hypothesis_quality", &hypothesis_quality, &b_hypothesis_quality);
    fChain->SetBranchAddress("isBest", &isBest, &b_isBest);
    fChain->SetBranchAddress("isBest_new", &isBest_new, &b_isBest_new);
-   fChain->SetBranchAddress("k0_p", &k0_p, &b_k0_p);
-   fChain->SetBranchAddress("k0_pt", &k0_pt, &b_k0_pt);
-   fChain->SetBranchAddress("k0_theta", &k0_theta, &b_k0_theta);
-   fChain->SetBranchAddress("k0_w", &k0_w, &b_k0_w);
-   fChain->SetBranchAddress("lambda_mom_z", &lambda_mom_z, &b_lambda_mom_z);
-   fChain->SetBranchAddress("lambda_p", &lambda_p, &b_lambda_p);
-   fChain->SetBranchAddress("lambda_pt", &lambda_pt, &b_lambda_pt);
-   fChain->SetBranchAddress("lambda_theta", &lambda_theta, &b_lambda_theta);
-   fChain->SetBranchAddress("lambda_w", &lambda_w, &b_lambda_w);
    fChain->SetBranchAddress("m_inv_p_pim", &m_inv_p_pim, &b_m_inv_p_pim);
    fChain->SetBranchAddress("m_inv_p_pim1", &m_inv_p_pim1, &b_m_inv_p_pim1);
    fChain->SetBranchAddress("m_inv_p_pim2", &m_inv_p_pim2, &b_m_inv_p_pim2);
@@ -495,7 +469,6 @@ void ppimpippim::Init(TTree *tree)
    fChain->SetBranchAddress("pip_sim_vertex_y", &pip_sim_vertex_y, &b_pip_sim_vertex_y);
    fChain->SetBranchAddress("pip_sim_vertex_z", &pip_sim_vertex_z, &b_pip_sim_vertex_z);
    fChain->SetBranchAddress("pip_theta", &pip_theta, &b_pip_theta);
-   fChain->SetBranchAddress("simon_cuts", &simon_cuts, &b_simon_cuts);
    fChain->SetBranchAddress("totalmult", &totalmult, &b_totalmult);
    fChain->SetBranchAddress("trigdownscale", &trigdownscale, &b_trigdownscale);
    fChain->SetBranchAddress("trigdownscaleflag", &trigdownscaleflag, &b_trigdownscaleflag);
@@ -517,10 +490,12 @@ void ppimpippim::Init(TTree *tree)
    fChain->SetBranchAddress("ver_pip_pim_x", &ver_pip_pim_x, &b_ver_pip_pim_x);
    fChain->SetBranchAddress("ver_pip_pim_y", &ver_pip_pim_y, &b_ver_pip_pim_y);
    fChain->SetBranchAddress("ver_pip_pim_z", &ver_pip_pim_z, &b_ver_pip_pim_z);
+   fChain->SetBranchAddress("simon_cuts", &simon_cuts, &b_simon_cuts);
+   fChain->SetBranchAddress("mlp_output", &mlp_output, &b_mlp_output);
    Notify();
 }
 
-Bool_t ppimpippim::Notify()
+Bool_t make_signal_hardCuts::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -531,18 +506,30 @@ Bool_t ppimpippim::Notify()
    return kTRUE;
 }
 
-void ppimpippim::Show(Long64_t entry)
+void make_signal_hardCuts::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ppimpippim::Cut(Long64_t entry)
+Int_t make_signal_hardCuts::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
-   return 1;
+  if(
+     p_sim_parentid==18
+     && p_sim_id==14
+     && pim_sim_parentid==18
+     //&& simon_cuts==1
+     && isBest_new==1
+     && pip_sim_id==8
+     && pip_sim_parentid==0
+     && mlp_output>0.59
+     )
+    return 1;
+  else
+    return 0;
 }
-#endif // #ifdef ppimpippim_cxx
+#endif // #ifdef make_signal_hardCuts_cxx
