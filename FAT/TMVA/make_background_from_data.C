@@ -116,8 +116,9 @@ void make_background_from_data::Loop()
       {
 	if(isBest_new==1
 	   && miss_mass_kp>1077
-	   &&m_inv_p_pim<1135
-	   &&m_inv_p_pim>995)
+	   && m_inv_p_pim<1135
+	   && m_inv_p_pim>995
+	   )
 	  
 	  signal_data->Fill();
       }

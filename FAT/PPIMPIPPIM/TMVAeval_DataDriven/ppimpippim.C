@@ -122,7 +122,7 @@ void ppimpippim::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
       Double_t mlp_output=reader->EvaluateMVA("kMLP");
-      Double_t mlp_response   = reader->GetMVAError();
+      Double_t mlp_response   = reader->GetMVAError("kLMP");
       
       (*n_out)["isBest"]=isBest;
       (*n_out)["isBest_new"]=isBest_new;
