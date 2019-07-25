@@ -30,20 +30,22 @@ void createHistos::Loop()
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
    if (fChain == 0) return;
-   const int bin=250;
+   const int bin=200;
    const int xmin=1000;
    const int xmax=2000;
    const int nsignal=20;
+   double sideband=10;
    int step;
    TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
    TH1F* background=new TH1F("background","background from side-band",bin,xmin,xmax);
    TH1F* data=new TH1F("data","data from experiment",bin,xmin,xmax);
+   TGraphErrors* resi=new TGraphErrors(bin);
    
    TFile *MyFile = new TFile("Event.root","recreate");
  
    Long64_t nentries = fChain->GetEntries();
    Long64_t nbytes = 0, nb = 0;
-   step =(int)nentries/1000;
+   step =(int)nentries/15;
    for (Long64_t jentry=0; jentry<nentries;jentry++)
      {
       Long64_t ientry = LoadTree(jentry);
@@ -55,10 +57,15 @@ void createHistos::Loop()
       if(isBest_new!=1
 	 ||mlp_output<0.58
 	 ||miss_mass_kp<1350
+	 ||m_inv_pip_pim>410
+	 ||dist_pip_pim>15
 	 )
 	continue;
-      data->Fill(m_inv_p_pim_pip_pim);
-      if(m_inv_p_pim<1110 ||m_inv_p_pim>1120)
+
+      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
+	data->Fill(m_inv_p_pim_pip_pim);
+      if((m_inv_p_pim<1110 && m_inv_p_pim>1110-sideband)
+	 ||(m_inv_p_pim>1120 && m_inv_p_pim<1120+sideband))
 	background->Fill(m_inv_p_pim_pip_pim);
    }
 
@@ -69,8 +76,17 @@ void createHistos::Loop()
 
    //Fill random signal
    TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
-   signal->FillRandom("L1520Spectral",nsignal);
-   
+   signal->FillRandom("L1520Spectral",10000);
+
+   signal->Scale((double)nsignal/10000);
+   //Calculate residuals
+   for(int i=0;i<bin;i++)
+     {
+       resi->SetPoint(i,background->GetBinCenter(i),data->GetBinContent(i)-background->GetBinContent(i));
+       resi->SetPointError(i,background->GetBinWidth(i),TMath::Sqrt(TMath::Power(data->GetBinError(i),2)+TMath::Power(background->GetBinError(i),2)));
+     }
+
+   resi->Write();
    signal->Write();
    background->Write();
    data->Write();
