@@ -30,7 +30,7 @@ void createHistos::Loop()
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
    if (fChain == 0) return;
-   const int bin=200;
+   const int bin=250;
    const int xmin=1000;
    const int xmax=2000;
    const int nsignal=20;
