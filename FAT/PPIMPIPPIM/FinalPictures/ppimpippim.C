@@ -4,6 +4,23 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <iostream>
+#include <TKey.h>
+#include <TMath.h>
+#include <TObject.h>
+
+void normalize(TH1* hist)
+{
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      double scale=1/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
+      hist->SetBinContent(j, hist->GetBinContent(j) / hist->GetBinWidth(j) *scale);
+      //hist->SetBinError( j, TMath::Sqrt( hist->GetBinContent(j) ) );
+      hist->SetBinError( j, hist->GetBinError(j) / hist->GetBinWidth(j) * scale );
+      hist->GetYaxis()->SetTitle("#frac{dN}{dE} [#frac{#mu b}{MeV}]");
+    }
+  
+}
+
 
 void ppimpippim::Loop()
 {
@@ -30,11 +47,15 @@ void ppimpippim::Loop()
   // METHOD2: replace line
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
+  
   TFile *MyFile = new TFile("pictures.root","RECREATE");
-  if ( MyFile->IsOpen() ) printf("File opened successfully\n");
+  if ( MyFile->IsOpen() )
+    printf("File opened successfully\n");
   else
     printf("Cann't open a file\n");
-    
+
+  TDirectory *MyDirectory=new TDirectory("finalHistograms","Final Histograms destination");
+  
   const int npt=10;
   const int nw=10;
 
@@ -142,6 +163,7 @@ void ppimpippim::Loop()
       //h1Lambda_w_k0cut[ii]->Print();
     }
   */
+
   //Main loop
   cout<<"start main loop"<<endl;
   if (fChain == 0) return;
@@ -224,6 +246,7 @@ void ppimpippim::Loop()
   cout<<"End of main loop"<<endl;
   
   //Save histograms
+    
   h2K0_wpt->Write();
   h2Lambda_wpt->Write();
 
@@ -256,6 +279,22 @@ void ppimpippim::Loop()
       h1K0_w_Lcut[i]->Write();
       h1Lambda_w_k0cut[i]->Write();
     }
-    
+  
+  
+  TIter next(MyFile->GetListOfKeys());
+  TKey *key;
+
+  
+  while ((key = (TKey*)next()))
+    {
+      TClass *cl = gROOT->GetClass(key->GetClassName());
+      if (!cl->InheritsFrom("TH1") || cl->InheritsFrom("TH2"))
+	continue;
+      TH1 *h = (TH1*)key->ReadObj();
+      cout<<"histogram name:" <<h->GetName()<<endl;
+      normalize(h);
+      h->Write(0,TObject::kWriteDelete);
+    }
+  
   MyFile->Close();
 }

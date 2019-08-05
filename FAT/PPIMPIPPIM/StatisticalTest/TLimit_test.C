@@ -39,9 +39,11 @@ double calcchi2(TH1F* hist, TF1* fuc, double xmin=0, double xmax=-1)
 
   for(int i=binmin;i<binmax;i++)
     {
-      chi2=chi2+TMath::Power(hist->GetBinContent(i)-fuc->Eval((hist->GetBinCenter(i))),2);
+      double chi2_i=TMath::Power(hist->GetBinContent(i)-fuc->Eval((hist->GetBinCenter(i))),2);
+      double sigma2=hist->GetBinContent(i)+fuc->Eval((hist->GetBinCenter(i)));
+      chi2=chi2+chi2_i/sigma2;
     }
-  return (chi2/nbin);
+  return (chi2/(nbin-1));
 }
 
 double calcchi2( TF1* fuc, TH1F* hist, double xmin=0, double xmax=-1)
@@ -53,17 +55,43 @@ double calcchi2( TF1* fuc, TH1F* hist, double xmin=0, double xmax=-1)
 void TLimit_test()
 {
   TCanvas* cTLimit=new TCanvas("cTLimit");
-  cTLimit->cd();
-  
+  //TCanvas* cFit1116=new TCanvas("cFit1116");
   TFile* infile=new TFile("Event.root","READ");
   double chi2;
   TH1F* sh=(TH1F*)infile->Get("signal");
+  sh->Scale(1);
   TH1F* bh=(TH1F*)infile->Get("background");
   TH1F* dh=(TH1F*)infile->Get("data");
+  //TH1F* l1116=(TH1F*)infile->Get("oryginal_spectrum");
+
+  /*
+  cFit1116->cd();
+  
+  TF1* fVoigt_bg= new TF1("fVoigt_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",1090.00,1156.67);
+  TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
+  TF1* fbg= new TF1("fbg","pol5(4)",1090.00,1156.67);
+
+  fVoigt_bg->SetParameters(13406.8,1114.78,0.1819,15.63,-53756.9,9.35043,0.0342083,3.07071e-5,7.00426e-9,-3.02549e-11);
+  l1116->Fit(fVoigt_bg,"R");
+  fVoigt_bg->SetRange(1080,1165);
+  //l1116->Fit(fVoigt_bg,"R");
+  l1116->Draw();
+  fbg->SetParameters(fVoigt_bg->GetParameter(4),fVoigt_bg->GetParameter(5),fVoigt_bg->GetParameter(6),fVoigt_bg->GetParameter(7),fVoigt_bg->GetParameter(8),fVoigt_bg->GetParameter(9));
+  fVoigt->SetParameters(fVoigt_bg->GetParameter(0),fVoigt_bg->GetParameter(1),fVoigt_bg->GetParameter(2),fVoigt_bg->GetParameter(3));
+  fVoigt->Draw("same");
+  fVoigt->SetLineColor(kGreen);
+  fbg->Draw("same");
+  fbg->SetLineColor(kBlue);
+  */
+  
+  cTLimit->cd();    
+  sh->Sumw2();
+  bh->Sumw2();
+  dh->Sumw2();
   
 
   TLimitDataSource* mydatasource = new TLimitDataSource(sh,bh,dh);
-  TConfidenceLevel *myconfidence = TLimit::ComputeLimit(mydatasource,50000);
+  TConfidenceLevel *myconfidence = TLimit::ComputeLimit(mydatasource,100000);
 
   std::cout << "  CLs    : " << myconfidence->CLs()  << std::endl;
   std::cout << "  CLsb   : " << myconfidence->CLsb() << std::endl;
