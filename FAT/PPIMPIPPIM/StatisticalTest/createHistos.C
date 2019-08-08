@@ -87,7 +87,9 @@ void createHistos::Loop()
    //normalize background to signal
    TCanvas* cFit1116=new TCanvas("cFit1116");
    cFit1116->cd();
-  
+
+   oryginal_spectrum->Sumw2();
+   
    TF1* fVoigt_bg= new TF1("fVoigt_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",1090.00,1156.67);
    TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
    TF1* fbg= new TF1("fbg","pol5(4)",1090.00,1156.67);
@@ -110,7 +112,8 @@ void createHistos::Loop()
    background->Scale(intsideband/intB);
 
    //Fill random signal
-   TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
+   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
+   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);
    signal->FillRandom("L1520Spectral",10000);
 
    signal->Scale((double)nsignal/10000);

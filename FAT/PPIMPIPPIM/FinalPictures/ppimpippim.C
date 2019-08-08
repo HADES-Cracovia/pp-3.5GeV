@@ -12,7 +12,7 @@ void normalize(TH1* hist)
 {
   for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
     {
-      double scale=1/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
+      double scale=1.0/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
       hist->SetBinContent(j, hist->GetBinContent(j) / hist->GetBinWidth(j) *scale);
       //hist->SetBinError( j, TMath::Sqrt( hist->GetBinContent(j) ) );
       hist->SetBinError( j, hist->GetBinError(j) / hist->GetBinWidth(j) * scale );
@@ -59,9 +59,9 @@ void ppimpippim::Loop()
   const int npt=10;
   const int nw=10;
 
-  int pt_points=800;
+  int pt_points=500;
   int w_points=500;
-  double ptmax=1600;
+  double ptmax=1000;
   double wmax=2;
 
   char L_pt_name[50];
@@ -108,8 +108,8 @@ void ppimpippim::Loop()
       cout<<"pt_name: "<<L_pt_name<<" "<<K0_pt_name<<endl;
       cout<<"pt_title: "<<L_pt_title<<" "<<K0_pt_title<<endl;
       
-      h1Lambda_pt[i]=new TH1F(L_pt_name,L_pt_title,pt_points,0,ptmax);
-      h1K0_pt[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,ptmax);
+      h1Lambda_pt[i]=new TH1F(L_pt_name,L_pt_title,pt_points,1000,2000);
+      h1K0_pt[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,1000);
 
       sprintf(L_pt_name,"Lambda_pt_%.2f_%.2f_k0cut",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
       sprintf(L_pt_title,"pt_{#Lambda(1116)}(%.2f, %.2f) K^{0} cut;M^{inv}_{p #pim^{-}}[MeV]",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
@@ -117,8 +117,8 @@ void ppimpippim::Loop()
       sprintf(K0_pt_name,"K0_pt_%.2f_%.2f_Lcut",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
       sprintf(K0_pt_title,"pt_{K^{0}} (%.2f, %.2f) L(1116) cut; M^{inv}_{p #pim^{-}}[MeV]",ptmax*(double)i/npt,ptmax*(double)(i+1)/npt);
 
-      h1Lambda_pt_k0cut[i]=new TH1F(L_pt_name,L_pt_title,pt_points,0,ptmax);
-      h1K0_pt_Lcut[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,ptmax);
+      h1Lambda_pt_k0cut[i]=new TH1F(L_pt_name,L_pt_title,pt_points,1000,2000);
+      h1K0_pt_Lcut[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,1000);
     }
   /*
   for(int i=0;i<npt;i++)
@@ -140,8 +140,8 @@ void ppimpippim::Loop()
       cout<<"w_name: "<<L_w_name<<" "<<K0_w_name<<endl;
       cout<<"w_title: "<<L_w_title<<" "<<K0_w_title<<endl;
       
-      h1Lambda_w[i]=new TH1F(L_w_name,L_w_title,w_points,0,wmax);
-      h1K0_w[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,wmax);
+      h1Lambda_w[i]=new TH1F(L_w_name,L_w_title,w_points,1000,2000);
+      h1K0_w[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,1000);
       
       sprintf(L_w_name,"Lambda_w_%.2f_%.2f_k0cut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       sprintf(L_w_title,"w_{#Lambda(1116)}(%.2f, %.2f) K^{0} cut; M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
@@ -149,8 +149,8 @@ void ppimpippim::Loop()
       sprintf(K0_w_name,"K0_w_%.2f_%.2f_Lcut",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
       sprintf(K0_w_title,"w_{K^{0}} (%.2f, %.2f) L(1116) cut; M^{inv}_{p #pim^{-}}[MeV]",wmax*(double)i/nw,wmax*(double)(i+1)/nw);
 
-      h1Lambda_w_k0cut[i]=new TH1F(L_w_name,L_w_title,w_points,0,wmax);
-      h1K0_w_Lcut[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,wmax);
+      h1Lambda_w_k0cut[i]=new TH1F(L_w_name,L_w_title,w_points,1000,2000);
+      h1K0_w_Lcut[i]=new TH1F(K0_w_name,K0_w_title,w_points,0,1000);
           
     }
   /*
@@ -204,8 +204,8 @@ void ppimpippim::Loop()
 	{
 	  //cout<<"m_inv_p_pim: "<<m_inv_p_pim<<endl;
 	  //cout<<"npt:"<<npt<<" i:"<<i<<endl;
-	  double pt_min=(double)i/npt*ptmax;
-	  double pt_max=(double)(i+1)/npt*ptmax;
+	  double pt_min=ptmax*((double)i)/npt;
+	  double pt_max=ptmax*((double)(i+1))/npt;
 	  //h1Lambda_pt[i]->Print();
 	  //h1K0_pt[i]->Print();
 	  

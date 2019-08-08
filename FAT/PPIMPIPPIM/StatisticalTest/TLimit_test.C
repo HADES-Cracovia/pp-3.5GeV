@@ -109,7 +109,7 @@ void TLimit_test()
   cChi2->cd(1);
   double fit_min=1440;
   double fit_max=1600;
-  int amp_steps=100;
+  int amp_steps=1000;
   TGraph* chi2_vs_ampl=new TGraph(amp_steps);
   
   TF1* bg=new TF1("bg","pol3(0)",fit_min,fit_max);
@@ -123,9 +123,11 @@ void TLimit_test()
 
   for(int j = 0; j<amp_steps+1;j++)
     {
-      TF1* bg_sig=new TF1("bg_sig","pol3(3)+[0]*exp(-0.5*((x-[1])/[2])**2)",fit_min,fit_max);
-      bg_sig->SetParameters(j,1520,16,
-			    bg->GetParameter(0),bg->GetParameter(1),bg->GetParameter(2),bg->GetParameter(3));
+      //TF1* bg_sig=new TF1("bg_sig","pol3(3)+[0]*exp(-0.5*((x-[1])/[2])**2)",fit_min,fit_max);
+      TF1* bg_sig=new TF1("bg_sig","pol3(0)+[4]*TMath::BreitWigner(x,1519.5,15.6)",fit_min,fit_max);
+      //bg_sig->SetParameters(j,1520,16,bg->GetParameter(0),bg->GetParameter(1),bg->GetParameter(2),bg->GetParameter(3));
+      bg_sig->SetParameters(bg->GetParameter(0),bg->GetParameter(1),bg->GetParameter(2),bg->GetParameter(3),j);
+      //bg_sig->Draw();
       double chi2_l=calcchi2(bg_sig,dh,fit_min,fit_max);
       chi2_vs_ampl->SetPoint(j,j,chi2_l);
     }
