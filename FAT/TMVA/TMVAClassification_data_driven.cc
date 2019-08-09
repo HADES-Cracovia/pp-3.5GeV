@@ -22,7 +22,7 @@
 using namespace std;
 
 //______________________________________________________________________________
-void TMVAClassification_data_driven(TString extraSuffix = "big_network", Long64_t DesEntries = -1) {
+void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t DesEntries = -1) {
   TMVA::Tools::Instance();
 
   cout << "==> Start TMVAClassification" << endl;
@@ -71,9 +71,9 @@ void TMVAClassification_data_driven(TString extraSuffix = "big_network", Long64_
   //factory->AddVariable("pip_p","pip_p","mm",'F');
   factory->AddVariable("dist_p_pim", "dist_p_pim","mm",'F',0,150);
   factory->AddVariable("dist_pip_pim", "dist_pip_pim","mm",'F',0,150);
-  factory->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
-  factory->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
-  factory->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
+  //factory->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
+  //factory->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
+  //factory->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
   factory->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-80,80);
   factory->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-80,80);
   factory->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-150,150);
@@ -93,7 +93,8 @@ void TMVAClassification_data_driven(TString extraSuffix = "big_network", Long64_
   //#warning Momentum diabled!
 
   //TFile* input    = TFile::Open(treeFile, "UPDATE");
-  TFile* input2   = TFile::Open("input_from_data_miss_mass_3.root", "UPDATE");
+  //TFile* input2   = TFile::Open("input_from_data_miss_mass_3.root", "UPDATE");
+  TFile* input2   = TFile::Open("input_from_data_miss_mass_4_new_vertex.root","UPDATE");
   cout<<"load input file"<<endl;
   //TTree* tSigAll  = (TTree*) input->Get("signal");
   //TTree* tBackAll = (TTree*) input->Get("background");

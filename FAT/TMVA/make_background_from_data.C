@@ -36,7 +36,7 @@ void make_background_from_data::Loop()
   if(fChain == 0)
     return;
 
-  TFile* outputFile = new TFile("input_from_data_miss_mass_3.root","recreate");
+  TFile* outputFile = new TFile("input_from_data_miss_mass_4_new_vertex.root","recreate");
   if( outputFile == 0 )
     {
       cout << "Error: file exampleEvents.root not found" << endl;
