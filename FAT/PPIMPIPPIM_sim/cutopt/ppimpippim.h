@@ -328,9 +328,9 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim_check.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DD/pp_after_TMVA_DD_6n+4_pNb_newVertex.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim_check.root");
+       f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6n+4_pNb_newVertex.root");
       }
       f->GetObject("ppimpippim",tree);
 

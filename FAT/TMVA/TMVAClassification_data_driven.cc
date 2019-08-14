@@ -83,9 +83,9 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   factory->AddVariable("oa_lambda", "oa_lambda","deg",'F',0,180);
   //factory->AddVariable("oa_pip_p","oa_pip_p","mm",'F');
   //factory->AddVariable("lambda_mom_z","lambda_mom_z","mm",'F');
-  factory->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
-  factory->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
-  factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
+  //factory->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
+  //factory->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
+  //factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
   factory->AddVariable("dist_lambda_ver_pip_pim","dist_lambda_ver_pip_pim","mm",'F',0,140);
   factory->AddVariable("dist_ver_to_ver","dist_ver_to_ver","mm",'F',0,150);
   

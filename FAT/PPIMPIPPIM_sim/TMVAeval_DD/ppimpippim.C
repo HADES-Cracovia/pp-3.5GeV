@@ -40,7 +40,7 @@ void ppimpippim::Loop()
   Long64_t nentries = fChain->GetEntriesFast();
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4)_pp_Lpippim.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4)_pNb_newVertex.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -65,9 +65,10 @@ void ppimpippim::Loop()
   reader1->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
   
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
-  //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
-  reader1->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
+  reader1->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  //reader1->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
 
+  /*
   TMVA::Reader *reader2 = new TMVA::Reader();
   reader2->AddVariable("dist_p_pim", &dist_p_pim);
   reader2->AddVariable("dist_pip_pim", &dist_pip_pim);
@@ -86,7 +87,7 @@ void ppimpippim::Loop()
   reader2->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
   reader2->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   reader2->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
-
+  */
   //reader2->BookMVA("kMLP","");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
