@@ -4,7 +4,7 @@
 
 int run_scripts()
 {
-  gROOT->ProcessLine(".L createHistos.C");
+  gROOT->ProcessLine(".L createHistos.C++");
   createHistos l;
   l.Loop();
   gROOT->ProcessLine(".x TLimit_test.C");

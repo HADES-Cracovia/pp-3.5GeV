@@ -134,8 +134,8 @@ void ppimpippim::Loop()
     {
       Long64_t ientry = LoadTree(jentry);
 
-      //dist=dist_ver_to_ver;
-      dist=ver_p_pim_z-ver_pip_pim_z;
+      dist=dist_ver_to_ver;
+      //dist=ver_p_pim_z-ver_pip_pim_z;
       
       if (ientry < 0)
 	break;

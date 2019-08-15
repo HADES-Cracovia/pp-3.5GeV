@@ -68,7 +68,9 @@ void createHistos::Loop()
       if(isBest_new!=1
 	 ||mlp_output<0.58
 	 ||miss_mass_kp<1350
-	 //||m_inv_pip_pim>410
+	 ||m_inv_pip_pim>410
+	 ||dist_ver_to_ver<40;
+	 ||(oa_lambda>20 && oa_lambda<160)
 	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
 	 //||dist_ver_to_ver<14
@@ -94,7 +96,9 @@ void createHistos::Loop()
    TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
    TF1* fbg= new TF1("fbg","pol5(4)",1090.00,1156.67);
 
-   fVoigt_bg->SetParameters(13406.8,1114.78,0.1819,15.63,-53756.9,9.35043,0.0342083,3.07071e-5,7.00426e-9,-3.02549e-11);
+   fVoigt_bg->SetParameters(527.3,1114,2.73,1,-9266,1.7,0.0061,5.51379e-6,1.23803e-9,-5.64175e-12);
+   fVoigt_bg->SetParLimits(3,0,2);
+   fVoigt_bg->SetParLimits(1,1112,1117);
    oryginal_spectrum->Fit(fVoigt_bg,"R");
    fVoigt_bg->SetRange(1080,1165);
    //oryginal_spectrum->Fit(fVoigt_bg,"R");
