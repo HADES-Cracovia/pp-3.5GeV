@@ -41,7 +41,7 @@ void ppimpippim::Loop()
   Long64_t nbytes = 0, nb = 0;
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_new_Vertex","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -49,9 +49,9 @@ void ppimpippim::Loop()
   TMVA::Reader *reader = new TMVA::Reader();
   reader->AddVariable("dist_p_pim", &dist_p_pim);
   reader->AddVariable("dist_pip_pim", &dist_pip_pim);
-  //reader->AddVariable("eVert_x",  &eVert_x);
-  //reader->AddVariable("eVert_y",  &eVert_y);
-  //reader->AddVariable("eVert_z",  &eVert_z);
+  reader->AddVariable("eVert_x",  &eVert_x);
+  reader->AddVariable("eVert_y",  &eVert_y);
+  reader->AddVariable("eVert_z",  &eVert_z);
   reader->AddVariable("ver_pip_pim_x", &ver_pip_pim_x);
   reader->AddVariable("ver_pip_pim_y", &ver_pip_pim_y);
   reader->AddVariable("ver_pip_pim_z", &ver_pip_pim_z);
@@ -242,7 +242,10 @@ void ppimpippim::Loop()
       (*n_out)["m_inv_pip_pim"] = m_inv_pip_pim;
       (*n_out)["m_inv_p_pim_pip_pim"] = m_inv_p_pim_pip_pim;
       (*n_out)["m_inv_p_pip"] = m_inv_p_pip;
-  
+
+      (*n_out)["m_inv_p_pim_pim"]=m_inv_p_pim_pim;
+      (*n_out)["m_inv_p_pim_pip"]=m_inv_p_pim_pip;
+      
       (*n_out)["ver_p_pim1_x"]=ver_p_pim1_x;
       (*n_out)["ver_p_pim1_y"]=ver_p_pim1_y;
       (*n_out)["ver_p_pim1_z"]=ver_p_pim1_z;

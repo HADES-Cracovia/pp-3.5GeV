@@ -42,7 +42,7 @@ void createHistos::Loop()
    const int xmin=1000;
    const int xmax=2000;
    const int nsignal=20;
-   double sidebandmin=16;
+   double sidebandmin=10;
    double sidebandmax=26;
    int step;
    TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
@@ -51,7 +51,8 @@ void createHistos::Loop()
    TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band",bin*6,xmin,xmax);
    TGraphErrors* resi=new TGraphErrors(bin);
    TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);   
-   TFile *MyFile = new TFile("Event.root","recreate");
+
+   TFile *MyFile = new TFile("dist_ver_to_ver_20.root","recreate");
  
    Long64_t nentries = fChain->GetEntries();
    Long64_t nbytes = 0, nb = 0;
@@ -69,8 +70,9 @@ void createHistos::Loop()
 	 ||mlp_output<0.58
 	 ||miss_mass_kp<1350
 	 ||m_inv_pip_pim>410
-	 ||dist_ver_to_ver<40;
+	 ||dist_ver_to_ver<20
 	 ||(oa_lambda>20 && oa_lambda<160)
+	 //||dist_pip_pim>15
 	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
 	 //||dist_ver_to_ver<14
@@ -94,14 +96,23 @@ void createHistos::Loop()
    
    TF1* fVoigt_bg= new TF1("fVoigt_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",1090.00,1156.67);
    TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
-   TF1* fbg= new TF1("fbg","pol5(4)",1090.00,1156.67);
+   TF1* fbg= new TF1("fbg","pol5(0)",1090.00,1156.67);
 
    fVoigt_bg->SetParameters(527.3,1114,2.73,1,-9266,1.7,0.0061,5.51379e-6,1.23803e-9,-5.64175e-12);
    fVoigt_bg->SetParLimits(3,0,2);
    fVoigt_bg->SetParLimits(1,1112,1117);
+   fVoigt_bg->SetRange(1106,1121);
    oryginal_spectrum->Fit(fVoigt_bg,"R");
-   fVoigt_bg->SetRange(1080,1165);
-   //oryginal_spectrum->Fit(fVoigt_bg,"R");
+   fVoigt_bg->SetRange(1100,1126);
+   oryginal_spectrum->Fit(fVoigt_bg,"R");
+   fVoigt_bg->SetRange(1092,1137);
+   oryginal_spectrum->Fit(fVoigt_bg,"R");
+   fVoigt_bg->SetRange(1088,1141); 
+   oryginal_spectrum->Fit(fVoigt_bg,"R");
+   fVoigt_bg->SetRange(1082,1141); 
+   oryginal_spectrum->Fit(fVoigt_bg,"R");
+
+
    oryginal_spectrum->Draw();
    fbg->SetParameters(fVoigt_bg->GetParameter(4),fVoigt_bg->GetParameter(5),fVoigt_bg->GetParameter(6),fVoigt_bg->GetParameter(7),fVoigt_bg->GetParameter(8),fVoigt_bg->GetParameter(9));
    fVoigt->SetParameters(fVoigt_bg->GetParameter(0),fVoigt_bg->GetParameter(1),fVoigt_bg->GetParameter(2),fVoigt_bg->GetParameter(3));

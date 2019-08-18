@@ -7,6 +7,8 @@
 #include <TKey.h>
 #include <TMath.h>
 #include <TObject.h>
+#include <TH1F.h>
+#include <TF1.h>
 
 void normalize(TH1* hist)
 {
@@ -56,8 +58,8 @@ void ppimpippim::Loop()
 
   TDirectory *MyDirectory=new TDirectory("finalHistograms","Final Histograms destination");
   
-  const int npt=10;
-  const int nw=10;
+  const int npt=7;
+  const int nw=7;
 
   int pt_points=500;
   int w_points=500;
@@ -95,7 +97,17 @@ void ppimpippim::Loop()
 
   TH1F *h1Lambda_m_all=new TH1F("h1Lambda_m_all","M^{inv}_{p #pi^{-}}",1000,1000,2000);
   TH1F *h1k0_m_all=new TH1F("h1k0_m_all","M^{inv}_{#pi^{+} #pi^{-}}",1000,200,1200);
-  
+  TH1F *h1Lambda_m_all_cut=new TH1F("h1Lambda_m_all_cut","M^{inv}_{p #pi^{-}}",1000,1000,2000);
+  TH1F *h1k0_m_all_cut=new TH1F("h1k0_m_all_cut","M^{inv}_{#pi^{+} #pi^{-}}",1000,200,1200);
+
+  TF1* fVoigt_bg_L1115= new TF1("fVoigt_bg_L1115","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",1090.00,1156.67);
+  TF1* fVoigt_L1115= new TF1("fVoigt_L1115","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
+  TF1* fbg_L1115= new TF1("fbg_L1115","pol5(0)",1090.00,1156.67);
+
+  TF1* fVoigt_bg_K0= new TF1("fVoigt_bg_K0","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",250,700);
+  TF1* fVoigt_K0= new TF1("fVoigt_K0","[0]*TMath::Voigt(x-[1],[2],[3])",250,700);
+  TF1* fbg_K0= new TF1("fbg_K0","pol5(0)",250,700);
+
   cout<<endl<<"Init pt histograms"<<endl;
   for(int i=0;i<npt;i++)
     {
@@ -121,11 +133,11 @@ void ppimpippim::Loop()
       h1K0_pt_Lcut[i]=new TH1F(K0_pt_name,K0_pt_title,pt_points,0,1000);
     }
   /*
-  for(int i=0;i<npt;i++)
+    for(int i=0;i<npt;i++)
     {
-      cout<<"i: "<<i<<endl;
-      h1Lambda_pt[i]->Print();
-      h1K0_pt[i]->Print();
+    cout<<"i: "<<i<<endl;
+    h1Lambda_pt[i]->Print();
+    h1K0_pt[i]->Print();
     }
   */
   cout<<endl<<"Init w histograms"<<endl;
@@ -154,13 +166,13 @@ void ppimpippim::Loop()
           
     }
   /*
-  for(int ii=0;ii<nw;ii++)
+    for(int ii=0;ii<nw;ii++)
     {
-      cout<<"ii: "<<ii<<endl;
-      h1K0_w[ii]->Print();
-      h1Lambda_w[ii]->Print();
-      //h1K0_w_Lcut[ii]->Print();
-      //h1Lambda_w_k0cut[ii]->Print();
+    cout<<"ii: "<<ii<<endl;
+    h1K0_w[ii]->Print();
+    h1Lambda_w[ii]->Print();
+    //h1K0_w_Lcut[ii]->Print();
+    //h1Lambda_w_k0cut[ii]->Print();
     }
   */
 
@@ -199,6 +211,12 @@ void ppimpippim::Loop()
       h1Lambda_m_all->Fill(m_inv_p_pim);
       
       h2_m_inv->Fill(m_inv_p_pim,m_inv_pip_pim);
+
+      if(m_inv_pip_pim<500 && m_inv_pip_pim>480)
+	h1Lambda_m_all_cut->Fill(m_inv_p_pim);
+      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
+	h1k0_m_all_cut->Fill(m_inv_pip_pim);
+	
       //fill histograms for pt and w slides
       for(int i=0; i<npt; i++)
 	{
@@ -231,7 +249,7 @@ void ppimpippim::Loop()
 	  if(lambda_w<w_max && lambda_w>w_min)
 	    {
 	      h1Lambda_w[i]->Fill(m_inv_p_pim);
-	      if(m_inv_pip_pim<510 && m_inv_pip_pim>490)
+	      if(m_inv_pip_pim<500 && m_inv_pip_pim>480)
 		h1Lambda_w_k0cut[i]->Fill(m_inv_p_pim);
 	    }
 	  if(k0_w<w_max && k0_w>w_min)
@@ -244,7 +262,7 @@ void ppimpippim::Loop()
     }
   //End of main loop
   cout<<"End of main loop"<<endl;
-  
+
   //Save histograms
     
   h2K0_wpt->Write();
@@ -264,6 +282,9 @@ void ppimpippim::Loop()
   h1Lambda_m_all->Write();
   h1k0_m_all->Write();
 
+  h1Lambda_m_all_cut->Write();
+  h1k0_m_all_cut->Write();
+
   for(int i=0;i<npt;i++)
     {
       h1K0_pt[i]->Write();
@@ -279,12 +300,69 @@ void ppimpippim::Loop()
       h1K0_w_Lcut[i]->Write();
       h1Lambda_w_k0cut[i]->Write();
     }
+
+  //Fit histograms
+
+  //Lambda 1115
+  fVoigt_bg_L1115->SetParameters(0.00951603,1114.13,1.44053,2.99181,-0.122525,2.18901e-5,7.87049e-8,7.05739e-11,1.59077e-14,-7.04671e-17);
+  fVoigt_bg_L1115->SetParLimits(3,0,1);
+  fVoigt_bg_L1115->SetParLimits(2,0,2);
+  fVoigt_bg_L1115->SetParLimits(1,1112,1117);
+  fVoigt_bg_L1115->SetRange(1106,1126);
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+  fVoigt_bg_L1115->SetRange(1099,1134);
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+  fVoigt_bg_L1115->SetRange(1094,1153);
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+  fVoigt_bg_L1115->SetRange(1085,1160);
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+  h1Lambda_m_all_cut->Fit(fVoigt_bg_L1115,"R");
+
+  fbg_L1115->SetParameters(fVoigt_bg_L1115->GetParameter(4),fVoigt_bg_L1115->GetParameter(5),fVoigt_bg_L1115->GetParameter(6),fVoigt_bg_L1115->GetParameter(7),fVoigt_bg_L1115->GetParameter(8),fVoigt_bg_L1115->GetParameter(9));
+  fVoigt_L1115->SetParameters(fVoigt_bg_L1115->GetParameter(0),fVoigt_bg_L1115->GetParameter(1),fVoigt_bg_L1115->GetParameter(2),fVoigt_bg_L1115->GetParameter(3));
+  fVoigt_L1115->Draw("same");
+  fVoigt_L1115->SetLineColor(kGreen);
+  fbg_L1115->Draw("same");
+  fbg_L1115->SetLineColor(kBlue);
+  h1Lambda_m_all_cut->Draw();
   
+  //K0
+  fVoigt_bg_K0->SetParameters(0.010109,491.385,0.031725,11.091,0.0043912,-1.30034e-6,-1.26503e-8,-2.57051e-11,-1.37871e-14,1.23134e-16);
+  fVoigt_bg_K0->SetParLimits(3,0,10);
+  fVoigt_bg_K0->SetParLimits(2,0,10);
+  fVoigt_bg_K0->SetParLimits(1,490,500);
+  fVoigt_bg_K0->SetRange(485,512);
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
+  fVoigt_bg_K0->SetRange(449,535);
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
+  fVoigt_bg_K0->SetRange(436,554);
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
+  fVoigt_bg_K0->SetRange(412,597);
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
+  h1k0_m_all_cut->Fit(fVoigt_bg_K0,"R");
   
+  fbg_K0->SetParameters(fVoigt_bg_K0->GetParameter(4),fVoigt_bg_K0->GetParameter(5),fVoigt_bg_K0->GetParameter(6),fVoigt_bg_K0->GetParameter(7),fVoigt_bg_K0->GetParameter(8),fVoigt_bg_K0->GetParameter(9));
+  fVoigt_K0->SetParameters(fVoigt_bg_K0->GetParameter(0),fVoigt_bg_K0->GetParameter(1),fVoigt_bg_K0->GetParameter(2),fVoigt_bg_K0->GetParameter(3));
+  fVoigt_K0->Draw("same");
+  fVoigt_K0->SetLineColor(kGreen);
+  fbg_K0->Draw("same");
+  fbg_K0->SetLineColor(kBlue);
+  h1k0_m_all_cut->Draw();
+
+  fVoigt_bg_L1115->Write();
+  fVoigt_L1115->Write();
+  fbg_L1115->Write();
+
+  fVoigt_bg_K0->Write();
+  fVoigt_K0->Write();
+  fbg_K0->Write();
+
+ //scale histograms 
   TIter next(MyFile->GetListOfKeys());
   TKey *key;
-
-  
+ 
   while ((key = (TKey*)next()))
     {
       TClass *cl = gROOT->GetClass(key->GetClassName());
@@ -293,8 +371,9 @@ void ppimpippim::Loop()
       TH1 *h = (TH1*)key->ReadObj();
       cout<<"histogram name:" <<h->GetName()<<endl;
       normalize(h);
-      h->Write(0,TObject::kWriteDelete);
+      h->Write(0,TObject::kOverwrite);
     }
+ 
   
   MyFile->Close();
 }

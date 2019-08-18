@@ -36,7 +36,7 @@ void ppimpippim::Loop()
 // METHOD2: replace line
 //    fChain->GetEntry(jentry);       //read all branches
 //by  b_branchname->GetEntry(ientry); //read only this branch
-  TFile *MyFile = new TFile("result.root","RECREATE");
+  TFile *MyFile = new TFile("result_dist_in_z.root","RECREATE");
   
   
   if ( MyFile->IsOpen() )
@@ -134,8 +134,8 @@ void ppimpippim::Loop()
     {
       Long64_t ientry = LoadTree(jentry);
 
-      dist=dist_ver_to_ver;
-      //dist=ver_p_pim_z-ver_pip_pim_z;
+      //dist=dist_ver_to_ver;
+      dist=ver_p_pim_z-ver_pip_pim_z;
       
       if (ientry < 0)
 	break;
