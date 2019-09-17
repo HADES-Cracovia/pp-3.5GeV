@@ -363,6 +363,7 @@ void ppimpippim::Loop()
   TIter next(MyFile->GetListOfKeys());
   TKey *key;
  
+  
   while ((key = (TKey*)next()))
     {
       TClass *cl = gROOT->GetClass(key->GetClassName());
@@ -371,9 +372,9 @@ void ppimpippim::Loop()
       TH1 *h = (TH1*)key->ReadObj();
       cout<<"histogram name:" <<h->GetName()<<endl;
       normalize(h);
-      h->Write(0,TObject::kOverwrite);
+      h->Write(0,TObject::kWriteDelete);
     }
- 
+  
   
   MyFile->Close();
 }
