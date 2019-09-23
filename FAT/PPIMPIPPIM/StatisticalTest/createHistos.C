@@ -38,21 +38,21 @@ void createHistos::Loop()
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
-  const int bin=200;
+  const int bin=200/2;
   const int xmin=1000;
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=22;
+  double sidebandmax=20;
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
-  TH1F* background=new TH1F("background","background from side-band",bin,xmin,xmax);
-  TH1F* data=new TH1F("data","data from experiment",bin,xmin,xmax);
-  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band",bin*6,xmin,xmax);
+  TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
+  TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
+  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin*6,xmin,xmax);
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);   
 
-  TFile *MyFile = new TFile("temp.root","recreate");
+  TFile *MyFile = new TFile("temp2.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
@@ -81,10 +81,11 @@ void createHistos::Loop()
 
       oryginal_spectrum->Fill(m_inv_p_pim);
       
-      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
+      if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
 	data->Fill(m_inv_p_pim_pip_pim);
-      if((m_inv_p_pim<1116-sidebandmin && m_inv_p_pim>1116-sidebandmax)
-	 ||(m_inv_p_pim>1116+sidebandmin && m_inv_p_pim<1116+sidebandmax))
+
+      if((m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
+	 ||(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax))
 	background->Fill(m_inv_p_pim_pip_pim);
     }
 
@@ -121,10 +122,13 @@ void createHistos::Loop()
   fbg->Draw("same");
   fbg->SetLineColor(kBlue);
    
-  double intS=fVoigt->Integral(1116-sidebandmin,1116+sidebandmin);
-  double intB=fbg->Integral(1116-sidebandmin,1116+sidebandmin);
-  double intsideband=fbg->Integral(1116-sidebandmax,1116-sidebandmin)+fbg->Integral(1116+sidebandmin,1116+sidebandmax);
-  cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband: "<<intsideband<<endl;
+  double intS=fVoigt->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
+  double intB=fbg->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
+  double intsideband=(fbg->Integral(1116-sidebandmax,1116-sidebandmin)+fbg->Integral(1116+sidebandmin,1116+sidebandmax))/oryginal_spectrum->GetBinWidth(1);
+  double intAll=fVoigt_bg->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
+  
+  cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
+  cout<<"all in signal range: "<<intAll<<endl;
 
   background->Scale(intB/intsideband);
 
