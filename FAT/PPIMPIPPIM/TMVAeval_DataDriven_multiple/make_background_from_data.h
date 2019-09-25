@@ -128,7 +128,7 @@ public :
    Float_t         ver_pip_pim_x;
    Float_t         ver_pip_pim_y;
    Float_t         ver_pip_pim_z;
-
+  Float_t mlp_output;
    // List of branches
    TBranch        *b_dist_lambda1_eVert;   //!
    TBranch        *b_dist_lambda1_pim2;   //!
@@ -236,7 +236,7 @@ public :
    TBranch        *b_ver_pip_pim_x;   //!
    TBranch        *b_ver_pip_pim_y;   //!
    TBranch        *b_ver_pip_pim_z;   //!
-
+  TBranch *b_mlp_output;//!
    make_background_from_data(TTree *tree=0);
    virtual ~make_background_from_data();
    virtual Int_t    Cut(Long64_t entry);
@@ -256,9 +256,9 @@ make_background_from_data::make_background_from_data(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_graph_cut_lambda_select_new_vertex.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_graph_cut_lambda_select_new_vertex.root");
+         f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
       }
       f->GetObject("ppimpippim",tree);
 
@@ -413,6 +413,7 @@ void make_background_from_data::Init(TTree *tree)
    fChain->SetBranchAddress("ver_pip_pim_x", &ver_pip_pim_x, &b_ver_pip_pim_x);
    fChain->SetBranchAddress("ver_pip_pim_y", &ver_pip_pim_y, &b_ver_pip_pim_y);
    fChain->SetBranchAddress("ver_pip_pim_z", &ver_pip_pim_z, &b_ver_pip_pim_z);
+   fChain->SetBranchAddress("mlp_output", &mlp_output,&b_mlp_output);
    Notify();
 }
 

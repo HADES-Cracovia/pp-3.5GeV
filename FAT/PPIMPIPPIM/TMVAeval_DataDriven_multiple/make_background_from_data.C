@@ -67,7 +67,7 @@ void make_background_from_data::Loop()
   background_data->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   background_data->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   background_data->Branch("dist_ver_to_ver",&dist_ver_to_ver);
-
+  background_data->Branch("m_inv_p_pim",&m_inv_p_pim);
 
   //signal_data->Branch("p_p",&p_beta);
   //signal_data->Branch("pip_p",&pip_p);
@@ -90,7 +90,7 @@ void make_background_from_data::Loop()
   signal_data->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   signal_data->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   signal_data->Branch("dist_ver_to_ver",&dist_ver_to_ver);
-  
+  signal_data->Branch("m_inv_p_pim",&m_inv_p_pim);
    
   Long64_t nentries = fChain->GetEntriesFast();
   Long64_t nentries_true = fChain->GetEntries();
@@ -110,6 +110,9 @@ void make_background_from_data::Loop()
     if ((m_inv_p_pim<1110 ||m_inv_p_pim>1120)
         && isBest_new==1
 	&& miss_mass_kp>1077
+	&& m_inv_p_pim<1200
+	&& m_inv_p_pim>900
+	&& mlp_output>0.50
 	)
       background_data->Fill();
     
@@ -119,7 +122,7 @@ void make_background_from_data::Loop()
 	   && miss_mass_kp>1077
 	   && m_inv_p_pim<1135
 	   && m_inv_p_pim>995
-	   && mlp_output>0.58
+	   && mlp_output>0.50
 	   )
 	  
 	  signal_data->Fill();
