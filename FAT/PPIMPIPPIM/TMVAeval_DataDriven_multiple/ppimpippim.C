@@ -41,7 +41,7 @@ void ppimpippim::Loop()
   Long64_t nbytes = 0, nb = 0;
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_iteracja_1.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -49,9 +49,9 @@ void ppimpippim::Loop()
   TMVA::Reader *reader = new TMVA::Reader();
   reader->AddVariable("dist_p_pim", &dist_p_pim);
   reader->AddVariable("dist_pip_pim", &dist_pip_pim);
-  reader->AddVariable("eVert_x",  &eVert_x);
-  reader->AddVariable("eVert_y",  &eVert_y);
-  reader->AddVariable("eVert_z",  &eVert_z);
+  //reader->AddVariable("eVert_x",  &eVert_x);
+  //reader->AddVariable("eVert_y",  &eVert_y);
+  //reader->AddVariable("eVert_z",  &eVert_z);
   reader->AddVariable("ver_pip_pim_x", &ver_pip_pim_x);
   reader->AddVariable("ver_pip_pim_y", &ver_pip_pim_y);
   reader->AddVariable("ver_pip_pim_z", &ver_pip_pim_z);
@@ -59,15 +59,15 @@ void ppimpippim::Loop()
   reader->AddVariable("ver_p_pim_y",&ver_p_pim_y);
   reader->AddVariable("ver_p_pim_z",&ver_p_pim_z);
   reader->AddVariable("oa_lambda",&oa_lambda);
-  reader->AddVariable("dist_p_eVert", &dist_p_eVert);
-  reader->AddVariable("dist_pim_eVert", &dist_pim_eVert);
-  reader->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
+  //reader->AddVariable("dist_p_eVert", &dist_p_eVert);
+  //reader->AddVariable("dist_pim_eVert", &dist_pim_eVert);
+  //reader->AddVariable("dist_lambda_eVert",&dist_lambda_eVert);
   reader->AddVariable("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   reader->AddVariable("dist_ver_to_ver",&dist_ver_to_ver);
   
 
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
-  reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  reader->BookMVA("kMLP","./weights/TMVAClassification_data_drivennew_Vertex_kMLP_pca_ce_200_6(n+4)_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
   
   const int steps=100;

@@ -112,7 +112,8 @@ void make_background_from_data::Loop()
 	&& miss_mass_kp>1077
 	&& m_inv_p_pim<1200
 	&& m_inv_p_pim>900
-	&& mlp_output>0.50
+	&& mlp_output<0.4
+	//&& m_inv_pip_pim<410
 	)
       background_data->Fill();
     
@@ -122,7 +123,8 @@ void make_background_from_data::Loop()
 	   && miss_mass_kp>1077
 	   && m_inv_p_pim<1135
 	   && m_inv_p_pim>995
-	   && mlp_output>0.50
+	   && mlp_output>0.58
+	   && m_inv_pip_pim<420
 	   )
 	  
 	  signal_data->Fill();

@@ -58,8 +58,8 @@ void ppimpippim::Loop()
 
   TDirectory *MyDirectory=new TDirectory("finalHistograms","Final Histograms destination");
   
-  const int npt=7;
-  const int nw=7;
+  const int npt=5;
+  const int nw=5;
 
   int pt_points=500;
   int w_points=500;
