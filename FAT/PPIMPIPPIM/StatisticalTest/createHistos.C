@@ -1,5 +1,6 @@
 #define createHistos_cxx
 #include "createHistos.h"
+#include <TCutG.h>
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -50,9 +51,19 @@ void createHistos::Loop()
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin*6,xmin,xmax);
   TGraphErrors* resi=new TGraphErrors(bin);
-  TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);   
+  TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
+  TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
+  TH2F* dedx_lambda=new TH2F("dedx_lambda","de/dx for #Lambda events",250,0,2000,250,0,18);
+  TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
 
-  TFile *MyFile = new TFile("temp2.root","recreate");
+  TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
+  //TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_pip_pim_tight.root","READ");
+  TCutG *graph_cut=0;
+  cutFile->GetObject("CUTG",graph_cut);
+  cutFile->Close();
+
+  double mlp_cut=0.52;
+  TFile *MyFile = new TFile("output_small_L1115.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
@@ -66,12 +77,29 @@ void createHistos::Loop()
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+
+      if(
+	 m_inv_pip_pim<500
+	 && m_inv_pip_pim>480
+	 && m_inv_p_pim<1126
+	 && m_inv_p_pim>1106
+	 && mlp_output<mlp_cut
+	 && miss_mass_kp>1077
+	 )//K0 and L(1116)
+	{
+	  dedx_lambda->Fill(pip_p,pip_dedx);
+	  missing_mass_K0_L->Fill(miss_mass_kp);
+	}
+
+            
+      //all events for final pictures
       if(isBest_new!=1
-	 ||mlp_output<0.58
-	 ||miss_mass_kp<1350
-	 ||m_inv_pip_pim>410
+	 ||mlp_output<mlp_cut
+	 //||miss_mass_kp<1450 //replaced by graphical cut
+	 //||m_inv_pip_pim>410 //replaced by graphical cut
 	 ||dist_ver_to_ver<20
 	 ||(oa_lambda>20 && oa_lambda<160)
+	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||dist_pip_pim>15
 	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
@@ -82,7 +110,10 @@ void createHistos::Loop()
       oryginal_spectrum->Fill(m_inv_p_pim);
       
       if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
-	data->Fill(m_inv_p_pim_pip_pim);
+	{
+	  data->Fill(m_inv_p_pim_pip_pim);
+	  miss_m_vs_pip_pim->Fill(miss_mass_kp,m_inv_pip_pim);	  
+	}
 
       if((m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
 	 ||(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax))
@@ -145,6 +176,7 @@ void createHistos::Loop()
       resi->SetPointError(i,background->GetBinWidth(i),TMath::Sqrt(TMath::Power(data->GetBinError(i),2)+TMath::Power(background->GetBinError(i),2)));
     }
 
+  dedx_lambda->Write();
   cFit1116->Write();
   fVoigt->Write();
   fbg->Write();
@@ -154,5 +186,8 @@ void createHistos::Loop()
   background->Write();
   data->Write();
   oryginal_spectrum->Write();
+  missing_mass_K0_L->Write();
+  miss_m_vs_pip_pim->Write();
+  graph_cut->Write();
   MyFile->Close();
 }

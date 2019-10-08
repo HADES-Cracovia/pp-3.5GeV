@@ -273,17 +273,19 @@ public :
 #ifdef createHistos_cxx
 createHistos::createHistos(TTree *tree) : fChain(0) 
 {
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-      }
+  // if parameter tree is not specified (or zero), connect the file
+  // used to generate this class and read the Tree.
+  if (tree == 0)
+    {
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma_new_vertex.root");
+      if (!f || !f->IsOpen())
+	{
+	  f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma_new_vertex.root");
+	}
       f->GetObject("ppimpippim",tree);
 
-   }
-   Init(tree);
+    }
+  Init(tree);
 }
 
 createHistos::~createHistos()

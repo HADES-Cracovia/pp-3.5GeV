@@ -654,10 +654,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*tlo)["oa_pim1_pip"]=oa_pim1_pip;
   (*tlo)["oa_pim2_pip"]=oa_pim2_pip;
 	 
-  (*tlo)["miss_mass_kp"]=miss->M();
   (*tlo)["lambda_mom_z"]=lambda_mom_z;
   (*tlo)["simon_cuts"]=simon_cut;
-	 
   (*tlo)["miss_mass_kp"]=miss->M();
 
   (*tlo)["lambda_pt"]=lambda_pt;
