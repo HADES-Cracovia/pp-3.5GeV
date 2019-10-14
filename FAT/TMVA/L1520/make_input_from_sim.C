@@ -90,7 +90,9 @@ void make_input_from_sim::Loop()
   signal->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   signal->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   signal->Branch("dist_ver_to_ver",&dist_ver_to_ver);
-
+  signal->Branch("m_inv_p_pim",&m_inv_p_pim);
+  signal->Branch("m_inv_p_pim_pip_pim",&m_inv_p_pim_pip_pim);
+  //signal->Branch("m_inv_p_pim_pip",&m_inv_p_pim_pip);
   /*
   background->Branch("p_p",&p_beta);
   background->Branch("pip_p",&pip_p);
@@ -140,7 +142,9 @@ void make_input_from_sim::Loop()
   background->Branch("dist_lambda_eVert",&dist_lambda_eVert);
   background->Branch("dist_lambda_ver_pip_pim",&dist_lambda_ver_pip_pim);
   background->Branch("dist_ver_to_ver",&dist_ver_to_ver);
-  
+
+  background->Branch("m_inv_p_pim",&m_inv_p_pim);
+  background->Branch("m_inv_p_pim_pip_pim",&m_inv_p_pim_pip_pim);
    
   Long64_t nentries = fChain->GetEntriesFast();
 
