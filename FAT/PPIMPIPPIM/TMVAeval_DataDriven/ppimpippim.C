@@ -42,7 +42,8 @@ void ppimpippim::Loop()
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
   //TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_new_vertex.root","recreate");
+  //TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_new_vertex.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_old_vertex.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 

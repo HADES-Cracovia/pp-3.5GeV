@@ -332,10 +332,16 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
 {
   // if parameter tree is not specified (or zero), connect the file
   // used to generate this class and read the Tree.
-  if (tree == 0) {
-    TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root");
+  if (tree == 0)
+    {
+    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root");
+    //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_after_TMVA_DD_6n+4_pNb.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_graph_cut_lambda_select_new_dist_pt_w.root");
     if (!f || !f->IsOpen()) {
-      f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root");
+      //f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root");
+      //f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_after_TMVA_DD_6n+4_pNb.root");
+      f = new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_graph_cut_lambda_select_new_dist_pt_w.root");
+   
     }
     f->GetObject("ppimpippim",tree);
 

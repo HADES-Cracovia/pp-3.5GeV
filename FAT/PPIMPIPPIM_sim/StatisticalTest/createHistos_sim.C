@@ -1,6 +1,5 @@
-#define createHistos_cxx
-#include "createHistos.h"
-#include <TCutG.h>
+#define createHistos_sim_cxx
+#include "createHistos_sim.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -13,11 +12,11 @@
 
 using namespace std;
 
-void createHistos::Loop()
+void createHistos_sim::Loop()
 {
   //   In a ROOT session, you can do:
-  //      root> .L createHistos.C
-  //      root> createHistos t
+  //      root> .L createHistos_sim.C
+  //      root> createHistos_sim t
   //      root> t.GetEntry(12); // Fill t data members with entry number 12
   //      root> t.Show();       // Show values of entry 12
   //      root> t.Show(16);     // Read and show values of entry 16
@@ -39,7 +38,7 @@ void createHistos::Loop()
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
-  const int bin=200;
+  const int bin=200/2;
   const int xmin=1000;
   const int xmax=2000;
   const int nsignal=20;
@@ -49,21 +48,14 @@ void createHistos::Loop()
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
-  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*6,xmin,xmax);
+  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin*6,xmin,xmax);
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
   TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
   TH2F* dedx_lambda=new TH2F("dedx_lambda","de/dx for #Lambda events",250,0,2000,250,0,18);
   TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
-
-  TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
-  //TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_pip_pim_tight.root","READ");
-  TCutG *graph_cut=0;
-  cutFile->GetObject("CUTG",graph_cut);
-  cutFile->Close();
-
-  double mlp_cut=0.52;
-  TFile *MyFile = new TFile("temp.root","recreate");
+  
+  TFile *MyFile = new TFile("output_sim.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
@@ -81,9 +73,9 @@ void createHistos::Loop()
       if(
 	 m_inv_pip_pim<500
 	 && m_inv_pip_pim>480
-	 && m_inv_p_pim<1126
-	 && m_inv_p_pim>1106
-	 && mlp_output<mlp_cut
+	 && m_inv_p_pim<1120
+	 && m_inv_p_pim>1110
+	 && mlp_output<0.58
 	 && miss_mass_kp>1077
 	 )//K0 and L(1116)
 	{
@@ -94,13 +86,11 @@ void createHistos::Loop()
             
       //all events for final pictures
       if(isBest_new!=1
-	 ||mlp_output<mlp_cut
-	 //||miss_mass_kp<1432 //replaced by graphical cut
-	 //||m_inv_pip_pim>410 //replaced by graphical cut
+	 ||mlp_output<0.58
+	 ||miss_mass_kp<1450
+	 ||m_inv_pip_pim>410
 	 ||dist_ver_to_ver<20
 	 ||(oa_lambda>20 && oa_lambda<160)
-	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
-	 //||p_theta>20 //to clean up proton sample
 	 //||dist_pip_pim>15
 	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
@@ -189,6 +179,5 @@ void createHistos::Loop()
   oryginal_spectrum->Write();
   missing_mass_K0_L->Write();
   miss_m_vs_pip_pim->Write();
-  graph_cut->Write();
   MyFile->Close();
 }

@@ -39,7 +39,7 @@ void createHistos::Loop()
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
-  const int bin=200;
+  const int bin=200/2;
   const int xmin=1000;
   const int xmax=2000;
   const int nsignal=20;
@@ -63,7 +63,7 @@ void createHistos::Loop()
   cutFile->Close();
 
   double mlp_cut=0.52;
-  TFile *MyFile = new TFile("temp.root","recreate");
+  TFile *MyFile = new TFile("output_old_results_the_best.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;

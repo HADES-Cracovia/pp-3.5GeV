@@ -1,4 +1,3 @@
-
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jul 24 18:09:59 2019 by ROOT version 6.13/02
@@ -278,12 +277,10 @@ createHistos::createHistos(TTree *tree) : fChain(0)
   // used to generate this class and read the Tree.
   if (tree == 0)
     {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-      //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim_check.root");
       if (!f || !f->IsOpen())
 	{
-	  f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-	  //f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
+	  f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim_check.root");
 	}
       f->GetObject("ppimpippim",tree);
 

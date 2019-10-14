@@ -1,4 +1,3 @@
-
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Jul 24 18:09:59 2019 by ROOT version 6.13/02
@@ -6,8 +5,8 @@
 // found on file: ../pp_after_TMVA_DD_6n+4_pNb.root
 //////////////////////////////////////////////////////////
 
-#ifndef createHistos_h
-#define createHistos_h
+#ifndef createHistos_sim_h
+#define createHistos_sim_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -15,7 +14,7 @@
 
 // Header file for the classes stored in the TTree if any.
 
-class createHistos {
+class createHistos_sim {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -258,8 +257,8 @@ public :
    TBranch        *b_ver_pip_pim_y;   //!
    TBranch        *b_ver_pip_pim_z;   //!
 
-   createHistos(TTree *tree=0);
-   virtual ~createHistos();
+   createHistos_sim(TTree *tree=0);
+   virtual ~createHistos_sim();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -271,39 +270,35 @@ public :
 
 #endif
 
-#ifdef createHistos_cxx
-createHistos::createHistos(TTree *tree) : fChain(0) 
+#ifdef createHistos_sim_cxx
+createHistos_sim::createHistos_sim(TTree *tree) : fChain(0) 
 {
-  // if parameter tree is not specified (or zero), connect the file
-  // used to generate this class and read the Tree.
-  if (tree == 0)
-    {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-      //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
-      if (!f || !f->IsOpen())
-	{
-	  f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_pNb.root");
-	  //f = new TFile("../TMVAeval_DataDriven/pp_after_TMVA_DD_6n+4_from_pNb_sigma.root");
-	}
+// if parameter tree is not specified (or zero), connect the file
+// used to generate this class and read the Tree.
+   if (tree == 0) {
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/pp_after_TMVA_DD_6n+4_pNb_newVertex.root");
+      if (!f || !f->IsOpen()) {
+         f = new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/pp_after_TMVA_DD_6n+4_pNb_newVertex.root");
+      }
       f->GetObject("ppimpippim",tree);
 
-    }
-  Init(tree);
+   }
+   Init(tree);
 }
 
-createHistos::~createHistos()
+createHistos_sim::~createHistos_sim()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t createHistos::GetEntry(Long64_t entry)
+Int_t createHistos_sim::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t createHistos::LoadTree(Long64_t entry)
+Long64_t createHistos_sim::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -316,7 +311,7 @@ Long64_t createHistos::LoadTree(Long64_t entry)
    return centry;
 }
 
-void createHistos::Init(TTree *tree)
+void createHistos_sim::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -451,7 +446,7 @@ void createHistos::Init(TTree *tree)
    Notify();
 }
 
-Bool_t createHistos::Notify()
+Bool_t createHistos_sim::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -462,18 +457,18 @@ Bool_t createHistos::Notify()
    return kTRUE;
 }
 
-void createHistos::Show(Long64_t entry)
+void createHistos_sim::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t createHistos::Cut(Long64_t entry)
+Int_t createHistos_sim::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef createHistos_cxx
+#endif // #ifdef createHistos_sim_cxx
