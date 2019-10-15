@@ -40,8 +40,8 @@ Int_t simflag = 0;
 Int_t wallflag = 0;
 Int_t btflag=0;
 
-//#define LEPTONS 1
-#define HADRONS 1
+#define LEPTONS 1
+//#define HADRONS 1
 
 /*********************************************************************************/
 
@@ -61,8 +61,9 @@ int main(Int_t argc, Char_t **argv)
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/";
-    
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/";
+
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------
@@ -116,9 +117,9 @@ int main(Int_t argc, Char_t **argv)
     myHyps.add("LpLp",eLeptonPos,eLeptonPos);
     myHyps.add("LmLm",eLeptonNeg,eLeptonNeg);
     //***------------------------------------------------
-    myHyps.add("HLpLm",eHadronPos,eHadronPos,eLeptonPos,eLeptonNeg);
-    myHyps.add("HLpLp",eHadronPos,eHadronPos,eLeptonPos,eLeptonPos);
-    myHyps.add("HLmLm",eHadronPos,eHadronPos,eLeptonNeg,eLeptonNeg);
+    myHyps.add("HpHmLpLm",eHadronPos,eHadronNeg,eLeptonPos,eLeptonNeg);
+    myHyps.add("HpHmLpLp",eHadronPos,eHadronNeg,eLeptonPos,eLeptonPos);
+    myHyps.add("HpHmLmLm",eHadronPos,eHadronNeg,eLeptonNeg,eLeptonNeg);
 #endif
     //***------- hadron stuff ---------------------------
 #ifdef HADRONS
@@ -139,9 +140,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids.add("HLpLp", "DEpEp",eDeuteron,ePositron,ePositron);
     //myPids.add("HLmLm", "DEmEm",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids.add("HLpLm", "PEpEm",eProton,ePositron,eElectron);
-    myPids.add("HLpLp", "PEpEp",eProton,ePositron,ePositron);
-    myPids.add("HLmLm", "PEmEm",eProton,eElectron,eElectron);
+    myPids.add("HpHmLpLm", "PEpEm",eProton,ePiMinus,ePositron,eElectron);
+    myPids.add("HpHmLpLp", "PEpEp",eProton,ePiMinus,ePositron,ePositron);
+    myPids.add("HpHmLmLm", "PEmEm",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids.add("LpLm", "EpEm",ePositron,eElectron);
     myPids.add("LpLp", "EpEp",ePositron,ePositron);
@@ -177,9 +178,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A.add("HLpLp", "DEpEp_ID",eDeuteron,ePositron,ePositron);
     //myPids_A.add("HLmLm", "DEmEm_ID",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids_A.add("HLpLm", "PEpEm_ID",eProton,ePositron,eElectron);
-    myPids_A.add("HLpLp", "PEpEp_ID",eProton,ePositron,ePositron);
-    myPids_A.add("HLmLm", "PEmEm_ID",eProton,eElectron,eElectron);
+    myPids_A.add("HpHmLpLm", "PEpEm_ID",eProton,ePiMinus,ePositron,eElectron);
+    myPids_A.add("HpHmLpLp", "PEpEp_ID",eProton,ePiMinus,ePositron,ePositron);
+    myPids_A.add("HpHmLmLm", "PEmEm_ID",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids_A.add("LpLm", "EpEm_ID",ePositron,eElectron);
     myPids_A.add("LpLp", "EpEp_ID",ePositron,ePositron);
