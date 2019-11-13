@@ -60,12 +60,12 @@ int main(Int_t argc, Char_t **argv)
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/ver2/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pi0pi0L/";
-    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/nK0bar/";
-
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/";
+    
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------

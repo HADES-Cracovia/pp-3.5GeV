@@ -43,7 +43,8 @@ void ppimpippim::Loop()
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
   //TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma.root","recreate");
   //TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_new_vertex.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_old_vertex.root","recreate");
+  //TFile* outFileData = new TFile("pp_after_TMVA_DD_6n+4_from_pNb_sigma_old_vertex.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_pNb_new_vertex_in_MLP.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
@@ -71,8 +72,8 @@ void ppimpippim::Loop()
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_n2_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
+  //reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_newVertex_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
   reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_newVertex_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
-
   
   const int steps=100;
   const double xmin=1110;

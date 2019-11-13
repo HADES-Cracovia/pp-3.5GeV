@@ -328,7 +328,8 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
      //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_new_vertex.root");
      //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_Lpippim_ver3_bis_check.root");
      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_Lpippim_ver3_new_vertex.root");
-     if (!f || !f->IsOpen()) {
+     if (!f || !f->IsOpen())
+       {
          f = new TFile("../pp_Lpippim_ver3_new_vertex.root");
       }
       f->GetObject("ppimpippim",tree);
