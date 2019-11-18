@@ -40,7 +40,7 @@ void ppimpippim::Loop()
   Long64_t nentries = fChain->GetEntriesFast();
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4)_pNb_newVertex.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6(n+4)_pNb_newVertex_SDppK0_Rafal.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 

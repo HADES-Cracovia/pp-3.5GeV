@@ -89,7 +89,9 @@ int main()
 
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_kMLP_ce_600_n4_no_ev.weights.xml" );
   /************************************** O U T P U T   F I L E ******************************************/
-  outFileData = new TFile("pp_Lpippim_ver3_new_vertex.root","recreate");
+  //outFileData = new TFile("S1385pK0_Rafal.root","recreate");
+  //outFileData = new TFile("SDppK0_Rafal.root","recreate");
+  outFileData = new TFile("LDppK0_Rafal.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
