@@ -63,7 +63,7 @@ void createHistos::Loop()
   cutFile->Close();
 
   double mlp_cut=0.52;
-  TFile *MyFile = new TFile("temp_Rafal_sim.root","recreate");
+  TFile *MyFile = new TFile("Rafal_sim_SDppK0.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
