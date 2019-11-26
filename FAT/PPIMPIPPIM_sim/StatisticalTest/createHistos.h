@@ -282,7 +282,7 @@ createHistos::createHistos(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen())
 	{
 	  //f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6_n+4_pp_Lpippim_check.root");
-	  f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6(n+4)_pNb_newVertex_SDppK0_Rafal.root");
+	  f = new TFile("../TMVAeval_DD/pp_after_TMVA_DD_6(n+4)_pNb_newVertex_S1385pK0_Rafal.root");
 	}
       f->GetObject("ppimpippim",tree);
 

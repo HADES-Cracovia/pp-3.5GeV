@@ -13,9 +13,9 @@ void normalize(TH1* hist)
 
 int draw_norm(void)
 {
-  TFile *fileS1385 = new TFile("./../StatisticalTest/temp_Rafal_sim.root","READ");
-  TFile *fileSDpp = new TFile("./../StatisticalTest/temp_Rafal_sim.root","READ");
-  TFile *fileLDpp = new TFile("./../StatisticalTest/temp_Rafal_sim.root","READ");
+  TFile *fileS1385 = new TFile("./../StatisticalTest/Rafal_sim_S1385pK0.root","READ");
+  TFile *fileSDpp = new TFile("./../StatisticalTest/Rafal_sim_SDppK0.root","READ");
+  TFile *fileLDpp = new TFile("./../StatisticalTest/Rafal_sim_LDppK0.root","READ");
 
   TFile *output= new TFile("output.root","RECREATE");
 
@@ -33,9 +33,9 @@ int draw_norm(void)
   //scale according to CS
   double nsim=40*TMath::Power(10,6);//number of simulated events
   double scale=3.13*TMath::Power(10,8)/(13.6*1000)/nsim;
-  double cs[3]={120*scale,//S1385
-		120*scale,//SDpp
-		120*scale};//LDpp
+  double cs[3]={14.05*scale,//S1385
+		9.26*scale,//SDpp
+		29.45*scale};//LDpp
   // cs in \mu barns!!
 
   hS1385_background->Scale(cs[0]);

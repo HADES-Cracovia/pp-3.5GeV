@@ -140,9 +140,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids.add("HLpLp", "DEpEp",eDeuteron,ePositron,ePositron);
     //myPids.add("HLmLm", "DEmEm",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids.add("HpHmLpLm", "PEpEm",eProton,ePiMinus,ePositron,eElectron);
-    myPids.add("HpHmLpLp", "PEpEp",eProton,ePiMinus,ePositron,ePositron);
-    myPids.add("HpHmLmLm", "PEmEm",eProton,ePiMinus,eElectron,eElectron);
+    myPids.add("HpHmLpLm", "PPimEpEm",eProton,ePiMinus,ePositron,eElectron);
+    myPids.add("HpHmLpLp", "PPimEpEp",eProton,ePiMinus,ePositron,ePositron);
+    myPids.add("HpHmLmLm", "PPimEmEm",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids.add("LpLm", "EpEm",ePositron,eElectron);
     myPids.add("LpLp", "EpEp",ePositron,ePositron);
@@ -178,9 +178,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A.add("HLpLp", "DEpEp_ID",eDeuteron,ePositron,ePositron);
     //myPids_A.add("HLmLm", "DEmEm_ID",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids_A.add("HpHmLpLm", "PEpEm_ID",eProton,ePiMinus,ePositron,eElectron);
-    myPids_A.add("HpHmLpLp", "PEpEp_ID",eProton,ePiMinus,ePositron,ePositron);
-    myPids_A.add("HpHmLmLm", "PEmEm_ID",eProton,ePiMinus,eElectron,eElectron);
+    myPids_A.add("HpHmLpLm", "PPimEpEm_ID",eProton,ePiMinus,ePositron,eElectron);
+    myPids_A.add("HpHmLpLp", "PPimEpEp_ID",eProton,ePiMinus,ePositron,ePositron);
+    myPids_A.add("HpHmLmLm", "PPimEmEm_ID",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids_A.add("LpLm", "EpEm_ID",ePositron,eElectron);
     myPids_A.add("LpLp", "EpEp_ID",ePositron,ePositron);
