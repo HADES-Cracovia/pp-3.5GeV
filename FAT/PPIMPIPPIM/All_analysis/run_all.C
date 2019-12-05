@@ -1,9 +1,15 @@
 #include "TMVAeval.C"
 #include "createHistos.C"
 
+#include "TFile.h"
+#include "TTree.h"
+#include <iostream>
+
+using namespace std;
+
 int run_all(void)
 {
-  bool experiment=0;//czy brac pod uwage pliki z eksperymentu
+  bool experiment=false;//czy brac pod uwage pliki z eksperymentu
   
   cout<<"Load all files"<<endl;
   TFile* fexperiment=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root","READ");
@@ -68,7 +74,7 @@ int run_all(void)
 
   cout<<"Run making Side-Band"<<endl;
   //Run createHistos
-  if(experiemnt)
+  if(experiment)
     {
       createHistos* SB_experiment=new createHistos(t_sb_experiment);
       SB_experiment->Loop("SB_experiment.root.root");
