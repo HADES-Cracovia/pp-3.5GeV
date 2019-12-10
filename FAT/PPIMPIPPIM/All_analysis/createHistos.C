@@ -62,7 +62,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.52;
+  double mlp_cut=0.58;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();

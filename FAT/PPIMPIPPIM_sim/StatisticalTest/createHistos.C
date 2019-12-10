@@ -53,7 +53,8 @@ void createHistos::Loop()
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
   TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
-  TH2F* dedx_lambda=new TH2F("dedx_lambda","de/dx for #Lambda events",250,0,2000,250,0,18);
+  TH2F* dedx_lambda_pip=new TH2F("dedx_lambda_pip","de/dx for #Lambda events",250,0,2000,250,0,18);
+  TH2F* dedx_lambda_pim=new TH2F("dedx_lambda_pim","de/dx for #Lambda events",250,0,2000,250,0,18);
   TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
 
   TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
@@ -63,7 +64,7 @@ void createHistos::Loop()
   cutFile->Close();
 
   double mlp_cut=0.52;
-  TFile *MyFile = new TFile("Rafal_sim_S1385pK0.root","recreate");
+  TFile *MyFile = new TFile("temp_3.root","recreate");
  
   Long64_t nentries = fChain->GetEntries();
   Long64_t nbytes = 0, nb = 0;
@@ -87,7 +88,9 @@ void createHistos::Loop()
 	 && miss_mass_kp>1077
 	 )//K0 and L(1116)
 	{
-	  dedx_lambda->Fill(pip_p,pip_dedx);
+	  dedx_lambda_pip->Fill(pip_p,pip_dedx);
+	  dedx_lambda_pim->Fill(pim1_p,pim1_dedx);
+	  dedx_lambda_pim->Fill(pim2_p,pim2_dedx);
 	  missing_mass_K0_L->Fill(miss_mass_kp);
 	}
 
@@ -177,7 +180,8 @@ void createHistos::Loop()
       resi->SetPointError(i,background->GetBinWidth(i),TMath::Sqrt(TMath::Power(data->GetBinError(i),2)+TMath::Power(background->GetBinError(i),2)));
     }
 
-  dedx_lambda->Write();
+  dedx_lambda_pip->Write();
+  dedx_lambda_pim->Write();
   cFit1116->Write();
   fVoigt->Write();
   fbg->Write();
