@@ -10,9 +10,9 @@ using namespace std;
 int run_all(void)
 {
   bool experiment=1;//czy brac pod uwage pliki z eksperymentu
-  bool TMVAeval=0;//czy uruchamiac przeliczenie sieci na nowo
+  bool b_TMVAeval=0;//czy uruchamiac przeliczenie sieci na nowo
 
-  if(TMVAeval)
+  if(b_TMVAeval)
     {
       cout<<"Load all files"<<endl;
       TFile* fexperiment=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root","READ");
@@ -94,5 +94,6 @@ int run_all(void)
   createHistos* SB_sim_L1520pippim=new createHistos(t_sb_sim_L1520pippim);
   SB_sim_L1520pippim->Loop("SB_sim_L1520pippim.root");
 
-  
+  gROOT->ProcessLine(".x draw_norm.C");
+   
 }
