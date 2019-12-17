@@ -54,17 +54,24 @@ int draw_norm(void)
   hL1520_background->SetName("hL1520_background");
   hL1520_background->Sumw2(kFALSE);
 
+  TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("oryginal_spectrum");
+  
   
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
   TH1F *hclean_background=(TH1F*)hS1385_background->Clone("hclean_background");
   TH1F *hclean_experiment=(TH1F*)hexperiment_background->Clone("hclean_experiment");
   TH1F *hclean_L1520=(TH1F*)hL1520_background->Clone("hclean_L1520");
   TH1F *hclean_sum=(TH1F*)hL1520_background->Clone("hclean_sum");
+  TH1F *hclean_L1520_ren=(TH1F*)hL1520_background->Clone("hclean_L1520_ren");
+  TH1F *hclean_sum_ren=(TH1F*)hL1520_background->Clone("hclean_sum_ren");
   hsum_background->Reset();
   hclean_background->Reset();
   hclean_experiment->Reset();
   hclean_L1520->Reset();
   hclean_sum->Reset();
+  hclean_L1520_ren->Reset();
+  hclean_sum_ren->Reset();
+
   
   //scale according to CS
   double nsim=40*TMath::Power(10,6);//number of simulated events
@@ -102,6 +109,16 @@ int draw_norm(void)
   hclean_sum->Add(hclean_L1520,hclean_background,1,1);
   //cs_sig=1/(hclean_L1520->Integral())*20;
   //hclean_L1520->Scale(cs_sig);    
+
+  //scale signal to difference between signal and background
+  double sig_int=hclean_L1520->Integral(1450,1570);
+  double backgroud_int=hclean_background->Integral(1450,1570);
+  double experiment_int=hclean_experiment->Integral(1450,1570);
+
+  hclean_L1520_ren->Add(hclean_L1520,1);
+  hclean_L1520_ren->Scale((experiment_int-backgroud_int)/sig_int);
+  hclean_sum_ren->Add(hclean_L1520_ren,1);
+  hclean_sum_ren->Add(hclean_background,1);
   
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
@@ -124,10 +141,14 @@ int draw_norm(void)
   
   
   TCanvas *cSum=new TCanvas("cSum","cSum");
+  hexperiment_data->Rebin(2);
   hexperiment_data->Draw();
+  hexperiment_background->Rebin(2);
   hexperiment_background->SetLineColor(kRed);
-  hexperiment_background->Draw("same");
+  hexperiment_background->Draw("same");  
+  hsum_data->Rebin(2);
   hsum_data->Draw("same");
+  hsum_background->Rebin(2);
   hsum_background->SetLineColor(kRed);
   hsum_background->Draw("Same");
 
@@ -144,7 +165,23 @@ int draw_norm(void)
   hclean_sum->Rebin(rebin);
   hclean_sum->SetLineColor(kMagenta);
   hclean_sum->Draw("same");
-  
+
+  TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
+  hclean_experiment->Draw();
+  //hclean_experiment->Rebin(rebin);
+  //hclean_background->SetLineColor(kRed);
+  //hclean_background->Rebin(rebin);
+  hclean_background->Draw("same");
+  //hclean_L1520->SetLineColor(kGreen);
+  hclean_L1520_ren->Rebin(rebin);
+  hclean_L1520_ren->Draw("same");
+  hclean_sum_ren->Rebin(rebin);
+  hclean_sum_ren->SetLineColor(kMagenta);
+  hclean_sum_ren->Draw("same");
+
+
+  TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
+  hexperiment_SB_spectrum->Draw();
 
   //save all
   TFile* output=new TFile("final_output.root","recreate");
@@ -167,9 +204,11 @@ int draw_norm(void)
   hclean_experiment->Write();
   hclean_L1520->Write();
   hclean_sum->Write();
+  hexperiment_SB_spectrum->Write();
   
   cRes->Write();
   cClean->Write();
   cSum->Write();
+  cSB->Write();
 }
 

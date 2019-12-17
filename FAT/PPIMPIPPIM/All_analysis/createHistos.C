@@ -44,12 +44,12 @@ void createHistos::Loop(char* output)
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=20;
+  double sidebandmax=18;
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
-  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*6,xmin,xmax);
+  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
   TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
@@ -57,7 +57,7 @@ void createHistos::Loop(char* output)
   TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
   background->Sumw2();
   data->Sumw2();
-
+  oryginal_spectrum->Sumw2();
   
   TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
   //TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_pip_pim_tight.root","READ");
@@ -103,6 +103,7 @@ void createHistos::Loop(char* output)
 	 ||dist_ver_to_ver<20
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
+	 //||dist_p_pim>15
 	 //||p_theta>20 //to clean up proton sample
 	 //||dist_pip_pim>15
 	 //||dist_pip_pim>150
@@ -127,9 +128,7 @@ void createHistos::Loop(char* output)
   //normalize background to signal
   TCanvas* cFit1116=new TCanvas("cFit1116");
   cFit1116->cd();
-
-  oryginal_spectrum->Sumw2();
-   
+     
   TF1* fVoigt_bg= new TF1("fVoigt_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol5(4)",1090.00,1156.67);
   TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
   TF1* fbg= new TF1("fbg","pol5(0)",1090.00,1156.67);
