@@ -20,30 +20,39 @@ int draw_norm(void)
   TFile *fileExp= new TFile("SB_experiment.root","READ");
   
   //TFile *output= new TFile("pictures.root","RECREATE");
-
   TH1F *hS1385_data = (TH1F*)fileS1385->Get("data");
   hS1385_data->SetName("hS1385_data");
+  hS1385_data->Sumw2(kFALSE);
   TH1F *hSDpp_data = (TH1F*)fileSDpp->Get("data");
   hSDpp_data->SetName("hSDpp_data");
+  hSDpp_data->Sumw2(kFALSE);;
   TH1F *hLDpp_data = (TH1F*)fileLDpp->Get("data");
   hLDpp_data->SetName("hLDpp_data");
+  hLDpp_data->Sumw2(kFALSE);
   TH1F *hexperiment_data=(TH1F*)fileExp->Get("data");
   hexperiment_data->SetName("hexperiment_data");
+  //hexperiment_data->Sumw2();
   TH1F *hL1520_data=(TH1F*)fileL1520->Get("data");
   hL1520_data->SetName("hL1520_data");
+  hL1520_data->Sumw2(kFALSE);
   TH1F *hsum_data=(TH1F*)hS1385_data->Clone("hsum_data");
   hsum_data->Reset();
   
   TH1F *hS1385_background = (TH1F*)fileS1385->Get("background");
   hS1385_background->SetName("hS1385_background");
+  hS1385_background->Sumw2(kFALSE);
   TH1F *hSDpp_background = (TH1F*)fileSDpp->Get("background");
   hSDpp_background->SetName("hSDpp_background");
+  hSDpp_background->Sumw2(kFALSE);
   TH1F *hLDpp_background = (TH1F*)fileLDpp->Get("background");
   hLDpp_background->SetName("hLDpp_background");
+  hLDpp_background->Sumw2(kFALSE);
   TH1F *hexperiment_background=(TH1F*)fileExp->Get("background");
   hexperiment_background->SetName("hexperiment_background");
+  //hexperiment_background->Sumw2();
   TH1F *hL1520_background=(TH1F*)fileL1520->Get("background");
   hL1520_background->SetName("hL1520_background");
+  hL1520_background->Sumw2(kFALSE);
 
   
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
