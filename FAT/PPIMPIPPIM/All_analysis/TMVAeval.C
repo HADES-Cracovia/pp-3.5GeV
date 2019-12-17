@@ -79,7 +79,8 @@ void TMVAeval::Loop(char*  output)
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_data_drivenbig_network_kMLP_pca_ce_600_6(n+4)_no_ev.weights.xml");
   //reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_newVertex_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
-  reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_newVertex_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  //reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_newVertex_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
+  reader->BookMVA("kMLP","/lustre/hades/user/knowakow/PNB/FAT/TMVA/weights/TMVAClassification_data_driven_kMLP_pca_ce_600_(n6+4)_no_ev.weights.xml");
   
   const int steps=100;
   const double xmin=1110;

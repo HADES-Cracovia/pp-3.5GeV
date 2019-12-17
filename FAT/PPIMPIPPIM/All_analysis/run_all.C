@@ -29,11 +29,16 @@ int run_all(void)
       TTree* tsim_L1520pippim;
 
       fexperiment->GetObject("ppimpippim",texperiment);
+      fexperiment->SetName("fexperiment");
       fsim_SDppK0->GetObject("ppimpippim",tsim_SDppK0);
+      fsim_SDppK0->SetName("fsim_SDppK0");
       fsim_S1385pK0->GetObject("ppimpippim",tsim_S1385pK0);
+      fsim_S1385pK0->SetName("fsim_S1385pK0");
       fsim_LDppK0->GetObject("ppimpippim",tsim_LDppK0);
+      fsim_LDppK0->SetName("fsim_LDppK0");
       fsim_L1520pippim->GetObject("ppimpippim",tsim_L1520pippim);
-
+      fsim_L1520pippim->SetName("fsim_L1520pippim");
+      
       cout<<"Run TMVA processes"<<endl;
       //Run TMVAeval
       if(experiment)
@@ -52,6 +57,13 @@ int run_all(void)
 
       TMVAeval* TM_sim_L1520pippim=new TMVAeval(tsim_L1520pippim);
       TM_sim_L1520pippim->Loop("TMVA_output_sim_L1520pippim.root");
+
+      texperiment->Delete();
+      tsim_SDppK0->Delete();
+      tsim_S1385pK0->Delete();
+      tsim_LDppK0->Delete();
+      tsim_L1520pippim->Delete();
+    
     }
   //Side-band part*************************
   
@@ -69,31 +81,47 @@ int run_all(void)
   TTree* t_sb_sim_LDppK0;
   TTree* t_sb_sim_L1520pippim;
 
-  f_sb_experiment->GetObject("TMVAeval",t_sb_experiment);
-  f_sb_sim_SDppK0->GetObject("TMVAeval",t_sb_sim_SDppK0);
-  f_sb_sim_S1385pK0->GetObject("TMVAeval",t_sb_sim_S1385pK0);
-  f_sb_sim_LDppK0->GetObject("TMVAeval",t_sb_sim_LDppK0);
-  f_sb_sim_L1520pippim->GetObject("TMVAeval",t_sb_sim_L1520pippim);
-
-  cout<<"Run making Side-Band"<<endl;
+  
   //Run createHistos
   if(experiment)
     {
+      cout<<"Run making Side-Band for experiment"<<endl;
+      f_sb_experiment->GetObject("TMVAeval",t_sb_experiment);
+      f_sb_experiment->SetName("f_sb_experiment");
       createHistos* SB_experiment=new createHistos(t_sb_experiment);
       SB_experiment->Loop("SB_experiment.root");
+      t_sb_experiment->Delete();
     }
+
+  cout<<"Run making Side-Band for SDppK0"<<endl;
+  f_sb_sim_SDppK0->GetObject("TMVAeval",t_sb_sim_SDppK0);
+  f_sb_sim_SDppK0->SetName("f_sb_sim_SDppK0");
   createHistos* SB_sim_SDppK0=new createHistos(t_sb_sim_SDppK0);
   SB_sim_SDppK0->Loop("SB_sim_SDppK0.root");
+  t_sb_sim_SDppK0->Delete();
 
+  cout<<"Run making Side-Band for S1385"<<endl;
+  f_sb_sim_S1385pK0->GetObject("TMVAeval",t_sb_sim_S1385pK0);
+  f_sb_sim_S1385pK0->SetName("f_sb_sim_S1385pK0");
   createHistos* SB_sim_S1385pK0=new createHistos(t_sb_sim_S1385pK0);
   SB_sim_S1385pK0->Loop("SB_sim_S1385pK0.root");
+  t_sb_sim_S1385pK0->Delete();
 
+  cout<<"Run making Side-Band for LDppK0"<<endl;
+  f_sb_sim_LDppK0->GetObject("TMVAeval",t_sb_sim_LDppK0);
+  f_sb_sim_LDppK0->SetName("f_sb_sim_LDppK0");
   createHistos* SB_sim_LDppK0=new createHistos(t_sb_sim_LDppK0);
   SB_sim_LDppK0->Loop("SB_sim_LDppK0.root");
+  t_sb_sim_LDppK0->Delete();
 
+  cout<<"Run making Side-Band for L1520"<<endl;
+  f_sb_sim_L1520pippim->GetObject("TMVAeval",t_sb_sim_L1520pippim);
+  f_sb_sim_L1520pippim->SetName("f_sb_sim_L1520pippim");
   createHistos* SB_sim_L1520pippim=new createHistos(t_sb_sim_L1520pippim);
   SB_sim_L1520pippim->Loop("SB_sim_L1520pippim.root");
-
-  gROOT->ProcessLine(".x draw_norm.C");
+  t_sb_sim_L1520pippim->Delete();
+  
+  
    
+  gROOT->ProcessLine(".x draw_norm.C");
 }
