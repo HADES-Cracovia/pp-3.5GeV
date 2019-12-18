@@ -65,7 +65,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.55;
+  double mlp_cut=0.50;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -100,7 +100,7 @@ void createHistos::Loop(char* output)
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
 	 //||m_inv_pip_pim>410 //replaced by graphical cut
-	 ||dist_ver_to_ver<20
+	 ||dist_ver_to_ver<15
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||dist_p_pim>15

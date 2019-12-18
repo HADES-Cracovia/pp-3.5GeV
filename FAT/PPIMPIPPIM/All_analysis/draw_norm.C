@@ -13,6 +13,8 @@ void normalize(TH1* hist)
 
 int draw_norm(void)
 {
+
+  TF1 *voigt=new TF1("signal_voit","[0]*TMath::Voigt(x-[1],[2],[3],4)",1380,1750);
   TFile *fileS1385 = new TFile("SB_sim_S1385pK0.root","READ");
   TFile *fileSDpp = new TFile("SB_sim_SDppK0.root","READ");
   TFile *fileLDpp = new TFile("SB_sim_LDppK0.root","READ");
@@ -64,6 +66,7 @@ int draw_norm(void)
   TH1F *hclean_sum=(TH1F*)hL1520_background->Clone("hclean_sum");
   TH1F *hclean_L1520_ren=(TH1F*)hL1520_background->Clone("hclean_L1520_ren");
   TH1F *hclean_sum_ren=(TH1F*)hL1520_background->Clone("hclean_sum_ren");
+  TH1F *hpure_signal=(TH1F*)hL1520_background->Clone("hpure_signal");
   hsum_background->Reset();
   hclean_background->Reset();
   hclean_experiment->Reset();
@@ -71,6 +74,7 @@ int draw_norm(void)
   hclean_sum->Reset();
   hclean_L1520_ren->Reset();
   hclean_sum_ren->Reset();
+  hpure_signal->Reset();
 
   
   //scale according to CS
@@ -111,15 +115,29 @@ int draw_norm(void)
   //hclean_L1520->Scale(cs_sig);    
 
   //scale signal to difference between signal and background
-  double sig_int=hclean_L1520->Integral(1450,1570);
-  double backgroud_int=hclean_background->Integral(1450,1570);
-  double experiment_int=hclean_experiment->Integral(1450,1570);
+  double int_min=1410;
+  double int_max=1590;
+  
+  double sig_int=hclean_L1520->Integral(hclean_L1520->FindBin(int_min),hclean_L1520->FindBin(int_max));
+  double backgroud_int=hclean_background->Integral(hclean_background->FindBin(int_min),hclean_background->FindBin(int_max));
+  double experiment_int=hclean_experiment->Integral(hclean_experiment->FindBin(int_min),hclean_experiment->FindBin(int_max));
 
   hclean_L1520_ren->Add(hclean_L1520,1);
   hclean_L1520_ren->Scale((experiment_int-backgroud_int)/sig_int);
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
-  
+    
+  cout<<"Integral for pK0L(1520):"<<endl;
+  cout<<hclean_L1520->Integral()<<endl;
+  cout<<"Integral for inclusive L(1520) production:"<<endl;
+  cout<<hclean_L1520_ren->Integral()<<endl;
+  cout<<"C-S for pp->pK0L(1520):"<<endl;
+  cout<<"35.26 \mu b:"<<endl;
+  cout<<"inclusive L(1520) production C-S:"<<endl;
+  cout<<35.26*(experiment_int-backgroud_int)/sig_int<<endl;
+  cout<<"a scaling factor"<<endl;
+  cout<<(experiment_int-backgroud_int)/sig_int<<endl;
+
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
   cRes->cd(1);
@@ -167,22 +185,39 @@ int draw_norm(void)
   hclean_sum->Draw("same");
 
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
+  cClean_ren->Divide(2);
+  cClean_ren->cd(1);
   hclean_experiment->Draw();
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin);
   hclean_background->Draw("same");
-  //hclean_L1520->SetLineColor(kGreen);
+  hclean_L1520_ren->SetLineColor(kGreen);
   hclean_L1520_ren->Rebin(rebin);
   hclean_L1520_ren->Draw("same");
+  hclean_L1520_ren->GetXaxis()->SetRange(hclean_L1520_ren->FindBin(1350),hclean_L1520_ren->FindBin(1850));
   hclean_sum_ren->Rebin(rebin);
   hclean_sum_ren->SetLineColor(kMagenta);
   hclean_sum_ren->Draw("same");
-
-
+  cClean_ren->cd(2);
+  hpure_signal->Rebin(rebin);
+  hpure_signal->GetXaxis()->SetRange(hpure_signal->FindBin(1350),hpure_signal->FindBin(1850));
+  hpure_signal->Draw();
+  
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
   hexperiment_SB_spectrum->Draw();
 
+
+  //fit Voigt to data
+  hpure_signal->Add(hclean_experiment,hclean_background,1,-1);
+  voigt->SetParameter(0,2412);
+  voigt->SetParameter(1,1500);
+  voigt->SetParameter(2,5);
+  voigt->SetParameter(3,50);
+  hpure_signal->Fit(voigt,"RL");
+  hpure_signal->Fit(voigt,"RL");
+
+  
   //save all
   TFile* output=new TFile("final_output.root","recreate");
 
@@ -205,6 +240,10 @@ int draw_norm(void)
   hclean_L1520->Write();
   hclean_sum->Write();
   hexperiment_SB_spectrum->Write();
+
+  hclean_L1520_ren->Write();
+  hclean_sum_ren->Write();
+  hpure_signal->Write();
   
   cRes->Write();
   cClean->Write();
