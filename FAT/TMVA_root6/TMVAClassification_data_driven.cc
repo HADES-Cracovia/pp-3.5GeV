@@ -13,11 +13,9 @@
 #include "TROOT.h"
 
 #include "TMVA/Factory.h"
-//#include "TMVA/DataLoader.h"
+#include "TMVA/DataLoader.h"
 #include "TMVA/Tools.h"
-//#include "TMVA/TMVAGui.h"
-
-//#include "ttextfile.h"
+#include "TMVA/TMVAGui.h"
 
 using namespace std;
 
@@ -28,7 +26,7 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   cout << "==> Start TMVAClassification" << endl;
 
   //TString NameSuffix = (treeFile.Contains("_") ? treeFile(treeFile.First('_'), treeFile.Last('.') - treeFile.First('_')) : TString("New")) + extraSuffix;
-  TFile* outputFile = TFile::Open("TMVATraining_data_driven_miss_mass" + extraSuffix + ".root", "RECREATE");
+  TFile* outputFile = TFile::Open("TMVATraining_data_driven_" + extraSuffix + ".root", "RECREATE");
 
   if(outputFile==0)
     cout<<"uninicialized output file"<<endl;
@@ -37,63 +35,35 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   
   TMVA::Factory* factory = new TMVA::Factory("TMVAClassification_data_driven" + extraSuffix, outputFile, "!V:!Silent:Color:DrawProgressBar:Transformations=N:AnalysisType=Classification");
   cout<<"Factory set"<<endl;
-  //TMVA::DataLoader* dataloader = new TMVA::DataLoader("dataset");
+  TMVA::DataLoader* dataloader = new TMVA::DataLoader("dataset");
 
-  /*
-  //factory->AddVariable("oa_lambda","oa_lambda","deg",'F',0,180);
-  //factory->AddVariable("oa_pip_p","oa_pip_p","deg",'F',0,180);
-  //factory->AddVariable("p_p","p_p","MeV",'F');
-  //factory->AddVariable("pip_p","pip_p","MeV",'F');
-  //factory->AddVariable("lambda_mom_z","lambda_mom_z","MeV",'F');
-  factory->AddVariable("eVert_x",  "eVert_x",  "mm",    'F',-200,200);
-  factory->AddVariable("eVert_y",  "eVert_y",  "mm",    'F',-200,200);
-  factory->AddVariable("eVert_z",  "eVert_z",  "mm",    'F',-200,200);
-  factory->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-200,200);
-  factory->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-200,200);
-  factory->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-200,200);
-  factory->AddVariable("ver_p_pim_x","ver_p_pim_x","mm",'F',-200,200);
-  factory->AddVariable("ver_p_pim_y","ver_p_pim_y","mm",'F',-200,200);
-  factory->AddVariable("ver_p_pim_z","ver_p_pim_z","mm",'F',-200,200);
-  factory->AddVariable("dist_p_pim", "dist_p_pim", "mm",'F',0,200);
-  factory->AddVariable("dist_pip_pim", "dist_pip_pim", "mm",'F',0,200);
-  factory->AddVariable("dist_p_eVert", "dist_p_eVert","mm",'F',0,200);
-  factory->AddVariable("dist_pim_eVert", "dist_pim_eVert",     "mm",'F',0,200);
-  factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert",     "mm",    'F',0,200);
-  factory->AddVariable("dist_lambda_ver_pip_pim","dist_lambda_ver_pip_pim","mm",'F',0,200);
-  //factory->AddVariable("pip_sim_vertex_x","pip_sim_vertex_x","mm",'F');
-  //factory->AddVariable("pip_sim_vertex_y","pip_sim_vertex_y","mm",'F');
-  //factory->AddVariable("pip_sim_vertex_z","pip_sim_vertex_z","mm",'F');
-  //factory->AddVariable("p_sim_vertex_x","p_sim_vertex_x","mm",'F');
-  //factory->AddVariable("p_sim_vertex_y","p_sim_vertex_y","mm",'F');
-  //factory->AddVariable("p_sim_vertex_z","p_sim_vertex_z","mm",'F');
-  */
-  //factory->AddVariable("p_p","p_beta","mm",'F');
-  //factory->AddVariable("pip_p","pip_p","mm",'F');
-  factory->AddVariable("dist_p_pim", "dist_p_pim","mm",'F',0,150);
-  factory->AddVariable("dist_pip_pim", "dist_pip_pim","mm",'F',0,150);
-  //factory->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
-  //factory->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
-  //factory->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
-  factory->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-80,80);
-  factory->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-80,80);
-  factory->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-150,150);
-  factory->AddVariable("ver_p_pim_x","ver_p_pim_x","mm",'F',-100,100);
-  factory->AddVariable("ver_p_pim_y","ver_p_pim_y","mm",'F',-100,100);
-  factory->AddVariable("ver_p_pim_z","ver_p_pim_z","mm",'F',-150,150);
-  factory->AddVariable("oa_lambda", "oa_lambda","deg",'F',0,180);
-  //factory->AddVariable("oa_pip_p","oa_pip_p","mm",'F');
-  //factory->AddVariable("lambda_mom_z","lambda_mom_z","mm",'F');
-  //factory->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
-  //factory->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
-  //factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
-  factory->AddVariable("dist_lambda_ver_pip_pim","dist_lambda_ver_pip_pim","mm",'F',0,140);
-  factory->AddVariable("dist_ver_to_ver","dist_ver_to_ver","mm",'F',0,150);
+  //dataloader->AddVariable("oa_lambda","oa_lambda","deg",'F',0,180);
+  //dataloader->AddVariable("p_p","p_beta","mm",'F');
+  //dataloader->AddVariable("pip_p","pip_p","mm",'F');
+  dataloader->AddVariable("dist_p_pim", "dist_p_pim","mm",'F',0,150);
+  dataloader->AddVariable("dist_pip_pim", "dist_pip_pim","mm",'F',0,150);
+  //dataloader->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
+  //dataloader->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
+  //dataloader->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
+  dataloader->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-80,80);
+  dataloader->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-80,80);
+  dataloader->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-150,150);
+  dataloader->AddVariable("ver_p_pim_x","ver_p_pim_x","mm",'F',-100,100);
+  dataloader->AddVariable("ver_p_pim_y","ver_p_pim_y","mm",'F',-100,100);
+  dataloader->AddVariable("ver_p_pim_z","ver_p_pim_z","mm",'F',-150,150);
+  dataloader->AddVariable("oa_lambda", "oa_lambda","deg",'F',0,180);
+  //dataloader->AddVariable("oa_pip_p","oa_pip_p","mm",'F');
+  //dataloader->AddVariable("lambda_mom_z","lambda_mom_z","mm",'F');
+  //dataloader->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
+  //dataloader->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
+  //dataloader->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
+  dataloader->AddVariable("dist_lambda_ver_pip_pim","dist_lambda_ver_pip_pim","mm",'F',0,140);
+  dataloader->AddVariable("dist_ver_to_ver","dist_ver_to_ver","mm",'F',0,150);
   
   
   //#warning Momentum diabled!
 
-  //TFile* input    = TFile::Open(treeFile, "UPDATE");
-  //TFile* input2   = TFile::Open("input_from_data_miss_mass_3.root", "UPDATE");
+  
   TFile* input2   = TFile::Open("input_from_data_miss_mass_4_new_vertex.root","UPDATE");
   cout<<"load input file"<<endl;
   //TTree* tSigAll  = (TTree*) input->Get("signal");
@@ -112,34 +82,24 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   TTree* tSig  = tSignalData -> CloneTree();
   TTree* tBack = tBackData -> CloneTree();
   
-  //TTree* tBackDataSel =tBackData-> CloneTree(MaxEntries);
-  //TTree* tSig  = tSigAll ->CloneTree();
-  //TTree* tBack = tBackAll->CloneTree();
-
-  factory->AddSignalTree    (tSig,  1.);
-  //factory->AddBackgroundTree(tBack, 1);
-  factory->AddBackgroundTree(tBack, 1);
-  //factory->SetSignalWeightExpression("Weight");
-  //factory->SetBackgroundWeightExpression("Weight");
-
-  factory->PrepareTrainingAndTestTree("", "", "!V:SplitMode=Random:SplitSeed=0:NormMode=EqualNumEvents");
-
-
-  //factory->BookMethod(TMVA::Types::kMLP, "kMLP_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N:BPMode=sequential:CalculateErrors=True");
-  //factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_(n-2)2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N-2,N-2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
   
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_n2_no_ev", "!H:!V:NCycles=600:HiddenLayers=N,N:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
-
-  factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_4(n+2)_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+2,N+2,N+2,N+2:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
-
-factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_6(n+4)_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4,N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
+  dataloader->AddSignalTree    (tSig,  1.);
+  dataloader->AddBackgroundTree(tBack, 1);
   
-  
-//factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
+  dataloader->PrepareTrainingAndTestTree("", "", "!V:SplitMode=Random:SplitSeed=0:NormMode=EqualNumEvents");
+
+
+  factory->BookMethod(dataloader,TMVA::Types::kCuts,"RecCuts","!V:VarTransform=G:FitMethod=GA");
+  factory->BookMethod(dataloader,TMVA::Types::kKNN, "kNN_30", "nkNN=30" );
+  factory->BookMethod(dataloader,TMVA::Types::kKNN, "kNN_30_pca", "nkNN=30:VarTransform=P" );  
+  factory->BookMethod(dataloader,TMVA::Types::kMLP, "kMLP_pca_ce_600_4_n+6_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+6,N+6,N+6,N+6:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=P:BPMode=sequential:CalculateErrors=True");
+  factory->BookMethod(dataloader,TMVA::Types::kDNN,"DNN_4_n+6_RELU","Layout=RELU|17,RELU|17,RELU|17,RELU|17:VarTransform=P");
+  factory->BookMethod(dataloader,TMVA::Types::kDNN,"DNN_4_n+6_RELU","Layout=SIGMOID|17,SIGMOID|17,SIGMOID|17,SIGMOID|17:VarTransform=P");
+  factory->BookMethod(dataloader,TMVA::Types::kPDERS, "PDERS", "VarTransform=P" );
+  factory->BookMethod(dataloader, TMVA::Types::kSVM, "SVM", "" );
 
   //factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
-  
-  factory->BookMethod( TMVA::Types::kCuts,"RecCuts","!V:FitMethod=GA");
+   
   
   //factory->BookMethod( TMVA::Types::kDNN, "DNN_d_0.1", "Layout:RELU|N,RELU|N,TANH:TrainingStrategy = LearningRate=1e-1, BatchSize=256| LearningRate=1e-2, BatchSize=256| LearningRate=1e-3, BatchSize=256:DropConfig=0.1:VarTransform=N,P");
   //factory->BookMethod( TMVA::Types::kDNN, "DNN_d_0.2", "Layout:RELU|N,RELU|N,TANH:TrainingStrategy = LearningRate=1e-1, BatchSize=256| LearningRate=1e-2, BatchSize=256| LearningRate=1e-3, BatchSize=256:DropConfig=0.2:VarTransform=N,P");
@@ -157,30 +117,7 @@ factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_6(n+4)_no_ev", "!H:!V:NC
     factory->BookMethod( factory, TMVA::Types::kMLP, "MLPBFGS", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=600:HiddenLayers=N+5:TestRate=5:TrainingMethod=BFGS:!UseRegulator" );
     factory->BookMethod( factory, TMVA::Types::kMLP, "MLPBNN", "H:!V:NeuronType=tanh:VarTransform=N:NCycles=60:HiddenLayers=N+5:TestRate=5:TrainingMethod=BFGS:UseRegulator" ); // BFGS training with bayesian regulators
 
-    TString layoutString ("Layout=TANH|128,TANH|128,TANH|128,LINEAR");
-
-    // Training strategies.
-    TString training0("LearningRate=1e-1,Momentum=0.9,Repetitions=1,"
-          "ConvergenceSteps=20,BatchSize=256,TestRepetitions=10,"
-	        "WeightDecay=1e-4,Regularization=L2,"
-		      "DropConfig=0.0+0.5+0.5+0.5, Multithreading=True");
-    TString training1("LearningRate=1e-2,Momentum=0.9,Repetitions=1,"
-          "ConvergenceSteps=20,BatchSize=256,TestRepetitions=10,"
-	        "WeightDecay=1e-4,Regularization=L2,"
-		      "DropConfig=0.0+0.0+0.0+0.0, Multithreading=True");
-    TString training2("LearningRate=1e-3,Momentum=0.0,Repetitions=1,"
-          "ConvergenceSteps=20,BatchSize=256,TestRepetitions=10,"
-	        "WeightDecay=1e-4,Regularization=L2,"
-		      "DropConfig=0.0+0.0+0.0+0.0, Multithreading=True");
-    TString trainingStrategyString ("TrainingStrategy=");
-    trainingStrategyString += training0 + "|" + training1 + "|" + training2;
-
-    // General Options.
-    TString dnnOptions ("!H:V:ErrorStrategy=CROSSENTROPY:VarTransform=N:"
-    "WeightInitialization=XAVIERUNIFORM");
-    dnnOptions.Append (":"); dnnOptions.Append (layoutString);
-    dnnOptions.Append (":"); dnnOptions.Append (trainingStrategyString);
-
+    
     // Multi-core CPU implementation.
     TString cpuOptions = dnnOptions + ":Architecture=CPU";
     factory->BookMethod(factory, TMVA::Types::kDNN, "DNN_CPU", cpuOptions);
@@ -217,5 +154,5 @@ factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_6(n+4)_no_ev", "!H:!V:NC
   cout << "==> TMVAClassification is done!" << endl;
 
   delete factory;
-  //delete factory;
+  delete dataloader;
 }
