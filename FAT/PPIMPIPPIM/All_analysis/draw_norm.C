@@ -81,11 +81,12 @@ int draw_norm(void)
   double nsim=40*TMath::Power(10,6);//number of simulated events
   double scale=3.13*TMath::Power(10,8);
   double downscale=3;//trigger downscale for simulated events
-  double cs[4]={14.05/1000*scale/(nsim*downscale),//S1385
-		9.26/1000*scale/(nsim*downscale),//SDpp
-		29.45/1000*scale/(nsim*downscale),//LDpp
-		35.26*0.06/1000*scale/(100*100000*downscale)//L(1520)pK+->Lpi+pi-pK+
-  };
+  double cs[4]=
+    {14.05/1000*scale/(nsim*downscale),//S1385
+     9.26/1000*scale/(nsim*downscale),//SDpp
+     29.45/1000*scale/(nsim*downscale),//LDpp
+     5.6/1000*scale/(100*100000*downscale)//L(1520)pK+->Lpi+pi-pK+
+    };
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
 
@@ -132,9 +133,9 @@ int draw_norm(void)
   cout<<"Integral for inclusive L(1520) production:"<<endl;
   cout<<hclean_L1520_ren->Integral()<<endl;
   cout<<"C-S for pp->pK0L(1520):"<<endl;
-  cout<<"35.26 \mu b:"<<endl;
+  cout<<"5.6 \mu b:"<<endl;
   cout<<"inclusive L(1520) production C-S:"<<endl;
-  cout<<35.26*(experiment_int-backgroud_int)/sig_int<<endl;
+  cout<<5.6*(experiment_int-backgroud_int)/sig_int<<endl;
   cout<<"a scaling factor"<<endl;
   cout<<(experiment_int-backgroud_int)/sig_int<<endl;
 
@@ -201,13 +202,9 @@ int draw_norm(void)
   hclean_sum_ren->Draw("same");
   cClean_ren->cd(2);
   hpure_signal->Rebin(rebin);
-  hpure_signal->GetXaxis()->SetRange(hpure_signal->FindBin(1350),hpure_signal->FindBin(1850));
+  //hpure_signal->GetXaxis()->SetRange(hpure_signal->FindBin(1350),hpure_signal->FindBin(1850));
   hpure_signal->Draw();
-  
-  TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
-  hexperiment_SB_spectrum->Draw();
-
-
+    
   //fit Voigt to data
   hpure_signal->Add(hclean_experiment,hclean_background,1,-1);
   voigt->SetParameter(0,2412);
@@ -216,6 +213,9 @@ int draw_norm(void)
   voigt->SetParameter(3,50);
   hpure_signal->Fit(voigt,"RL");
   hpure_signal->Fit(voigt,"RL");
+
+  TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
+  hexperiment_SB_spectrum->Draw();
 
   
   //save all
@@ -245,6 +245,7 @@ int draw_norm(void)
   hclean_sum_ren->Write();
   hpure_signal->Write();
   
+  cClean_ren->Write();
   cRes->Write();
   cClean->Write();
   cSum->Write();

@@ -44,7 +44,7 @@ void createHistos::Loop(char* output)
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=18;
+  double sidebandmax=20;
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
@@ -65,7 +65,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.50;
+  double mlp_cut=0.55;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -94,16 +94,15 @@ void createHistos::Loop(char* output)
 	  missing_mass_K0_L->Fill(miss_mass_kp);
 	}
 
-            
+
       //all events for final pictures
       if(isBest_new!=1
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
 	 //||m_inv_pip_pim>410 //replaced by graphical cut
-	 ||dist_ver_to_ver<15
+	 ||dist_ver_to_ver<20
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
-	 //||dist_p_pim>15
 	 //||p_theta>20 //to clean up proton sample
 	 //||dist_pip_pim>15
 	 //||dist_pip_pim>150
@@ -111,7 +110,6 @@ void createHistos::Loop(char* output)
 	 //||dist_ver_to_ver<14
 	 )
 	continue;
-
       oryginal_spectrum->Fill(m_inv_p_pim);
       
       if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
