@@ -26,7 +26,7 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   cout << "==> Start TMVAClassification" << endl;
 
   //TString NameSuffix = (treeFile.Contains("_") ? treeFile(treeFile.First('_'), treeFile.Last('.') - treeFile.First('_')) : TString("New")) + extraSuffix;
-  TFile* outputFile = TFile::Open("Output_data_driven_" + extraSuffix + ".root", "RECREATE");
+  TFile* outputFile = TFile::Open("Output_sim" + extraSuffix + ".root", "RECREATE");
 
   if(outputFile==0)
     cout<<"uninicialized output file"<<endl;
@@ -63,13 +63,13 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   
   //#warning Momentum diabled!
 
-  
-  TFile* input2   = TFile::Open("input_from_data_miss_mass_4_new_vertex.root","UPDATE");
+  TFile* input1   = TFile::Open("signal_from_sim.root","UPDATE");
+  TFile* input2   = TFile::Open("background_from_sim.root","UPDATE");
   cout<<"load input file"<<endl;
   //TTree* tSigAll  = (TTree*) input->Get("signal");
   //TTree* tBackAll = (TTree*) input->Get("background");
-  TTree* tBackData= (TTree*) input2->Get("background_data");
-  TTree* tSignalData= (TTree*) input2->Get("signal_data");
+  TTree* tBackData= (TTree*) input2->Get("background");
+  TTree* tSignalData= (TTree*) input2->Get("signal");
   if(tBackData==0)
     cout<<"uninicialized pointer!"<<endl;
   else
@@ -79,8 +79,8 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
 //if (DesEntries > 0 && DesEntries < MaxEntries)
 //  MaxEntries = DesEntries;
   
-  TTree* tSig  = tSignalData -> CloneTree(MaxEntries);
-  TTree* tBack = tBackData -> CloneTree(MaxEntries);
+  TTree* tSig  = tSignalData -> CloneTree();
+  TTree* tBack = tBackData -> CloneTree();
   
   
   dataloader->AddSignalTree    (tSig,  1.);

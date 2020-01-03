@@ -255,30 +255,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
       chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SDppK0_Rafal/hadron.root/PPimPipPim_ID");
       chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/hadron.root/PPimPipPim_ID");
-      /*
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k1_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k2_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k3_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k4_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k5_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k6_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k7_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k8_dst_hadron_out.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/lambda1520_100k9_dst_hadron_out.root/PPimPipPim_ID");
-	/*
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron01.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron02.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron03.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron04.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron05.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron06.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron07.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron08.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron09.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron10.root/PPimPipPim_ID");
-	chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron11.root/PPimPipPim_ID");    //
-      */
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/all.root");
+     
       tree = chain;
     }
 
