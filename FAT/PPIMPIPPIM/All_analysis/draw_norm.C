@@ -1,3 +1,38 @@
+double hist_error(TH1* hist, double x1=2, double x2=1)
+{
+  int nbin_min;
+  int nbin_max;
+  double err_sum=0;
+
+  cout<<endl<<"***calculating sum of errors in range***"<<endl;
+  cout<<"min value= "<<x1<<endl;
+  cout<<"max value= "<<x2<<endl;
+  
+  if(x1>x2)
+    {
+      nbin_min=1;
+      nbin_max=hist->GetNbinsX();
+    }
+  else
+    {
+      nbin_min=hist->FindBin(x1);
+      nbin_max=hist->FindBin(x2);
+    }
+  cout<<"min bin= "<<nbin_min<<endl;
+  cout<<"max bin= "<<nbin_max<<endl;
+  
+  for(int i=nbin_min;i<=nbin_max;i++)
+    {
+      cout<<"bin number: "<<i<<" bin error: "<<hist->GetBinError(i)<<endl;
+      err_sum=err_sum+hist->GetBinError(i); 
+    }
+
+  cout<<"***end of hist_error function***"<<endl<<endl;
+  return err_sum;
+}
+
+
+
 void normalize(TH1* hist)
 {
   for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
@@ -118,6 +153,7 @@ int draw_norm(void)
   //scale signal to difference between signal and background
   double int_min=1410;
   double int_max=1590;
+  double err_sum;
   
   double sig_int=hclean_L1520->Integral(hclean_L1520->FindBin(int_min),hclean_L1520->FindBin(int_max));
   double backgroud_int=hclean_background->Integral(hclean_background->FindBin(int_min),hclean_background->FindBin(int_max));
@@ -127,18 +163,8 @@ int draw_norm(void)
   hclean_L1520_ren->Scale((experiment_int-backgroud_int)/sig_int);
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
-    
-  cout<<"Integral for pK0L(1520):"<<endl;
-  cout<<hclean_L1520->Integral()<<endl;
-  cout<<"Integral for inclusive L(1520) production:"<<endl;
-  cout<<hclean_L1520_ren->Integral()<<endl;
-  cout<<"C-S for pp->pK0L(1520):"<<endl;
-  cout<<"5.6 \mu b:"<<endl;
-  cout<<"inclusive L(1520) production C-S:"<<endl;
-  cout<<5.6*(experiment_int-backgroud_int)/sig_int<<endl;
-  cout<<"a scaling factor"<<endl;
-  cout<<(experiment_int-backgroud_int)/sig_int<<endl;
 
+  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
   cRes->cd(1);
@@ -214,9 +240,25 @@ int draw_norm(void)
   hpure_signal->Fit(voigt,"RL");
   hpure_signal->Fit(voigt,"RL");
 
+  
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
   hexperiment_SB_spectrum->Draw();
 
+  err_sum=hist_error(hpure_signal,int_min,int_max);
+  
+  cout<<"Integral for pK0L(1520):"<<endl;
+  cout<<hclean_L1520->Integral()<<endl;
+  cout<<"Integral for inclusive L(1520) production:"<<endl;
+  cout<<hclean_L1520_ren->Integral()<<endl;
+  cout<<"C-S for pp->pK0L(1520):"<<endl;
+  cout<<"5.6 \mu b:"<<endl;
+  cout<<"inclusive L(1520) production C-S:"<<endl;
+  cout<<5.6*(experiment_int-backgroud_int)/sig_int<<endl;
+  cout<<"a scaling factor"<<endl;
+  cout<<(experiment_int-backgroud_int)/sig_int<<endl;
+  cout<<"****************error estimation****************"<<endl;
+  cout<<"error sum= "<<err_sum<<endl;
+  cout<<endl<<endl;
   
   //save all
   TFile* output=new TFile("final_output.root","recreate");

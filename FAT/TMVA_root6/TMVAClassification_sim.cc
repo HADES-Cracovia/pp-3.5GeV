@@ -20,7 +20,7 @@
 using namespace std;
 
 //______________________________________________________________________________
-void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t DesEntries = -1) {
+void TMVAClassification_sim(TString extraSuffix = "new_Vertex", Long64_t DesEntries = -1) {
   TMVA::Tools::Instance();
 
   cout << "==> Start TMVAClassification" << endl;
@@ -69,11 +69,17 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   //TTree* tSigAll  = (TTree*) input->Get("signal");
   //TTree* tBackAll = (TTree*) input->Get("background");
   TTree* tBackData= (TTree*) input2->Get("background");
-  TTree* tSignalData= (TTree*) input2->Get("signal");
+  TTree* tSignalData= (TTree*) input1->Get("signal");
   if(tBackData==0)
-    cout<<"uninicialized pointer!"<<endl;
+    cout<<"uninicialized background pointer!"<<endl;
   else
     cout<<"background data load"<<endl;
+
+  if(tSignalData==0)
+    cout<<"uninicialized signal pointer!"<<endl;
+  else
+    cout<<"signal data load"<<endl;
+  
   
   Long64_t MaxEntries = TMath::Min(tSignalData->GetEntries(),tBackData->GetEntries());
 //if (DesEntries > 0 && DesEntries < MaxEntries)
@@ -93,8 +99,8 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   factory->BookMethod(dataloader,TMVA::Types::kKNN, "kNN_30", "nkNN=30:VarTransform=N" );
   factory->BookMethod(dataloader,TMVA::Types::kKNN, "kNN_20", "nkNN=20:VarTransform=N" );
   factory->BookMethod(dataloader,TMVA::Types::kKNN, "kNN_10", "nkNN=10:VarTransform=N" );
-  factory->BookMethod(dataloader,TMVA::Types::kPDERS, "PDERS", "VarTransform=N,P" );
-  factory->BookMethod(dataloader,TMVA::Types::kSVM, "SVM", "VarTransform=N" );
+  //factory->BookMethod(dataloader,TMVA::Types::kPDERS, "PDERS", "VarTransform=N,P" );
+  //factory->BookMethod(dataloader,TMVA::Types::kSVM, "SVM", "VarTransform=N" );
 
   //factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
    
