@@ -1,3 +1,17 @@
+void setHistogramStyleData(TH1* hist)
+{
+  hist->SetLineWidth(2);
+  
+  hist->SetMarkerColor(hist->GetLineColor());
+  hist->SetMarkerSize(2);
+  hist->SetMarkerStyle(8);
+}
+
+void setHistogramStyleSimul(TH1* hist)
+{
+  hist->SetLineWidth(2);
+}
+
 double hist_error(TH1* hist, double x1=2, double x2=1)
 {
   int nbin_min;
@@ -24,11 +38,11 @@ double hist_error(TH1* hist, double x1=2, double x2=1)
   for(int i=nbin_min;i<=nbin_max;i++)
     {
       cout<<"bin number: "<<i<<" bin error: "<<hist->GetBinError(i)<<endl;
-      err_sum=err_sum+hist->GetBinError(i); 
+      err_sum=err_sum+hist->GetBinError(i)*hist->GetBinError(i); 
     }
 
   cout<<"***end of hist_error function***"<<endl<<endl;
-  return err_sum;
+  return TMath::Sqrt(err_sum);
 }
 
 
@@ -152,7 +166,7 @@ int draw_norm(void)
 
   //scale signal to difference between signal and background
   double int_min=1410;
-  double int_max=1590;
+  double int_max=1600;
   double err_sum;
   
   double sig_int=hclean_L1520->Integral(hclean_L1520->FindBin(int_min),hclean_L1520->FindBin(int_max));
@@ -186,53 +200,75 @@ int draw_norm(void)
   
   
   TCanvas *cSum=new TCanvas("cSum","cSum");
+
   hexperiment_data->Rebin(2);
   hexperiment_data->Draw();
+  setHistogramStyleData(hexperiment_data);
+
   hexperiment_background->Rebin(2);
   hexperiment_background->SetLineColor(kRed);
-  hexperiment_background->Draw("same");  
+  hexperiment_background->Draw("same");
+  setHistogramStyleData(hexperiment_background);
+
   hsum_data->Rebin(2);
   hsum_data->Draw("same");
+  setHistogramStyleSimul(hsum_data);
+  
   hsum_background->Rebin(2);
   hsum_background->SetLineColor(kRed);
+  setHistogramStyleSimul(hsum_background);
   hsum_background->Draw("Same");
 
   int rebin=4;
   TCanvas *cClean=new TCanvas("cClean","cClean");
   hclean_experiment->Draw();
   hclean_experiment->Rebin(rebin);
+  
   hclean_background->SetLineColor(kRed);
   hclean_background->Rebin(rebin);
   hclean_background->Draw("same");
+  setHistogramStyleSimul(hclean_background);
+  
   hclean_L1520->SetLineColor(kGreen);
   hclean_L1520->Rebin(rebin);
   hclean_L1520->Draw("same");
+  setHistogramStyleSimul(hclean_L1520);
+  
   hclean_sum->Rebin(rebin);
   hclean_sum->SetLineColor(kMagenta);
   hclean_sum->Draw("same");
+  setHistogramStyleSimul(hclean_sum);
 
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
   cClean_ren->Divide(2);
   cClean_ren->cd(1);
   hclean_experiment->Draw();
+  hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
+  setHistogramStyleData(hclean_experiment);
+  
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin);
   hclean_background->Draw("same");
+  setHistogramStyleSimul(hclean_background);
   hclean_L1520_ren->SetLineColor(kGreen);
   hclean_L1520_ren->Rebin(rebin);
   hclean_L1520_ren->Draw("same");
-  hclean_L1520_ren->GetXaxis()->SetRange(hclean_L1520_ren->FindBin(1350),hclean_L1520_ren->FindBin(1850));
+  setHistogramStyleSimul(hclean_L1520_ren);
+
   hclean_sum_ren->Rebin(rebin);
   hclean_sum_ren->SetLineColor(kMagenta);
   hclean_sum_ren->Draw("same");
+  setHistogramStyleSimul(hclean_sum_ren);
+
   cClean_ren->cd(2);
   hpure_signal->Rebin(rebin);
-  //hpure_signal->GetXaxis()->SetRange(hpure_signal->FindBin(1350),hpure_signal->FindBin(1850));
+  hpure_signal->GetXaxis()->SetRangeUser(1360,1780);
   hpure_signal->Draw();
     
   //fit Voigt to data
   hpure_signal->Add(hclean_experiment,hclean_background,1,-1);
+  setHistogramStyleData(hpure_signal);
   voigt->SetParameter(0,2412);
   voigt->SetParameter(1,1500);
   voigt->SetParameter(2,5);
@@ -246,7 +282,7 @@ int draw_norm(void)
 
   err_sum=hist_error(hpure_signal,int_min,int_max);
   
-  cout<<"Integral for pK0L(1520):"<<endl;
+  cout<<"Integral for pK0L(1520) (CS from Laura paper):"<<endl;
   cout<<hclean_L1520->Integral()<<endl;
   cout<<"Integral for inclusive L(1520) production:"<<endl;
   cout<<hclean_L1520_ren->Integral()<<endl;
