@@ -44,7 +44,7 @@ void createHistos::Loop(char* output)
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=20;
+  double sidebandmax=25;
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
