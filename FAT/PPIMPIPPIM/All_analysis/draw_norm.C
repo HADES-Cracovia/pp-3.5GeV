@@ -127,7 +127,8 @@ int draw_norm(void)
 
   
   //scale according to CS
-  double nsim=40*TMath::Power(10,6);//number of simulated events
+  //double nsim=40*TMath::Power(10,6);//number of simulated events
+  double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
   double downscale=3;//trigger downscale for simulated events
   double cs[4]=

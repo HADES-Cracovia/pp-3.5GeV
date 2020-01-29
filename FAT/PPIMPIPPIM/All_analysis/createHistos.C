@@ -44,7 +44,7 @@ void createHistos::Loop(char* output)
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=25;
+  double sidebandmax=27;
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
@@ -58,6 +58,20 @@ void createHistos::Loop(char* output)
   background->Sumw2();
   data->Sumw2();
   oryginal_spectrum->Sumw2();
+
+  //Histograms for all stages of analysis
+  TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identyfication cuts; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
+  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identyfication cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
+  TH2F* miss_m_vs_pip_pim_start=new TH2F("miss_m_vs_pip_pim_start","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",100,500,1650,100,200,700);
+  TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
+  TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
+  TH2F* miss_m_vs_pip_pim_TMVA=new TH2F("miss_m_vs_pip_pim_TMVA","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",100,500,1650,100,200,700);
+ TH1F* hMPPim_TMVA_K0mass=new TH1F("hMPPim_TMVA_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
+  TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
+  TH1F* hMPPim_TMVAMass=new TH1F("hMPPim_TMVAMass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
+  TH1F* hMPipPim_TMVAMass=new TH1F("hMPipPim_TMVAMass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
+  
+  
   
   TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
   //TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_pip_pim_tight.root","READ");
@@ -65,7 +79,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.55;
+  double mlp_cut=0.57;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -80,7 +94,30 @@ void createHistos::Loop(char* output)
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+      if(isBest_new==1)
+	{
+	  hMPPim_start->Fill(m_inv_p_pim);
+	  hMPipPim_start->Fill(m_inv_pip_pim);
+	  miss_m_vs_pip_pim_start->Fill(miss_mass_kp,m_inv_pip_pim);
 
+	  if(mlp_output>mlp_cut)
+	    {
+	      hMPPim_TMVA->Fill(m_inv_p_pim);
+	      hMPipPim_TMVA->Fill(m_inv_pip_pim);
+	      miss_m_vs_pip_pim_TMVA->Fill(miss_mass_kp,m_inv_pip_pim);
+	      if(m_inv_p_pim<1126 && m_inv_p_pim>1106)
+		hMPipPim_TMVA_Lmass->Fill(m_inv_pip_pim);
+	      if(m_inv_pip_pim<500 && m_inv_pip_pim>480)
+		hMPPim_TMVA_K0mass->Fill(m_inv_p_pim);
+	      if(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
+		{
+		  hMPPim_TMVAMass->Fill(m_inv_p_pim);
+		  hMPipPim_TMVAMass->Fill(m_inv_pip_pim);
+		}
+	    }
+	}
+      
+      
       if(
 	 m_inv_pip_pim<500
 	 && m_inv_pip_pim>480
@@ -190,5 +227,43 @@ void createHistos::Loop(char* output)
   missing_mass_K0_L->Write();
   miss_m_vs_pip_pim->Write();
   graph_cut->Write();
+
+  hMPPim_start->Write();
+  hMPipPim_start->Write();
+  miss_m_vs_pip_pim_start->Write();
+  hMPPim_TMVA->Write();
+  hMPipPim_TMVA->Write();
+  miss_m_vs_pip_pim_TMVA->Write();
+  hMPPim_TMVA_K0mass->Write();
+  hMPipPim_TMVA_Lmass->Write();
+  hMPPim_TMVAMass->Write();
+  hMPipPim_TMVAMass->Write(); 
+
+  hMPPim_start->Delete();
+  hMPipPim_start->Delete();
+  miss_m_vs_pip_pim_start->Delete();
+  hMPPim_TMVA->Delete();
+  hMPipPim_TMVA->Delete();
+  miss_m_vs_pip_pim_TMVA->Delete();
+  hMPPim_TMVA_K0mass->Delete();
+  hMPipPim_TMVA_Lmass->Delete();
+  hMPPim_TMVAMass->Delete();
+  hMPipPim_TMVAMass->Delete();
+
+  dedx_lambda->Delete();
+  cFit1116->Delete();
+  fVoigt->Delete();
+  fbg->Delete();
+  fVoigt_bg->Delete();
+  resi->Delete();
+  signal->Delete();
+  background->Delete();
+  data->Delete();
+  oryginal_spectrum->Delete();
+  missing_mass_K0_L->Delete();
+  miss_m_vs_pip_pim->Delete();
+  graph_cut->Delete();
+
+
   MyFile->Close();
 }
