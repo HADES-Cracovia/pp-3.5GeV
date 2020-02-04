@@ -59,19 +59,26 @@ void createHistos::Loop(char* output)
   data->Sumw2();
   oryginal_spectrum->Sumw2();
 
+  int dM=1;
+  int Lmin=1000;
+  int Lmax=1500;
+  int LdM=(Lmax-Lmin)/dM;
+  int Kmin=250;
+  int Kmax=950;
+  int KdM=(Kmax-Kmin)/dM;
   //Histograms for all stages of analysis
-  TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identyfication cuts; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
-  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identyfication cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
-  TH2F* miss_m_vs_pip_pim_start=new TH2F("miss_m_vs_pip_pim_start","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",100,500,1400,100,200,700);
-  TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",200,1050,1450,200,250,700);
-  TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
-  TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
-  TH2F* miss_m_vs_pip_pim_TMVA=new TH2F("miss_m_vs_pip_pim_TMVA","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",100,500,1400,100,200,700);
-  TH2F* p_pim_vs_pip_pim_TMVA=new TH2F("p_pim_vs_pip_pim_TMVA","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV]",200,1050,1400,200,250,700);
- TH1F* hMPPim_TMVA_K0mass=new TH1F("hMPPim_TMVA_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
-  TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
-  TH1F* hMPPim_TMVAMass=new TH1F("hMPPim_TMVAMass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV]",500,1000,1500);
-  TH1F* hMPipPim_TMVAMass=new TH1F("hMPipPim_TMVAMass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV]",750,250,1000);
+  TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identyfication cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identyfication cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH2F* miss_m_vs_pip_pim_start=new TH2F("miss_m_vs_pip_pim_start","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",100,500,1400,100,200,700);
+  TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1450,200,250,700);
+  TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH2F* miss_m_vs_pip_pim_TMVA=new TH2F("miss_m_vs_pip_pim_TMVA","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",100,500,1400,100,200,700);
+  TH2F* p_pim_vs_pip_pim_TMVA=new TH2F("p_pim_vs_pip_pim_TMVA","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1400,200,250,700);
+  TH1F* hMPPim_TMVA_K0mass=new TH1F("hMPPim_TMVA_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH1F* hMPPim_TMVAMass=new TH1F("hMPPim_TMVAMass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_TMVAMass=new TH1F("hMPipPim_TMVAMass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   
   
   

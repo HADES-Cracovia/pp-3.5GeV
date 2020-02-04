@@ -476,4 +476,18 @@ Int_t createHistos::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+
+void normalize(TH1* hist)
+{
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      double scale=1.0/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
+      hist->SetBinContent(j, hist->GetBinContent(j) / hist->GetBinWidth(j) *scale);
+      //hist->SetBinError( j, TMath::Sqrt( hist->GetBinContent(j) ) );
+      hist->SetBinError( j, hist->GetBinError(j) / hist->GetBinWidth(j) * scale );
+      hist->GetYaxis()->SetTitle("#frac{dN}{dE} [#frac{#mu b}{MeV}]");
+    }
+
+}  
+
 #endif // #ifdef createHistos_cxx

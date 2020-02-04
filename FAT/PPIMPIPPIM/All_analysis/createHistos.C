@@ -148,7 +148,7 @@ void createHistos::Loop(char* output)
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
 	 //||m_inv_pip_pim>410 //replaced by graphical cut
-	 ||dist_ver_to_ver<20
+	 ||dist_ver_to_ver<5
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||p_theta>20 //to clean up proton sample

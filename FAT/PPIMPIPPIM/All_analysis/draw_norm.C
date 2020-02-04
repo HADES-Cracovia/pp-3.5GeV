@@ -45,6 +45,26 @@ double hist_error(TH1* hist, double x1=2, double x2=1)
   return TMath::Sqrt(err_sum);
 }
 
+void scale_error(TH1* hist, double err)
+{
+  cout<<endl<<"***scaling the histogram errors according to one relative error***"<<endl;
+  cout<<"hist name"<<hist->GetName()<<endl;
+  cout<<"scaling error"<<err<<endl;
+  
+  int nbin_min=1;
+  int nbin_max=hist->GetNbinsX();
+  for(int i=nbin_min;i<=nbin_max;i++)
+    {
+      double cont=hist->GetBinContent(i);
+      double error=hist->GetBinContent(i)*err;
+      cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
+      cout<<"                       bin error:  "<<error<<endl;
+      hist->SetBinError(i,error); 
+    }
+
+  cout<<"***end of scale_error function***"<<endl<<endl;
+  
+}
 
 
 void normalize(TH1* hist)
@@ -52,9 +72,10 @@ void normalize(TH1* hist)
   for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
     {
       double scale=1.0/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
+      double binErr=hist->GetBinError(j);
       hist->SetBinContent(j, hist->GetBinContent(j) / hist->GetBinWidth(j) *scale);
       //hist->SetBinError( j, TMath::Sqrt( hist->GetBinContent(j) ) );
-      hist->SetBinError( j, hist->GetBinError(j) / hist->GetBinWidth(j) * scale );
+      hist->SetBinError( j,  binErr/ hist->GetBinWidth(j) * scale );
       hist->GetYaxis()->SetTitle("#frac{dN}{dE} [#frac{#mu b}{MeV}]");
     }
 
@@ -137,6 +158,12 @@ int draw_norm(void)
      29.45/1000*scale/(nsim*downscale),//LDpp
      5.6/1000*scale/(100*100000*downscale)//L(1520)pK+->Lpi+pi-pK+
     };
+  double err[4]=
+    {2.25/14.05,//S1385
+     1.47/9.26,//SDpp
+     2.55/29.45,//LDpp
+     0/5.6//L(1520)pK+->Lpi+pi-pK+
+    };
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
 
@@ -144,12 +171,32 @@ int draw_norm(void)
   hSDpp_background->Scale(cs[1]);
   hLDpp_background->Scale(cs[2]);
   hL1520_background->Scale(cs[3]);
+
+  /*  hS1385_background->Sumw2();
+  hSDpp_background->Sumw2();
+  hLDpp_background->Sumw2();
+  hL1520_background->Sumw2();
+  */
+  scale_error(hS1385_background,err[0]);
+  scale_error(hSDpp_background,err[1]);
+  scale_error(hLDpp_background,err[2]);
+  scale_error(hL1520_background,err[3]);
   
   hS1385_data->Scale(cs[0]);
   hSDpp_data->Scale(cs[1]);
   hLDpp_data->Scale(cs[2]);
   hL1520_data->Scale(cs[3]);
-  
+  /*
+  hS1385_data->Sumw2();
+  hSDpp_data->Sumw2();
+  hLDpp_data->Sumw2();
+  hL1520_data->Sumw2();
+  */
+  scale_error(hS1385_data,err[0]);
+  scale_error(hSDpp_data,err[1]);
+  scale_error(hLDpp_data,err[2]);
+  scale_error(hL1520_data,err[3]);
+    
   hsum_background->Add(hS1385_background);
   hsum_background->Add(hSDpp_background);
   hsum_background->Add(hLDpp_background);
@@ -201,21 +248,21 @@ int draw_norm(void)
   
   
   TCanvas *cSum=new TCanvas("cSum","cSum");
-
-  hexperiment_data->Rebin(2);
+  int rebin2=2; //wrong error propagation for simul events
+  hexperiment_data->Rebin(rebin2);
   hexperiment_data->Draw();
   setHistogramStyleData(hexperiment_data);
 
-  hexperiment_background->Rebin(2);
+  hexperiment_background->Rebin(rebin2);
   hexperiment_background->SetLineColor(kRed);
   hexperiment_background->Draw("same");
   setHistogramStyleData(hexperiment_background);
 
-  hsum_data->Rebin(2);
+  hsum_data->Rebin(rebin2);
   hsum_data->Draw("same");
   setHistogramStyleSimul(hsum_data);
   
-  hsum_background->Rebin(2);
+  hsum_background->Rebin(rebin2);
   hsum_background->SetLineColor(kRed);
   setHistogramStyleSimul(hsum_background);
   hsum_background->Draw("Same");
@@ -226,8 +273,9 @@ int draw_norm(void)
   hclean_experiment->Rebin(rebin);
   
   hclean_background->SetLineColor(kRed);
+  hclean_background->SetFillColor(kRed);
   hclean_background->Rebin(rebin);
-  hclean_background->Draw("same");
+  hclean_background->Draw("samee2B");
   setHistogramStyleSimul(hclean_background);
   
   hclean_L1520->SetLineColor(kGreen);
@@ -237,7 +285,8 @@ int draw_norm(void)
   
   hclean_sum->Rebin(rebin);
   hclean_sum->SetLineColor(kMagenta);
-  hclean_sum->Draw("same");
+  hclean_sum->SetFillColor(kMagenta);
+  hclean_sum->Draw("samee2B");
   setHistogramStyleSimul(hclean_sum);
 
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
@@ -250,7 +299,7 @@ int draw_norm(void)
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin);
-  hclean_background->Draw("same");
+  hclean_background->Draw("samee2B");
   setHistogramStyleSimul(hclean_background);
   hclean_L1520_ren->SetLineColor(kGreen);
   hclean_L1520_ren->Rebin(rebin);
@@ -259,7 +308,8 @@ int draw_norm(void)
 
   hclean_sum_ren->Rebin(rebin);
   hclean_sum_ren->SetLineColor(kMagenta);
-  hclean_sum_ren->Draw("same");
+  hclean_sum_ren->SetFillColor(kMagenta);
+  hclean_sum_ren->Draw("samee2B");
   setHistogramStyleSimul(hclean_sum_ren);
 
   cClean_ren->cd(2);
