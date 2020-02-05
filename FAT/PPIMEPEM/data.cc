@@ -1,70 +1,69 @@
 #include "data.h"
+#include <TVector3.h>
+#include <hgeomvector.h>
+#include <hparticletool.h>  
+#include <hgeomvector.h>
+/**************************** Global histograms repository ***********************************/
 
-/**************************** global histograms repository ***********************************/
 
-namespace PATData {
+namespace PATData
+{
 
   TFile         *outFileData;
 
-  HNtuple       *tlo;
+  HNtuple       *tlo, *n_out, *n_ppim;
 
   HFilter       *filter;
   float         EFF, ACC;
 
-  TH1F          *oa_corr;
-  TH1F          *em_mom, *em_mom_bt,*ep_mom, *ep_mom_bt;
-  
-  TH1F          *SIGNAL, *CB, *SIGNIFICANCE;
-  TH1F          *sig_all, *sig_all_bt, *sig_all_back1, *sig_all_back2, *sig_OK, *sig_bt_OK;
-  TH1F          *miss_all, *miss_all_back1, *miss_all_back2, *miss_OK;
-  TH1F          *sig_all_var, *sig_all_var_bt, *sig_all_var_back1, *sig_all_bt_back1, *sig_all_var_bt_back1, *sig_all_var_back2, *sig_var_OK, *sig_var_bt_OK, *sig_all_bt_back2, *sig_all_var_bt_back2;
-  TH1F          *sig_all_var2, *sig_all_var2_back1, *sig_all_var2_back2, *sig_var2_OK;
-  TH1F          *cos_ep, *cos_em, *cos_sum;
-  TH1F          *cos_ep_cm, *cos_back1_cm, *cos_back2_cm,*cos_ep_cm_OK;
-  TH1F          *cos_ep_back1, *cos_em_back1, *cos_sum_back1;
-  TH1F          *cos_ep_back2, *cos_em_back2, *cos_sum_back2;
-  TH1F          *cos_ep_OK, *cos_em_OK, *cos_sum_OK;
-  TH1F          *rapidity_all, *rapidity_back1, *rapidity_back2, *rapidity_OK;
-  TH1F          *rapidity_140_all, *rapidity_140_back1, *rapidity_140_back2, *rapidity_140_OK;
-  TH1F          *pt_all, *pt_back1, *pt_back2, *pt_OK;
-  TH1F          *pt_140_all, *pt_140_back1, *pt_140_back2, *pt_140_OK;
-  TH1F          *pureBT_signal, *pureBT_signal_OK, *pureBT_signal_back1, *pureBT_signal_back2;
-  TH1F          *pureBT_signal_var, *pureBT_signal_OK_var, *pureBT_signal_back1_var, *pureBT_signal_back2_var;
-  TH2F          *ep_beta_mom, *em_beta_mom,*ep_beta_mom_bt, *em_beta_mom_bt, *pureBT_beta_mom;
-  TH1F *momentum_spectrum, *momentum_spectrum_bt, *momentum_spectrum_pureBT;
-  TH1F          *sig_rf_and_bt,*sig_rf_and_bt_OK,*sig_rf_and_bt_back1,*sig_rf_and_bt_back2;
-  TH1F      *sig_to_bg_var, *sig_to_bg_bt_var, *sig_to_bg_pureBT_var;
-  TH1F          *sig_rf_and_bt_var,*sig_rf_and_bt_OK_var,*sig_rf_and_bt_back1_var,*sig_rf_and_bt_back2_var;
-  TH1F          *sig_sum,*sig_sum_var;
-  TH1F      *sig_all_var_back, *sig_all_var_bt_back, *pureBT_signal_back_var;
-  TH1I          *bt_rf_stat, *bt_rf_stat_pi,*bt_rf_stat_back1, *bt_rf_stat_back2, *bt_rf_stat_OK,*bt_rf_stat_pi_back1, *bt_rf_stat_pi_back2, *bt_rf_stat_pi_OK;
-  TH3F      *rf_freedom;
-  TH2F      *rf_f_dtheta, *rf_f_dphi;
-  TH2F      *q_vs_p_leptons_RF,*q_vs_p_leptons_BT; 
-  TH2F *phi_theta_rich[9],*z_theta_epep, *z_theta_emem, *z_theta_epem, *z_theta_all;
-
-  TH1F *proton_p, *proton_E, *proton_m;
-  TH2F *proton_p_beta;
-  TH1F *miss_mass_all, *miss_mass_BT, *miss_mass_RF, *miss_mass_profit;
-  TH1F *miss_mass_all_OK, *miss_mass_BT_OK, *miss_mass_RF_OK, *miss_mass_profit_OK;
-
-  TH1F *miss_mass_all_bcg1, *miss_mass_BT_bcg1, *miss_mass_RF_bcg1, *miss_mass_profit_bcg1;
-  TH1F *miss_mass_all_bcg2, *miss_mass_BT_bcg2, *miss_mass_RF_bcg2, *miss_mass_profit_bcg2;
-  TH1F *miss_mass_all_bcg, *miss_mass_BT_bcg, *miss_mass_RF_bcg, *miss_mass_profit_bcg;  
-
+  int event_number, event_mult;
+  //PPimEpPim*******************************
+  TH2F *p_p_beta, *pim_p_beta, *ep_p_beta;
+  TH1F *p_pim_mass, *p_mass, *pim_mass;
 
   
-  TFile *file1_cuts, *file2_cuts;
+  TH1F *p_pim_mass, *p_em_mass, *pim_ep_mass,*pim_ep_mass,*em_ep_mass, *p_pim_ep_pim_mass;
+  TH2F *dist_p_pim_pim_ep;
+  TH2F *ver_ep_lambda;
+  TH1F *dist_p_pim, *dist_pim_ep;
+
+  TH1F *sum_dist_1, *sum_dist_2, *sum_dist_diff;
+
+  TH1F *DL_p_pim_mass, *DL_p_em_mass, *DL_pim_ep_mass,*DL_pim_ep_mass,*DL_em_ep_mass, *DL_p_pim_ep_pim_mass;
+  TH1F *DL_dist_p_pim, *DL_dist_pim_ep;
+  TH2F *DL_dist_p_pim_pim_ep;
+  TH1F *DL_p_pim_mass, *DL_p_mass, *DL_pim_mass, *DL_in_target;
+
+  TH1F *chi_p_pim_mass, *chi_ep_pim_mass, *chi_final_mass;
+  TH2F *chi_lambda_vertex;
+
+  TH1F *LM_chi_p_pim_mass, *LM_chi_ep_pim_mass, *LM_chi_final_mass;
+  TH2F *LM_chi_lambda_vertex;
+  
+  TH1F *DML_p_pim_mass, *DML_p_em_mass, *DML_pim_ep_mass,*DML_pim_ep_mass,*DML_em_ep_mass, *DML_p_pim_ep_pim_mass;
+  TH1F *DML_dist_p_pim, *DML_dist_pim_ep;
+  TH2F *DML_dist_p_pim_pim_ep;
+  TH1F *DML_p_pim_mass, *DML_p_mass, *DML_pim_mass;
+
+  TH1F *DL_target_z, *DL_target_z_diff, *DL_ep_z;
+  TH1F *DL_pim_ep_z;
+
+  TH1F *signal_fit[10][10];
+
+  TH2F *vertex_lambda, *vertex_target, *DL_vertex_lambda, *DL_vertex_target, *DLM_vertex_lambda, *DLM_vertex_target;
+  //***************************************** 
+
+  TFile *filp_cuts, *filpi_cuts;
 
   TCutG *pEpS0, *pEpS1, *pEmS0, *pEmS1;
   TCutG *pEm1S0, *pEm1S1, *pEm2S0, *pEm2S1;
   TCutG *pEp1S0, *pEp1S1, *pEp2S0, *pEp2S1;
   TCutG *pvertex_xy, *pvertex_xz, *pvertex_yz;
 
-  Bool_t NoLeptonE1;
-  Bool_t NoHadronE1;
-  Bool_t NoLeptonE2;
-  Bool_t NoHadronE2;
+  Bool_t NoLeptonP;
+  Bool_t NoHadronP;
+  Bool_t NoLeptonPI;
+  Bool_t NoHadronPI;
 
   Bool_t Electron;
   Bool_t Positron;
@@ -78,18 +77,26 @@ namespace PATData {
   Bool_t ElectronElectron;
   Bool_t PositronPositron;
 
-  TLorentzVector *e1;
-  TLorentzVector *e2;
   TLorentzVector *p;
-  TLorentzVector *beam;
+  TLorentzVector *pi, *pim, *pim, *em, *ep;
+  TLorentzVector *beam, *miss;
   TLorentzVector *proj;
   TLorentzVector *targ;
-  TLorentzVector *gammae1e2;
-  TLorentzVector *e1e2;
-  TLorentzVector *e1e2_miss;
-  TLorentzVector *pe1e2_miss;
-  TLorentzVector *e1_delta;
-  TLorentzVector *e2_delta;
+  TLorentzVector *gammappi;
+  TLorentzVector *gammapep;
+  TLorentzVector *gammappim;
+  TLorentzVector *gammapem;
+  TLorentzVector *gammapimep;
+  TLorentzVector *gammaemep;
+  TLorentzVector *gammappimepem;
+  TLorentzVector *gammappimem;
+  TLorentzVector *gammappimep;
+  TLorentzVector *gammapemep;
+  
+  TLorentzVector *ppi;
+  TLorentzVector *ppi_miss;
+  TLorentzVector *p_delta;
+  TLorentzVector *pi_delta;
 
   Int_t insideTarget;
 
@@ -101,18 +108,18 @@ namespace PATData {
   Int_t insideEm1S0;
   Int_t insideEm1S1;
   Int_t insideEm2S0;
-   Int_t insideEm2S1;
+  Int_t insideEm2S1;
 
-   Int_t insideEp1S0;
-   Int_t insideEp1S1;
-   Int_t insideEp2S0;
-   Int_t insideEp2S1;
+  Int_t insideEp1S0;
+  Int_t insideEp1S1;
+  Int_t insideEp2S0;
+  Int_t insideEp2S1;
 
-   const double D2R = 1.74532925199432955e-02;
-   const double R2D = 57.2957795130823229;
+  const double D2R = 1.74532925199432955e-02;
+  const double R2D = 57.2957795130823229;
 
 
-   /************************* M E T H O D S *************************************/
+  /************************* M E T H O D S *************************************/
 
   double openingangle(const TLorentzVector& a, const TLorentzVector& b)
   {
@@ -147,8 +154,8 @@ namespace PATData {
     TH1 *ptr = (TH1*)hist->Clone(name);
     for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
       {
-	//ptr->SetBinContent(j, hist->GetBinContent(j) - back1->GetBinContent(j) - back2->GetBinContent(j));
-	ptr->SetBinContent(j, hist->GetBinContent(j) - 2*TMath::Sqrt(back1->GetBinContent(j)*back2->GetBinContent(j)));
+	ptr->SetBinContent(j, hist->GetBinContent(j) - back1->GetBinContent(j) - back2->GetBinContent(j));
+	//ptr->SetBinContent(j, hist->GetBinContent(j) - 2*TMath::Sqrt(back1->GetBinContent(j)*back2->GetBinContent(j)));
 	ptr->SetBinError(j, TMath::Sqrt( hist->GetBinError(j)*hist->GetBinError(j) + 
 					 back1->GetBinError(j)*back1->GetBinError(j) + 
 					 back2->GetBinError(j)*back2->GetBinError(j) ));
@@ -163,6 +170,85 @@ namespace PATData {
     //return (a*y + b);
     return (-40.0-(0.0583*y)+(0.000208333*y*y));
   }
+  
+  double trackDistance(double r1, double z1, TLorentzVector v1, double r2, double z2, TLorentzVector v2)
+  {
+    double dist;
+    HGeomVector base_1, base_2, dir_1, dir_2;
+    HParticleTool p_tool;
+    double phi1, phi2;
+
+    phi1=p_tool.getLabPhiDeg(v1)*D2R;
+    phi2=p_tool.getLabPhiDeg(v2)*D2R;
+    //HGeomVector temp1(v1.X(),v1.Y(),v1.Z());
+    //HGeomVector temp2(v2.X(),v2.Y(),v2.Z());
+    //     v1.Print();
+    //    v2.Print();
+    //r1=TMath::Abs(r1);
+    //r2=TMath::Abs(r2);
+    
+        
+    p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
+
+    dist=p_tool.calculateMinimumDistance(base_1,dir_1,base_2,dir_2);
+
+    return dist;
+  }
+
+  TVector3 vertex(double r1,double z1,TLorentzVector v1, double r2,double z2,TLorentzVector v2)
+  {
+    TVector3 out;
+    HGeomVector ver;
+    HGeomVector base_1, base_2, dir_1, dir_2;
+    HParticleTool p_tool;
+    double phi1, phi2;
+    //r1=TMath::Abs(r1);
+    //r2=TMath::Abs(r2);
+
+    phi1=p_tool.getLabPhiDeg(v1)*D2R;
+    phi2=p_tool.getLabPhiDeg(v2)*D2R;
+
+    //cout<<phi1<<" "<<v1.Theta()<<endl;
+    //cout<<phi2<<" "<<v2.Theta()<<endl;
+
+    p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
+
+    //cout <<z1<<" "<<r1<<" "<<phi1<<" "<<v1.Theta()<<endl;
+    //cout<<base_1.getX()<<" "<<base_1.getY()<<" "<<base_1.getZ()<<endl;
+    //cout<<dir_1.getX()<<" "<<dir_1.getY()<<" "<<dir_1.getZ()<<endl;
+    //cout<<endl<<endl;
+
+    ver=p_tool.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
+    //cout<<"HGeomVector: "<<ver.getX()<<" " <<ver.getY()<<" "<<ver.getZ()<<endl;
+    out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
+    //cout<<"out vector"; out.Print(); cout<<endl;
+    return out; 
+  }
+  
+  double getR(TVector3 vec)
+  {
+    return TMath::Sqrt(vec.X()*vec.X()+vec.Y()*vec.Y());
+  }
+
+  double trackToPoint(TVector3 base,TVector3 dir, TVector3 point)
+  {
+    HGeomVector point1, dir1, base1, res;
+    double result;
+    point1.setXYZ(point.X(), point.Y(), point.Z());
+    dir1.setXYZ(dir.X(), dir.Y(), dir.Z());
+    base1.setXYZ(base.X(), base.Y(), base.Z());
+
+    //cout<<"direction vec: "<<dir1.X()<<" "<<dir1.Y()<<" "<<dir1.Z()<<" "<<endl;
+    HParticleTool p_tool;
+    result=p_tool.calculateMinimumDistanceStraightToPoint(base1, dir1, point1);
+    //cout<<res.X()<<" "<<res.Z()<<endl;
+    //res1.SetXYZ(res.X(),res.Y(),res.Z());
+    return result;
+
+  }
+  
 
 }
 
