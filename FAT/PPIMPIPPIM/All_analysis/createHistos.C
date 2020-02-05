@@ -239,6 +239,16 @@ void createHistos::Loop(char* output)
   miss_m_vs_pip_pim->Write();
   graph_cut->Write();
 
+  styleTH1(hMPPim_start);
+  styleTH1(hMPipPim_start);
+  styleTH1(hMPPim_TMVA);
+  styleTH1(hMPipPim_TMVA);
+  styleTH1(hMPPim_TMVA_K0mass);
+  styleTH1(hMPipPim_TMVA_Lmass);
+  styleTH1(hMPPim_TMVAMass);
+  styleTH1(hMPipPim_TMVAMass);
+ 
+  
   hMPPim_start->Write();
   hMPipPim_start->Write();
   miss_m_vs_pip_pim_start->Write();

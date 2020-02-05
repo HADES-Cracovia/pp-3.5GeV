@@ -45,7 +45,7 @@ double hist_error(TH1* hist, double x1=2, double x2=1)
   return TMath::Sqrt(err_sum);
 }
 
-void scale_error(TH1* hist, double err)
+void scale_error(TH1* hist, double err,bool verbose=0)
 {
   cout<<endl<<"***scaling the histogram errors according to one relative error***"<<endl;
   cout<<"hist name"<<hist->GetName()<<endl;
@@ -57,8 +57,11 @@ void scale_error(TH1* hist, double err)
     {
       double cont=hist->GetBinContent(i);
       double error=hist->GetBinContent(i)*err;
-      cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
-      cout<<"                       bin error:  "<<error<<endl;
+      if(verbose)
+	{
+	  cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
+	  cout<<"                       bin error:  "<<error<<endl;
+	}
       hist->SetBinError(i,error); 
     }
 
