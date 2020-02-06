@@ -51,68 +51,10 @@ void PPimEpEm::Loop()
 
       if(isBest!=-1 /*&& trigdownscaleflag==1*/)
 	{
-	  //initialization for first event
-	  if(event_number==-1)
-	    { 
-	      event_number=event;
-	      event_mult=1;
-	    }
 	  
-	  //reset event multiplisity in case of a new event
-	  if(event!=event_number || jentry==(nentries-1)) //every new event or end of last event
-	    {
-	      dif_events++;
-	      double min_value=10000000;
-	      int best_hipo=-1;
-	      int isBest_sum=0;
-	      int lambda_in_event=0;
-	      //find the best hypothesis
-	      for(int j=0;j<the_best.size();j++)
-		{
-		  //cout<<the_best[j]<<" ";
-		  isBest_sum=isBest_sum+isBest_vector[j];
-		  if(the_best[j]<min_value)
-		    {
-		      min_value=the_best[j];
-		      best_hipo=j;
-		    }
-		}
-	      //cout<<endl;
-	      /*if(isBest_sum<1)
-		{
-		cout<<"best hipo:"<<best_hipo;
-		cout<<" isBest sum ="<<isBest_sum <<"for event "<<event_number;
-		cout<<endl;
-		}
-	      */
-	      for(int k=0;k<buffer.size();k++)
-		{
-		  //cout<<"writing event "<< endl <<"best hipo "<<best_hipo<<endl;
-		  if(k==best_hipo)
-		    filler(buffer[k],event_mult,1,1);
-		  else
-		    filler(buffer[k],event_mult,1,0);
-		}
-      
-	      buffer.clear();
-	      the_best.clear();
-	      isBest_vector.clear();
-
-	      event_number=event;
-	      event_mult=1;
-
-	      if(lambda_in_event>0)
-		real_lambdas++;
-
-	      //cout<<"no. of real lambdas in event "<<lambda_in_event<<endl;
-	      if(jentry==(nentries-1))
-		cout<<"no. of real labdas is all data "<<real_lambdas<<endl;
-	    }
-	  else
-	    {
-	      event_mult++;
-	    }
-
+	  dif_events++;
+	  double min_value=10000000;
+	  
 	  double F = 1.006;
 	  //double F=1;
 	  TVector3 v1, v2, v3, v4, v5;
@@ -123,27 +65,9 @@ void PPimEpEm::Loop()
 
 	  p->SetVectM( v2, 938.272013 );
 	  pim->SetVectM( v3, 139.57018 );
-	  ep->SetVectM( v4, 139.57018 );
-	  em->SetVectM( v5, 139.57018 );
-	  /*
-	    cout<<"first part"<<endl;
-	    HParticleTool p_tool;  
-	    cout<<"p_phi: "<<p_phi<<endl;
-	    cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
-	    cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
-	    cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
-	    cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
-	    cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
+	  ep->SetVectM( v4, 0.51099894 );
+	  em->SetVectM( v5, 0.51099894 );
 
-	    cout<<"p_theta: "<<p_theta<<endl;
-	    cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
-	    cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
-	    //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
-	    //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
-	    //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
-	    v2.Print();
-	    cout<<endl;
-	  */
 	  *gammapep = *p + *ep;
 	  *gammappim = *p + *pim;
 	  *gammapem = *p + *em;
@@ -157,7 +81,7 @@ void PPimEpEm::Loop()
 	  Float_t m_inv_pem = gammapem->M();
 	  Float_t m_inv_eppim = gammapimep->M();
 	  Float_t m_inv_epem = gammaemep->M();
-	  Float_t m_inv_ppimeppim = gammappimepem->M();
+	  Float_t m_inv_ppimepem = gammappimepem->M();
 	  Float_t oa = R2D * openingangle(*p, *pim);
 	  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
@@ -172,8 +96,8 @@ void PPimEpEm::Loop()
 	  TVector3 ver_ep_pim=vertex(ep_r,ep_z,*ep,pim_r,pim_z,*pim);
 	  TVector3 ver_ep_em=vertex(ep_r,ep_z,*ep,em_r,em_z,*em);
 
-	  TVector3 ver_to_ver_1=ver_p_pim-ver_ep_em;
-	  TVector3 ver_to_ver_2=ver_p_em-ver_ep_pim;
+	  TVector3 ver_to_ver=ver_p_pim-ver_ep_em;
+	  //TVector3 ver_to_ver_2=ver_p_em-ver_ep_pim;
 
 	  Float_t oa_pim_p=R2D*openingangle(pim->Vect(),p->Vect());
 	  Float_t oa_em_p=R2D*openingangle(em->Vect(),p->Vect());
@@ -182,47 +106,213 @@ void PPimEpEm::Loop()
 	  Float_t oa_pim_ep=R2D*openingangle(pim->Vect(),ep->Vect());
 	  Float_t oa_em_ep=R2D*openingangle(em->Vect(),ep->Vect());
                   
-	  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim->Vect());
-	  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammapem->Vect());
+	  Float_t oa_lambda=R2D*openingangle(ver_to_ver,gammappim->Vect());
+	  //Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammapem->Vect());
       
 	  Float_t dist_p_pim=trackDistance(p_r,p_z,*p,pim_r,pim_z,*pim);
 	  Float_t dist_p_em=trackDistance(p_r,p_z,*p,em_r,em_z,*em);
 	  Float_t dist_ep_pim=trackDistance(ep_r,ep_z,*ep,pim_r,pim_z,*pim);
 	  Float_t dist_ep_em=trackDistance(ep_r,ep_z,*ep,em_r,em_z,*em);
-	  Float_t dist_lambda1_ep=trackDistance(ep_r,ep_z,*ep,ver_p_pim.Z(),getR(ver_p_pim),*gammappim);
-	  Float_t dist_lambda2_ep=trackDistance(ep_r,ep_z,*ep,ver_p_em.Z(),getR(ver_p_em),*gammapem);
-	  Float_t dist_lambda1_em=trackDistance(em_r,em_z,*em,ver_p_pim.Z(),getR(ver_p_pim),*gammappim);
-	  Float_t dist_lambda2_pim=trackDistance(pim_r,pim_z,*pim,ver_p_em.Z(),getR(ver_p_em),*gammapem);
-	  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
-	  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
+	  Float_t dist_lambda_ep=trackDistance(ep_r,ep_z,*ep,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
+	  //Float_t dist_lambda2_ep=trackDistance(ep_r,ep_z,*ep,ver_p_em.Z(),getR(ver_p_em),*gammapem);
+	  Float_t dist_lambda_em=trackDistance(em_r,em_z,*em,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
+	  //Float_t dist_lambda2_pim=trackDistance(pim_r,pim_z,*pim,ver_p_em.Z(),getR(ver_p_em),*gammapem);
+	  Float_t dist_ver_to_ver=ver_to_ver.Mag();
+	  //Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       
-	  //Float_t quality=trackDistance(p_r,p_z,v2,pim_r,pim_z,v3);
-	  //Float_t quality1=dist_p_pim*dist_p_pim+dist_ep_em*dist_ep_em;
-	  //Float_t quality2=dist_p_em*dist_p_em+dist_ep_pim*dist_ep_pim;
-	  Float_t quality1=TMath::Power(m_inv_ppim-1116,2)
-	    //+TMath::Power(dist_p_pim/12,2)
-	    //TMath::Power(dist_lambda1_em,2)+TMath::Power(dist_lambda1_ep,2)
-	    ;
-	  Float_t quality2=TMath::Power(m_inv_pem-1116,2)
-	    //+TMath::Power(dist_p_em/12,2)
-	    //TMath::Power(dist_lambda2_pim,2)+TMath::Power(dist_lambda2_ep,2)
-	    ;
-
-	  Float_t quality=std::min(quality1,quality2);
-	  
-	  //add hypothesis to buffer and quality measure
-	  buffer.push_back( PPimEpPim_ID_buffer( this ));
-	  the_best.push_back(quality);
-	  isBest_vector.push_back(isBest);
 
 	  //cout<<"p pim dist from main part:"<<dist_p_pim<<endl;
-	}
-	  
-    }
-  cout<<"all different values for \"event\" "<<dif_events<<endl;
-  cout<<"events with real lambda "<<real_lambdas<<endl;
-}
+	  Float_t dist_lambda_eVert=trackToPoint(ver_p_pim,gammappim->Vect(),eVert);
+	  //Float_t dist_lambda2_eVert=trackToPoint(ver_p_em,gammapem->Vect(),eVert);;
+	  Float_t dist_lambda_ver_ep_em=trackToPoint(ver_p_pim,gammappim->Vect(),ver_ep_em);;
+	  //Float_t dist_lambda2_ver_ep_pim=trackToPoint(ver_p_em,gammapem->Vect(),ver_ep_pim);;
 
+	  Float_t dist_p_eVert=trackToPoint(ver_p_pim,p->Vect(),eVert);
+	  //Float_t dist_p2_eVert=trackToPoint(ver_p_em,p->Vect(),eVert);
+	  Float_t dist_pim_eVert=trackToPoint(ver_p_pim,pim->Vect(),eVert);
+	  //Float_t dist_em_eVert=trackToPoint(ver_p_em,em->Vect(),eVert);
+  	    
+	  bool simon_cut=(oa_pim_p > 15
+			  && dist_p_pim < 10
+			  && dist_lambda_eVert > 50
+			  && dist_p_eVert > 5
+			  && dist_pim_eVert > 15
+			  );
+
+	  Float_t lambda_pt=lorentz_lambda1115.Pt();
+	  Float_t lambda_w=lorentz_lambda1115.Rapidity();
+	  Float_t k0_pt=lorentz_k0.Pt();
+	  Float_t k0_w=lorentz_k0.Rapidity();
+  
+	  //save all important variables
+	  (*tlo)["isBest"]=isBest;
+	  //(*tlo)["isBest_new"]=isBest_new;
+	  (*tlo)["event"]=event;
+	  (*tlo)["hneg_mult"]=hneg_mult;
+	  (*tlo)["hpos_mult"]=hpos_mult;
+	  (*tlo)["eVert_x"]=eVert_x;
+	  (*tlo)["eVert_y"]=eVert_y;
+	  (*tlo)["eVert_z"]=eVert_z;
+	  (*tlo)["totalmult"]=totalmult;
+	  (*tlo)["trigdownscaleflag"]=trigdownscaleflag;
+	  (*tlo)["trigdownscale"]=trigdownscale;
+	  (*tlo)["event_mult"]=event_mult;
+	  (*tlo)["hypothesis"]=pim_no;
+	  //(*tlo)["hypothesis_quality"]=quality;
+  
+	  (*tlo)["p_p"]=p_p;
+	  (*tlo)["p_theta"] = p_theta;
+	  (*tlo)["p_phi"] = p_phi;
+	  (*tlo)["p_beta"] = p_beta_new;
+	  (*tlo)["p_m"] = p_mass;
+	  (*tlo)["p_dedx"]=p_dedx_mdc;
+	  (*tlo)["p_q"]=p_q;
+	  
+	  //(*tlo)["p_sim_p"]=p_sim_p;
+	  //(*tlo)["p_sim_id"]=p_sim_id;
+	  //(*tlo)["p_sim_parentid"]=p_sim_parentid;
+	  //(*tlo)["p_sim_vertex_x"]=p_sim_vertexx;
+	  //(*tlo)["p_sim_vertex_y"]=p_sim_vertexy;
+	  //(*tlo)["p_sim_vertex_z"]=p_sim_vertexz;
+	  
+	  (*tlo)["ep_p"]=ep_p;
+	  (*tlo)["ep_theta"] = ep_theta;
+	  (*tlo)["ep_phi"] = ep_phi;
+	  (*tlo)["ep_beta"] = ep_beta_new;
+	  (*tlo)["ep_m"] = ep_mass;
+	  (*tlo)["ep_dedx"]=ep_dedx_mdc;
+	  (*tlo)["ep_q"]=ep_q;
+	  
+	  //(*tlo)["ep_sim_p"]=ep_sim_p;
+	  //(*tlo)["ep_sim_id"]=ep_sim_id;
+	  //(*tlo)["ep_sim_parentid"]=ep_sim_parentid;
+	  //(*tlo)["ep_sim_vertex_x"]=ep_sim_vertexx;
+	  //(*tlo)["ep_sim_vertex_y"]=ep_sim_vertexy;
+	  //(*tlo)["ep_sim_vertex_z"]=ep_sim_vertexz;
+	  
+	  
+	  (*tlo)["pim_p"]=pim_p;
+	  (*tlo)["pim_theta"] = pim_theta;
+	  (*tlo)["pim_phi"] = pim_phi;
+	  (*tlo)["pim_beta"] = pim_beta_new;
+	  (*tlo)["pim_m"] = pim_mass;
+	  (*tlo)["pim_dedx"]=pim_dedx_mdc;
+	  (*tlo)["pim_q"]=pim_q;
+	  
+	  //(*tlo)["pim_sim_p"]=pim_sim_p;
+	  //(*tlo)["pim_sim_id"]=pim_sim_id;
+	  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
+	  //(*tlo)["pim_sim_vertex_x"]=pim_sim_vertexx;
+	  //(*tlo)["pim_sim_vertex_y"]=pim_sim_vertexy;
+	  //(*tlo)["pim_sim_vertex_z"]=pim_sim_vertexz;
+	  
+	  
+	  (*tlo)["em_p"]=em_p;
+	  (*tlo)["em_theta"] = em_theta;
+	  (*tlo)["em_phi"] = em_phi;
+	  (*tlo)["em_beta"] = em_beta_new;
+	  (*tlo)["em_m"] = em_mass;
+	  (*tlo)["em_dedx"]=em_dedx_mdc;
+	  (*tlo)["em_q"]=em_q;
+	  
+	  //(*tlo)["em_sim_p"]=em_sim_p;
+	  //(*tlo)["em_sim_id"]=em_sim_id;
+	  //(*tlo)["em_sim_parentid"]=em_sim_parentid;
+	  //(*tlo)["em_sim_vertex_x"]=em_sim_vertexx;
+	  //(*tlo)["em_sim_vertex_y"]=em_sim_vertexy;
+	  //(*tlo)["em_sim_vertex_z"]=em_sim_vertexz;
+	  	  
+	  //(*tlo)["pim_sim_id"]=pim_sim_id;
+	  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
+
+	  (*tlo)["dist_ep_pim"]=dist_ep_pim;
+	  (*tlo)["dist_ep_em"] = dist_ep_em;
+	  (*tlo)["dist_ep_pim"] = dist_ep_pim;
+	  (*tlo)["dist_p_pim"] = dist_p_pim;
+	  (*tlo)["dist_p_em"] = dist_p_em;
+	  (*tlo)["dist_p_pim"] = dist_p_pim;
+	  (*tlo)["dist_lambda_em"] = dist_lambda_em;
+	  //(*tlo)["dist_lambda1_ep"] = dist_lambda1_ep;
+	  //(*tlo)["dist_lambda_pim"] = dist_lambda_pim;
+	  (*tlo)["dist_lambda_ep"] = dist_lambda_ep;
+	  (*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
+	  //(*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
+	  //(*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
+	  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
+	  (*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
+	  //(*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
+	  //(*tlo)["dist_lambda2_ver_ep_pim"]=dist_lambda2_ver_ep_pim;
+	  //(*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
+	  //(*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
+	  (*tlo)["dist_p_eVert"]=dist_p_eVert;
+	  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
+	  //(*tlo)["dist_p2_eVert"]=dist_p2_eVert;
+	  //(*tlo)["dist_em_eVert"]=dist_em_eVert;
+	  //(*tlo)["dist_p_eVert"]=dist_p_eVert;
+	  //(*tlo)["dist_pim_eVert"]=dist_pim_eVert;
+  
+
+  
+	  (*tlo)["m_inv_p_pim"] = m_inv_ppim;
+	  (*tlo)["m_inv_p_em"] = m_inv_pem;
+	  
+	  (*tlo)["m_inv_p_pim_em"]=m_inv_ppimem;
+	  (*tlo)["m_inv_p_pim_ep"]=m_inv_ppimep;
+
+	  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
+	  (*tlo)["m_inv_ep_em"] = m_inv_epem;
+	  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
+	  (*tlo)["m_inv_p_pim_ep_em"] = m_inv_ppimepem;
+	  (*tlo)["m_inv_p_ep"] = m_inv_pep;
+  
+	  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
+	  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
+	  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
+
+	  (*tlo)["ver_p_em_x"]=ver_p_em.X();
+	  (*tlo)["ver_p_em_y"]=ver_p_em.Y();
+	  (*tlo)["ver_p_em_z"]=ver_p_em.Z();
+
+	  (*tlo)["ver_ep_pim_x"]=ver_ep_pim.X();
+	  (*tlo)["ver_ep_pim_y"]=ver_ep_pim.Y();
+	  (*tlo)["ver_ep_pim_z"]=ver_ep_pim.Z();
+
+	  (*tlo)["ver_ep_em_x"]=ver_ep_em.X();
+	  (*tlo)["ver_ep_em_y"]=ver_ep_em.Y();
+	  (*tlo)["ver_ep_em_z"]=ver_ep_em.Z();
+
+	  (*tlo)["oa_lambda"]=oa_lambda;
+	  //(*tlo)["oa_lambda_2"]=oa_lambda_2;
+	  //(*tlo)["oa_lambda"]=oa_lambda;
+	  (*tlo)["oa_pim_p"]=oa_pim_p;
+	  (*tlo)["oa_em_p"]=oa_em_p;
+	  //(*tlo)["oa_pim_p"]=oa_p_pim;
+	  (*tlo)["oa_ep_p"]=oa_ep_p;
+	  (*tlo)["oa_pim_em"]=oa_pim_em;
+	  (*tlo)["oa_pim_ep"]=oa_pim_ep;
+	  (*tlo)["oa_em_ep"]=oa_em_ep;
+	 
+	  (*tlo)["lambda_mom_z"]=lambda_mom_z;
+	  (*tlo)["simon_cuts"]=simon_cut;
+	  (*tlo)["miss_mass_kp"]=miss->M();
+
+	  (*tlo)["lambda_pt"]=lambda_pt;
+	  (*tlo)["lambda_w"]=lambda_w;
+	  (*tlo)["lambda_p"]=lorentz_lambda1115.P();
+	  lorentz_lambda1115.Boost(-1*(beam->Vect()));
+	  (*tlo)["lambda_theta"]=lorentz_lambda1115.Theta();
+  
+	  (*tlo)["k0_pt"]=k0_pt;
+	  (*tlo)["k0_w"]=k0_w;
+	  (*tlo)["k0_p"]=lorentz_k0.P();
+	  lorentz_k0.Boost(-1*(beam->Vect()));
+	  (*tlo)["k0_theta"]=lorentz_k0.Theta();
+    
+	  tlo->fill();	
+	  
+	}
+    }
+}
 PPimEpEm::PPimEpEm(TTree *tree)
 {
   // if parameter tree is not specified (or zero), connect the file
@@ -237,22 +327,21 @@ PPimEpEm::PPimEpEm(TTree *tree)
     Init(tree);*/
   if (tree == 0)
     {
-      TChain * chain = new TChain("PPimPipPim_ID","");
+      TChain * chain = new TChain("PPimEpEm_ID","");
       
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron00.root/PPimPipPim_ID");    
-
-      
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron01.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron02.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron03.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron04.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron05.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron06.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron07.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron08.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron09.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron10.root/PPimPipPim_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/hadron11.root/PPimPipPim_ID"); 
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton00.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton02.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton03.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton04.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton05.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton06.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton07.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton08.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton09.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton10.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton11.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton12.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton01.root/PPimEpEm_ID");
       
       
       tree = chain;
@@ -267,7 +356,7 @@ PPimEpEm::~PPimEpEm()
   delete fChain->GetCurrentFile();
 }
 
-void PPimEpEm::filler( const PPimEpPim_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
+void PPimEpEm::filler( const PPimEpEm_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
 {
   double F = 1.006;
   //double F=1;
@@ -400,89 +489,7 @@ void PPimEpEm::filler( const PPimEpPim_ID_buffer& s,int event_mult, double WEIGH
     //+TMath::Power(dist_p_em/12,2)
     //TMath::Power(dist_lambda2_pim,2)+TMath::Power(dist_lambda2_ep,2)
     ;
-  Float_t quality=std::min(quality1,quality2);
   
-  int pim_no, pim_sim_id, pim_sim_parentid;
-  Float_t m_inv_ppim;
-  Float_t m_inv_eppim;
-  Float_t m_inv_ppimpim;
-  Float_t m_inv_ppimep;
-  Float_t dist_p_pim;
-  Float_t dist_ep_pim;
-  Float_t oa_lambda;
-  Float_t oa_p_pim;
-  Float_t dist_ver_to_ver;
-  TVector3 ver_p_pim;
-  TVector3 ver_ep_pim;
-  Float_t dist_lambda_eVert;
-  Float_t dist_lambda_ver_ep_pim;
-  Float_t dist_p_eVert;
-  Float_t dist_pim_eVert;
-  Float_t lambda_mom_z;
-  TLorentzVector lorentz_lambda1115;
-  TLorentzVector lorentz_k0;
-  //cout<<"p pim dist from filler part:"<<dist_p_pim<<endl;
-  if(quality1<quality2)
-    {
-      pim_no=1;
-      m_inv_ppim=m_inv_ppim;
-      m_inv_eppim=m_inv_epem;
-      m_inv_ppimep=gammappimep->M();
-      m_inv_ppimpim=gammappimem->M();
-      dist_p_pim=dist_p_pim;
-      dist_ep_pim=dist_ep_em;
-      oa_lambda=oa_lambda_1;
-      oa_p_pim=oa_pim_p;
-      dist_ver_to_ver=dist_ver_to_ver_1;
-      ver_p_pim=ver_p_pim;
-      ver_ep_pim=ver_ep_em;
-      //pim_sim_id=s.pim_sim_id;
-      //pim_sim_parentid=s.pim_sim_parentid;
-      dist_lambda_eVert=dist_lambda1_eVert;
-      dist_lambda_ver_ep_pim=dist_lambda1_ver_ep_pim;
-      dist_p_eVert=dist_p1_eVert;
-      dist_pim_eVert=dist_pim_eVert;
-      lambda_mom_z=gammappim->Z();
-      lorentz_lambda1115=*gammappim;
-      lorentz_k0=*gammaemep;
-
-      //new vertex_ep_pim
-      ver_ep_pim=vertex(ver_p_pim.Pt(),ver_p_pim.Z(),lorentz_lambda1115,ver_ep_pim.Pt(),ver_ep_pim.Z(),lorentz_k0);
-      TVector3 ver_to_ver=ver_p_pim-ver_ep_pim;
-      dist_ver_to_ver=ver_to_ver.Mag();
-      oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());
-    }
-  else
-    {
-      pim_no=2;
-      m_inv_ppim=m_inv_pem;
-      m_inv_eppim=m_inv_eppim;
-      m_inv_ppimep=gammapemep->M();
-      m_inv_ppimpim=gammappimem->M();
-      dist_p_pim=dist_p_em;
-      dist_ep_pim=dist_ep_pim;
-      oa_lambda=oa_lambda_2;
-      oa_p_pim=oa_em_p;
-      dist_ver_to_ver=dist_ver_to_ver_2;
-      ver_p_pim=ver_p_em;
-      ver_ep_pim=ver_ep_pim;
-      //pim_sim_id=s.em_sim_id;
-      //pim_sim_parentid=s.em_sim_parentid;
-      dist_lambda_eVert=dist_lambda2_eVert;
-      dist_lambda_ver_ep_pim=dist_lambda2_ver_ep_pim;
-      dist_p_eVert=dist_p2_eVert;
-      dist_pim_eVert=dist_em_eVert;
-      lambda_mom_z=gammapem->Z();
-      lorentz_lambda1115=*gammapem;
-      lorentz_k0=*gammapimep;
-
-      //new vertex_ep_pim
-      ver_ep_pim=vertex(ver_p_pim.Pt(),ver_p_pim.Z(),lorentz_lambda1115,ver_ep_pim.Pt(),ver_ep_pim.Z(),lorentz_k0);
-      TVector3 ver_to_ver=ver_p_pim-ver_ep_pim;
-      dist_ver_to_ver=ver_to_ver.Mag();
-      oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());
-    }
-
   bool simon_cut=(oa_p_pim > 15
 		  && dist_p_pim < 10
 		  && dist_lambda_eVert > 50

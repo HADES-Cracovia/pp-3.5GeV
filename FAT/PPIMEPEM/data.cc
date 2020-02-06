@@ -19,20 +19,20 @@ namespace PATData
   int event_number, event_mult;
   //PPimEpPim*******************************
   TH2F *p_p_beta, *pim_p_beta, *ep_p_beta;
-  TH1F *p_pim_mass, *p_mass, *pim_mass;
+  TH1F *p_mass, *pim_mass;
 
   
-  TH1F *p_pim_mass, *p_em_mass, *pim_ep_mass,*pim_ep_mass,*em_ep_mass, *p_pim_ep_pim_mass;
+  TH1F *p_pim_mass, *p_em_mass, *pim_ep_mass,*em_ep_mass, *p_pim_ep_pim_mass;
   TH2F *dist_p_pim_pim_ep;
   TH2F *ver_ep_lambda;
   TH1F *dist_p_pim, *dist_pim_ep;
 
   TH1F *sum_dist_1, *sum_dist_2, *sum_dist_diff;
 
-  TH1F *DL_p_pim_mass, *DL_p_em_mass, *DL_pim_ep_mass,*DL_pim_ep_mass,*DL_em_ep_mass, *DL_p_pim_ep_pim_mass;
+  TH1F *DL_p_pim_mass, *DL_p_em_mass, *DL_pim_ep_mass,*DL_em_ep_mass, *DL_p_pim_ep_pim_mass;
   TH1F *DL_dist_p_pim, *DL_dist_pim_ep;
   TH2F *DL_dist_p_pim_pim_ep;
-  TH1F *DL_p_pim_mass, *DL_p_mass, *DL_pim_mass, *DL_in_target;
+  TH1F *DL_p_mass, *DL_pim_mass, *DL_in_target;
 
   TH1F *chi_p_pim_mass, *chi_ep_pim_mass, *chi_final_mass;
   TH2F *chi_lambda_vertex;
@@ -40,10 +40,10 @@ namespace PATData
   TH1F *LM_chi_p_pim_mass, *LM_chi_ep_pim_mass, *LM_chi_final_mass;
   TH2F *LM_chi_lambda_vertex;
   
-  TH1F *DML_p_pim_mass, *DML_p_em_mass, *DML_pim_ep_mass,*DML_pim_ep_mass,*DML_em_ep_mass, *DML_p_pim_ep_pim_mass;
+  TH1F *DML_p_pim_mass, *DML_p_em_mass, *DML_pim_ep_mass,*DML_em_ep_mass, *DML_p_pim_ep_pim_mass;
   TH1F *DML_dist_p_pim, *DML_dist_pim_ep;
   TH2F *DML_dist_p_pim_pim_ep;
-  TH1F *DML_p_pim_mass, *DML_p_mass, *DML_pim_mass;
+  TH1F *DML_p_mass, *DML_pim_mass;
 
   TH1F *DL_target_z, *DL_target_z_diff, *DL_ep_z;
   TH1F *DL_pim_ep_z;
@@ -78,7 +78,7 @@ namespace PATData
   Bool_t PositronPositron;
 
   TLorentzVector *p;
-  TLorentzVector *pi, *pim, *pim, *em, *ep;
+  TLorentzVector *pi, *pim, *em, *ep;
   TLorentzVector *beam, *miss;
   TLorentzVector *proj;
   TLorentzVector *targ;

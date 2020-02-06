@@ -493,10 +493,10 @@ void normalize(TH1* hist)
 void styleTH1(TH1* hist)
 {
   hist->SetLineWidth(3);
-
-  hist->Draw();
-  gPad->SetMargin(0.20, 0.05, 0.25, 0.1);//(l,r,b,t)
-  //hist->Update();
+  char name[10000]; // enough to hold all numbers up to 64-bits
+  sprintf(name, "#frac{counts}{%.1f} #left[ #frac{1}{MeV} #right]", hist->GetBinWidth(2));
+  cout<<"Y axis name: "<<name<<endl;
+  hist->GetYaxis()->SetTitle(name);
   
   hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetNdivisions(508);
@@ -505,21 +505,12 @@ void styleTH1(TH1* hist)
   hist->GetXaxis()->SetTitleOffset(1.1);
   hist->GetXaxis()->SetTitleFont(42);
 
+  hist->GetYaxis()->SetNdivisions(508);
   hist->GetYaxis()->SetLabelFont(42);
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleOffset(0.8);
   hist->GetYaxis()->SetTitleSize(0.05);
   hist->GetYaxis()->SetTitleFont(42);  
-  /*
-  hist->Draw();
-  TText *xlabel = new TText();
-  xlabel->SetNDC();
-  xlabel->SetTextFont(22);
-  xlabel->SetTextColor(hist->GetLineColor());
-  xlabel->SetTextSize(0.03);
-  xlabel->SetTextAlign(11);
-  xlabel->SetTextAngle(0);
-  xlabel->DrawText(0.5, 0.04, "#Delta M=1MeV");
-  */
+  
 }
 #endif // #ifdef createHistos_cxx
