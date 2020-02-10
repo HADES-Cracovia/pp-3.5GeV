@@ -165,7 +165,7 @@ int draw_norm(void)
     {2.25/14.05,//S1385
      1.47/9.26,//SDpp
      2.55/29.45,//LDpp
-     0/5.6//L(1520)pK+->Lpi+pi-pK+
+     2/5.6//L(1520)pK+->Lpi+pi-pK+
     };
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
@@ -268,7 +268,7 @@ int draw_norm(void)
   hsum_background->Rebin(rebin2);
   hsum_background->SetLineColor(kRed);
   setHistogramStyleSimul(hsum_background);
-  hsum_background->Draw("Same");
+  hsum_background->Draw("samee2");
 
   int rebin=4;
   TCanvas *cClean=new TCanvas("cClean","cClean");
@@ -289,7 +289,7 @@ int draw_norm(void)
   hclean_sum->Rebin(rebin);
   hclean_sum->SetLineColor(kMagenta);
   hclean_sum->SetFillColor(kMagenta);
-  hclean_sum->Draw("samee2B");
+  hclean_sum->Draw("samee1");
   setHistogramStyleSimul(hclean_sum);
 
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
@@ -312,7 +312,7 @@ int draw_norm(void)
   hclean_sum_ren->Rebin(rebin);
   hclean_sum_ren->SetLineColor(kMagenta);
   hclean_sum_ren->SetFillColor(kMagenta);
-  hclean_sum_ren->Draw("samee2B");
+  hclean_sum_ren->Draw("samee1B");
   setHistogramStyleSimul(hclean_sum_ren);
 
   cClean_ren->cd(2);

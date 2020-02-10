@@ -1,7 +1,7 @@
 CC=g++
 TARGET=analpp
 OBJS=main.o data.o PPimEpEm.o
-HEADERS=data.h PPimEpEm.h PPimEpEm_buffer.h
+HEADERS=data.h PPimEpEm.h #PPimEpEm_buffer.h
 ROOTLIBS=`root-config  --libs` -lTuple -lHFilter -lParticle -lHydra
 ROOTLIBS += -lPid -lPidUtil -lPairs -lParticle
 ROOTLIBS += -lMdcTrackG -lMdcTrackD -lMdcTrackS -lKick

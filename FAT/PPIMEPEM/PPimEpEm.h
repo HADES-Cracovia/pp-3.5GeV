@@ -12,7 +12,7 @@
 #include <TChain.h>
 #include <TFile.h>
 
-class PPimEpEm_ID_buffer;
+//class PPimEpEm_ID_buffer;
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
@@ -498,7 +498,6 @@ public :
   virtual void     Init(TTree *tree);
   virtual void     Loop();
   virtual Bool_t   Notify();
-  virtual void filler( const PPimEpEm_ID_buffer& s, int event_mult=1, double WEIGHT=1, int is_best=0);
   virtual void     Show(Long64_t entry = -1);
 };
 

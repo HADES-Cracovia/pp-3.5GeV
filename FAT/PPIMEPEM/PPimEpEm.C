@@ -1,5 +1,5 @@
 #include "PPimEpEm.h"
-#include "PPimEpEm_buffer.h"
+//#include "PPimEpEm_buffer.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -21,11 +21,6 @@ void PPimEpEm::Loop()
   Long64_t nentries = fChain->GetEntries();
 
   double nbytes = 0, nb = 0;
-
-  std::vector< PPimEpEm_ID_buffer >  buffer;
-  std::vector<double> the_best;
-  std::vector<int> isBest_vector;
- 
   int event_number=-1;
   int event_mult=-1;
 
@@ -51,6 +46,7 @@ void PPimEpEm::Loop()
 
       if(isBest!=-1 /*&& trigdownscaleflag==1*/)
 	{
+	  TVector3 eVert (eVert_x,eVert_y,eVert_z);
 	  
 	  dif_events++;
 	  double min_value=10000000;
@@ -132,6 +128,15 @@ void PPimEpEm::Loop()
 	  Float_t dist_pim_eVert=trackToPoint(ver_p_pim,pim->Vect(),eVert);
 	  //Float_t dist_em_eVert=trackToPoint(ver_p_em,em->Vect(),eVert);
   	    
+	  Float_t lambda_mom_z;
+	  TLorentzVector lorentz_lambda1115;
+	  TLorentzVector lorentz_k0;
+
+	  lorentz_lambda1115=*gammappim;
+	  lorentz_k0=*gammaemep;
+	  dist_lambda_eVert=dist_lambda_eVert;
+	  lambda_mom_z=gammappim->Z();
+	  
 	  bool simon_cut=(oa_pim_p > 15
 			  && dist_p_pim < 10
 			  && dist_lambda_eVert > 50
@@ -157,7 +162,7 @@ void PPimEpEm::Loop()
 	  (*tlo)["trigdownscaleflag"]=trigdownscaleflag;
 	  (*tlo)["trigdownscale"]=trigdownscale;
 	  (*tlo)["event_mult"]=event_mult;
-	  (*tlo)["hypothesis"]=pim_no;
+	  //(*tlo)["hypothesis"]=pim_no;
 	  //(*tlo)["hypothesis_quality"]=quality;
   
 	  (*tlo)["p_p"]=p_p;
@@ -239,7 +244,7 @@ void PPimEpEm::Loop()
 	  //(*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
 	  //(*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
 	  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-	  (*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
+	  //(*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
 	  //(*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
 	  //(*tlo)["dist_lambda2_ver_ep_pim"]=dist_lambda2_ver_ep_pim;
 	  //(*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
@@ -256,14 +261,14 @@ void PPimEpEm::Loop()
 	  (*tlo)["m_inv_p_pim"] = m_inv_ppim;
 	  (*tlo)["m_inv_p_em"] = m_inv_pem;
 	  
-	  (*tlo)["m_inv_p_pim_em"]=m_inv_ppimem;
-	  (*tlo)["m_inv_p_pim_ep"]=m_inv_ppimep;
+	  //(*tlo)["m_inv_p_pim_em"]=m_inv_ppimem;
+	  //(*tlo)["m_inv_p_pim_ep"]=m_inv_ppimep;
 
 	  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
 	  (*tlo)["m_inv_ep_em"] = m_inv_epem;
-	  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
+	  //(*tlo)["m_inv_ep_pim"] = m_inv_eppim;
 	  (*tlo)["m_inv_p_pim_ep_em"] = m_inv_ppimepem;
-	  (*tlo)["m_inv_p_ep"] = m_inv_pep;
+	  //(*tlo)["m_inv_p_ep"] = m_inv_pep;
   
 	  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
 	  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
@@ -354,330 +359,6 @@ PPimEpEm::~PPimEpEm()
 {
   if (!fChain) return;
   delete fChain->GetCurrentFile();
-}
-
-void PPimEpEm::filler( const PPimEpEm_ID_buffer& s,int event_mult, double WEIGHT,int isBest_new)
-{
-  double F = 1.006;
-  //double F=1;
-  TVector3 v1, v2, v3, v4, v5;
-  v2.SetXYZ(F*s.p_p*sin(D2R*s.p_theta)*cos(D2R*s.p_phi),F*s.p_p*sin(D2R*s.p_theta)*sin(D2R*s.p_phi),F*s.p_p*cos(D2R*s.p_theta));
-  v3.SetXYZ(F*s.pim_p*sin(D2R*s.pim_theta)*cos(D2R*s.pim_phi),F*s.pim_p*sin(D2R*s.pim_theta)*sin(D2R*s.pim_phi),F*s.pim_p*cos(D2R*s.pim_theta));
-  v4.SetXYZ(F*s.ep_p*sin(D2R*s.ep_theta)*cos(D2R*s.ep_phi),F*s.ep_p*sin(D2R*s.ep_theta)*sin(D2R*s.ep_phi),F*s.ep_p*cos(D2R*s.ep_theta));
-  v5.SetXYZ(F*s.em_p*sin(D2R*s.em_theta)*cos(D2R*s.em_phi),F*s.em_p*sin(D2R*s.em_theta)*sin(D2R*s.em_phi),F*s.em_p*cos(D2R*s.em_theta));
-  /*
-    TVector3 vtemp;
-    vtemp.SetXYZ(F*s.p_p*sin(D2R*90)*cos(D2R*45),F*s.p_p*sin(D2R*90)*sin(D2R*45),F*s.p_p*cos(D2R*90));
-    vtemp.Print();
-  */  
-  /*TVector3 r1, r2, r3,r4;
-    r1.SetXYZ(sin(D2R*p_theta_rich)*cos(D2R*p_phi_rich),sin(D2R*p_theta_rich)*sin(D2R*p_phi_rich),cos(D2R*p_theta_rich));
-    r2.SetXYZ(sin(D2R*pim_theta_rich)*cos(D2R*pim_phi_rich),sin(D2R*pim_theta_rich)*sin(D2R*pim_phi_rich),cos(D2R*pim_theta_rich));
-    r3.SetXYZ(sin(D2R*ep_theta_rich)*cos(D2R*ep_phi_rich),sin(D2R*ep_theta_rich)*sin(D2R*ep_phi_rich),cos(D2R*ep_theta_rich));
-    r4.SetXYZ(sin(D2R*em_theta_rich)*cos(D2R*em_phi_rich),sin(D2R*em_theta_rich)*sin(D2R*em_phi_rich),cos(D2R*em_theta_rich));
-  */      
-  p->SetVectM( v2, 938.272013 );
-  pim->SetVectM( v3, 139.57018 );
-  ep->SetVectM( v4, 139.57018 );
-  em->SetVectM( v5, 139.57018 );
-  /*
-    cout<<"save part"<<endl;
-    HParticleTool p_tool;  
-    cout<<"p_phi: "<<s.p_phi<<endl;
-    cout<<"p_phi by 3 vector: "<<v2.Phi()*R2D<<endl;
-    cout<<"p_phi by 4 vector: "<<p->Phi()*R2D<<endl;
-    cout<<"p_phi by getLabPhiDeg: "<<p_tool.getLabPhiDeg(*p)<<endl;
-    cout<<"p_phi by phiLabToPhiSecDeg: "<<p_tool.phiLabToPhiSecDeg(v2.Phi()*R2D)<<endl;
-    cout<<"p_phi by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
-
-    cout<<"p_theta: "<<s.p_theta<<endl;
-    cout<<"p_theta by 3 vector: "<<v2.Theta()*R2D<<endl;
-    cout<<"p_theta by 4 vector: "<<p->Theta()*R2D<<endl;
-    //cout<<"p_theta by getLabThetaDeg: "<<p_tool.getLabThetaDeg(*p)<<endl;
-    //cout<<"p_theta by thetaLabToThetaSecDeg: "<<p_tool.thetaLabToThetaSecDeg(v2.Theta()*R2D)<<endl;
-    //cout<<"p_theta by Atan(x/y): "<<TMath::ATan(v2.Y()/v2.X())*R2D<<endl;
-    v2.Print();
-    cout<<endl;
-  */
-  *gammapep = *p + *ep;
-  *gammappim = *p + *pim;
-  *gammapem = *p + *em;
-  *gammapimep= *pim + *ep;
-  *gammaemep= *em + *ep;
-  *gammappimepem=*pim +*em + *ep + *p;
-  *miss=*beam-*gammappimepem;
-
-  //sigma candidates
-  *gammappimem= *p+*pim+*em;
-  *gammappimep=*p+*pim+*ep;
-  *gammapemep=*p+*em+*ep;
-  
-  //*ppim = *p + *pim;
-  //*p_delta = *p;
-  //*pim_delta = *pim;
-  //*ppim_miss = *beam - *p - *pim;
-  Float_t m_inv_pep = gammapep->M();
-  Float_t m_inv_ppim = gammappim->M();
-  Float_t m_inv_pem = gammapem->M();
-  Float_t m_inv_eppim = gammapimep->M();
-  Float_t m_inv_epem = gammaemep->M();
-  Float_t m_inv_ppimeppim = gammappimepem->M();
-  Float_t oa = R2D * openingangle(*p, *pim);
-  //Float_t oa_rich = R2D * openingangle(r1, r2);
-
-  Float_t p_mass = s.p_p*s.p_p * (  1. / (s.p_beta*s.p_beta)  - 1. ) ;
-  //Float_t pi_mass = s.pim_p*s.pim_p * (  1. / (s.pim_beta*s.pim_beta_new)  - 1. ) ;
-  Float_t ep_mass = s.ep_p*s.ep_p * (  1. / (s.ep_beta*s.ep_beta_new)  - 1. ) ;
-  Float_t pim_mass = s.pim_p*s.pim_p * (  1. / (s.pim_beta*s.pim_beta_new)  - 1. ) ;
-  Float_t em_mass = s.em_p*s.em_p * (  1. / (s.em_beta*s.em_beta_new)  - 1. ) ;
-
-  TVector3 eVert(s.eVert_x,s.eVert_y,s.eVert_z);
-  TVector3 ver_p_pim=vertex(s.p_r,s.p_z,*p,s.pim_r,s.pim_z,*pim);
-  TVector3 ver_p_em=vertex(s.p_r,s.p_z,*p,s.em_r,s.em_z,*em);
-  TVector3 ver_ep_pim=vertex(s.ep_r,s.ep_z,*ep,s.pim_r,s.pim_z,*pim);
-  TVector3 ver_ep_em=vertex(s.ep_r,s.ep_z,*ep,s.em_r,s.em_z,*em);
-  
-  
-  TVector3 ver_to_ver_1=ver_p_pim-eVert;//ver_ep_em;
-  TVector3 ver_to_ver_2=ver_p_em-eVert;//ver_ep_pim;
-
-  Float_t oa_pim_p=R2D*openingangle(pim->Vect(),p->Vect());
-  Float_t oa_em_p=R2D*openingangle(em->Vect(),p->Vect());
-  Float_t oa_ep_p=R2D*openingangle(ep->Vect(),p->Vect());
-  Float_t oa_pim_em=R2D*openingangle(pim->Vect(),em->Vect());
-  Float_t oa_pim_ep=R2D*openingangle(pim->Vect(),ep->Vect());
-  Float_t oa_em_ep=R2D*openingangle(em->Vect(),ep->Vect());
-                  
-  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim->Vect());
-  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammapem->Vect());
-
-  /*
-    cout<<"vectors to calc"<<endl;
-    cout<<"p_z: "<<p_z<<endl;
-    cout<<"p_r: "<<p_r<<endl;
-    cout<<"v2: "; v2.Print(); cout<<endl;
-  */
-  
-  Float_t dist_p_pim=trackDistance(s.p_r,s.p_z,*p,s.pim_r,s.pim_z,*pim);
-  Float_t dist_p_em=trackDistance(s.p_r,s.p_z,*p,s.em_r,s.em_z,*em);
-  Float_t dist_ep_pim=trackDistance(s.ep_r,s.ep_z,*ep,s.pim_r,s.pim_z,*pim);
-  Float_t dist_ep_em=trackDistance(s.ep_r,s.ep_z,*ep,s.em_r,s.em_z,*em);
-  Float_t dist_lambda1_ep=trackDistance(s.ep_r,s.ep_z,*ep,ver_p_pim.Z(),getR(ver_p_pim),*gammappim);
-  Float_t dist_lambda2_ep=trackDistance(s.ep_r,s.ep_z,*ep,ver_p_em.Z(),getR(ver_p_em),*gammapem);
-  Float_t dist_lambda1_em=trackDistance(s.em_r,s.em_z,*em,ver_p_pim.Z(),getR(ver_p_pim),*gammappim);
-  Float_t dist_lambda2_pim=trackDistance(s.pim_r,s.pim_z,*pim,ver_p_em.Z(),getR(ver_p_em),*gammapem);
-  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
-  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
-
-  Float_t dist_lambda1_eVert=trackToPoint(ver_p_pim,gammappim->Vect(),eVert);
-  Float_t dist_lambda2_eVert=trackToPoint(ver_p_em,gammapem->Vect(),eVert);;
-  Float_t dist_lambda1_ver_ep_pim=trackToPoint(ver_p_pim,gammappim->Vect(),ver_ep_em);;
-  Float_t dist_lambda2_ver_ep_pim=trackToPoint(ver_p_em,gammapem->Vect(),ver_ep_pim);;
-
-  Float_t dist_p1_eVert=trackToPoint(ver_p_pim,p->Vect(),eVert);
-  Float_t dist_p2_eVert=trackToPoint(ver_p_em,p->Vect(),eVert);
-  Float_t dist_pim_eVert=trackToPoint(ver_p_pim,pim->Vect(),eVert);
-  Float_t dist_em_eVert=trackToPoint(ver_p_em,em->Vect(),eVert);
-  
-  //Float_t quality1=dist_p_pim*dist_p_pim+dist_ep_em*dist_ep_em;
-  //Float_t quality2=dist_p_em*dist_p_em+dist_ep_pim*dist_ep_pim;
-  Float_t quality1=TMath::Power(m_inv_ppim-1116,2)
-    //+TMath::Power(dist_p_pim/12,2)
-    //TMath::Power(dist_lambda1_em,2)+TMath::Power(dist_lambda1_ep,2)
-    ;
-  Float_t quality2=TMath::Power(m_inv_pem-1116,2)
-    //+TMath::Power(dist_p_em/12,2)
-    //TMath::Power(dist_lambda2_pim,2)+TMath::Power(dist_lambda2_ep,2)
-    ;
-  
-  bool simon_cut=(oa_p_pim > 15
-		  && dist_p_pim < 10
-		  && dist_lambda_eVert > 50
-		  && dist_p_eVert > 5
-		  && dist_pim_eVert > 15
-		  );
-
-  Float_t lambda_pt=lorentz_lambda1115.Pt();
-  Float_t lambda_w=lorentz_lambda1115.Rapidity();
-  Float_t k0_pt=lorentz_k0.Pt();
-  Float_t k0_w=lorentz_k0.Rapidity();
-  
-  //save all important variables
-  (*tlo)["isBest"]=s.isBest;
-  (*tlo)["isBest_new"]=isBest_new;
-  (*tlo)["event"]=s.event;
-  (*tlo)["hneg_mult"]=s.hneg_mult;
-  (*tlo)["hpos_mult"]=s.hpos_mult;
-  (*tlo)["eVert_x"]=s.eVert_x;
-  (*tlo)["eVert_y"]=s.eVert_y;
-  (*tlo)["eVert_z"]=s.eVert_z;
-  (*tlo)["totalmult"]=s.totalmult;
-  (*tlo)["trigdownscaleflag"]=s.trigdownscaleflag;
-  (*tlo)["trigdownscale"]=s.trigdownscale;
-  (*tlo)["event_mult"]=event_mult;
-  (*tlo)["hypothesis"]=pim_no;
-  (*tlo)["hypothesis_quality"]=quality;
-  
-  (*tlo)["p_p"]=s.p_p;
-  (*tlo)["p_theta"] = s.p_theta;
-  (*tlo)["p_phi"] = s.p_phi;
-  (*tlo)["p_beta"] = s.p_beta_new;
-  (*tlo)["p_m"] = p_mass;
-  (*tlo)["p_dedx"]=s.p_dedx_mdc;
-  (*tlo)["p_q"]=s.p_q;
-	  
-  //(*tlo)["p_sim_p"]=s.p_sim_p;
-  //(*tlo)["p_sim_id"]=s.p_sim_id;
-  //(*tlo)["p_sim_parentid"]=s.p_sim_parentid;
-  //(*tlo)["p_sim_vertex_x"]=s.p_sim_vertexx;
-  //(*tlo)["p_sim_vertex_y"]=s.p_sim_vertexy;
-  //(*tlo)["p_sim_vertex_z"]=s.p_sim_vertexz;
-	  
-  (*tlo)["ep_p"]=s.ep_p;
-  (*tlo)["ep_theta"] = s.ep_theta;
-  (*tlo)["ep_phi"] = s.ep_phi;
-  (*tlo)["ep_beta"] = s.ep_beta_new;
-  (*tlo)["ep_m"] = ep_mass;
-  (*tlo)["ep_dedx"]=s.ep_dedx_mdc;
-  (*tlo)["ep_q"]=s.ep_q;
-	  
-  //(*tlo)["ep_sim_p"]=s.ep_sim_p;
-  //(*tlo)["ep_sim_id"]=s.ep_sim_id;
-  //(*tlo)["ep_sim_parentid"]=s.ep_sim_parentid;
-  //(*tlo)["ep_sim_vertex_x"]=s.ep_sim_vertexx;
-  //(*tlo)["ep_sim_vertex_y"]=s.ep_sim_vertexy;
-  //(*tlo)["ep_sim_vertex_z"]=s.ep_sim_vertexz;
-	  
-	  
-  (*tlo)["pim_p"]=s.pim_p;
-  (*tlo)["pim_theta"] = s.pim_theta;
-  (*tlo)["pim_phi"] = s.pim_phi;
-  (*tlo)["pim_beta"] = s.pim_beta_new;
-  (*tlo)["pim_m"] = pim_mass;
-  (*tlo)["pim_dedx"]=s.pim_dedx_mdc;
-  (*tlo)["pim_q"]=s.pim_q;
-	  
-  //(*tlo)["pim_sim_p"]=s.pim_sim_p;
-  //(*tlo)["pim_sim_id"]=s.pim_sim_id;
-  //(*tlo)["pim_sim_parentid"]=s.pim_sim_parentid;
-  //(*tlo)["pim_sim_vertex_x"]=s.pim_sim_vertexx;
-  //(*tlo)["pim_sim_vertex_y"]=s.pim_sim_vertexy;
-  //(*tlo)["pim_sim_vertex_z"]=s.pim_sim_vertexz;
-	  
-	  
-  (*tlo)["em_p"]=s.em_p;
-  (*tlo)["em_theta"] = s.em_theta;
-  (*tlo)["em_phi"] = s.em_phi;
-  (*tlo)["em_beta"] = s.em_beta_new;
-  (*tlo)["em_m"] = em_mass;
-  (*tlo)["em_dedx"]=s.em_dedx_mdc;
-  (*tlo)["em_q"]=s.em_q;
-	  
-  //(*tlo)["em_sim_p"]=s.em_sim_p;
-  //(*tlo)["em_sim_id"]=s.em_sim_id;
-  //(*tlo)["em_sim_parentid"]=s.em_sim_parentid;
-  //(*tlo)["em_sim_vertex_x"]=s.em_sim_vertexx;
-  //(*tlo)["em_sim_vertex_y"]=s.em_sim_vertexy;
-  //(*tlo)["em_sim_vertex_z"]=s.em_sim_vertexz;
-	  	  
-  //(*tlo)["pim_sim_id"]=pim_sim_id;
-  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
-
-  (*tlo)["dist_ep_pim"]=dist_ep_pim;
-  (*tlo)["dist_ep_em"] = dist_ep_em;
-  (*tlo)["dist_ep_pim"] = dist_ep_pim;
-  (*tlo)["dist_p_pim"] = dist_p_pim;
-  (*tlo)["dist_p_em"] = dist_p_em;
-  (*tlo)["dist_p_pim"] = dist_p_pim;
-  (*tlo)["dist_lambda1_em"] = dist_lambda1_em;
-  (*tlo)["dist_lambda1_ep"] = dist_lambda1_ep;
-  (*tlo)["dist_lambda2_pim"] = dist_lambda2_pim;
-  (*tlo)["dist_lambda2_ep"] = dist_lambda2_ep;
-  (*tlo)["dist_ver_to_ver_1"]=dist_ver_to_ver_1;
-  (*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
-  (*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
-  (*tlo)["dist_lambda1_eVert"]=dist_lambda1_eVert;
-  (*tlo)["dist_lambda1_ver_ep_pim"]=dist_lambda1_ver_ep_pim;
-  (*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
-  (*tlo)["dist_lambda2_ver_ep_pim"]=dist_lambda2_ver_ep_pim;
-  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-  (*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
-  (*tlo)["dist_p1_eVert"]=dist_p1_eVert;
-  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
-  (*tlo)["dist_p2_eVert"]=dist_p2_eVert;
-  (*tlo)["dist_em_eVert"]=dist_em_eVert;
-  (*tlo)["dist_p_eVert"]=dist_p_eVert;
-  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
-  
-
-  
-  (*tlo)["m_inv_p_pim"] = m_inv_ppim;
-  (*tlo)["m_inv_p_em"] = m_inv_pem;
-  (*tlo)["m_inv_p_pim"]=m_inv_ppim;
-
-
-  (*tlo)["m_inv_p_pim_pim"]=m_inv_ppimpim;
-  (*tlo)["m_inv_p_pim_ep"]=m_inv_ppimep;
-
-  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
-  (*tlo)["m_inv_ep_em"] = m_inv_epem;
-  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
-  (*tlo)["m_inv_p_pim_ep_pim"] = m_inv_ppimeppim;
-  (*tlo)["m_inv_p_ep"] = m_inv_pep;
-  
-  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
-  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
-  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
-
-  (*tlo)["ver_p_em_x"]=ver_p_em.X();
-  (*tlo)["ver_p_em_y"]=ver_p_em.Y();
-  (*tlo)["ver_p_em_z"]=ver_p_em.Z();
-
-  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
-  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
-  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
-
-  
-  (*tlo)["ver_ep_pim_x"]=ver_ep_pim.X();
-  (*tlo)["ver_ep_pim_y"]=ver_ep_pim.Y();
-  (*tlo)["ver_ep_pim_z"]=ver_ep_pim.Z();
-
-  (*tlo)["ver_ep_em_x"]=ver_ep_em.X();
-  (*tlo)["ver_ep_em_y"]=ver_ep_em.Y();
-  (*tlo)["ver_ep_em_z"]=ver_ep_em.Z();
-
-  (*tlo)["ver_ep_pim_x"]=ver_ep_pim.X();
-  (*tlo)["ver_ep_pim_y"]=ver_ep_pim.Y();
-  (*tlo)["ver_ep_pim_z"]=ver_ep_pim.Z();
-
-  (*tlo)["oa_lambda_1"]=oa_lambda_1;
-  (*tlo)["oa_lambda_2"]=oa_lambda_2;
-  (*tlo)["oa_lambda"]=oa_lambda;
-  (*tlo)["oa_pim_p"]=oa_pim_p;
-  (*tlo)["oa_em_p"]=oa_em_p;
-  (*tlo)["oa_pim_p"]=oa_p_pim;
-  (*tlo)["oa_ep_p"]=oa_ep_p;
-  (*tlo)["oa_pim_em"]=oa_pim_em;
-  (*tlo)["oa_pim_ep"]=oa_pim_ep;
-  (*tlo)["oa_em_ep"]=oa_em_ep;
-	 
-  (*tlo)["lambda_mom_z"]=lambda_mom_z;
-  (*tlo)["simon_cuts"]=simon_cut;
-  (*tlo)["miss_mass_kp"]=miss->M();
-
-  (*tlo)["lambda_pt"]=lambda_pt;
-  (*tlo)["lambda_w"]=lambda_w;
-  (*tlo)["lambda_p"]=lorentz_lambda1115.P();
-  lorentz_lambda1115.Boost(-1*(beam->Vect()));
-  (*tlo)["lambda_theta"]=lorentz_lambda1115.Theta();
-  
-  (*tlo)["k0_pt"]=k0_pt;
-  (*tlo)["k0_w"]=k0_w;
-  (*tlo)["k0_p"]=lorentz_k0.P();
-  lorentz_k0.Boost(-1*(beam->Vect()));
-  (*tlo)["k0_theta"]=lorentz_k0.Theta();
-    
-  tlo->fill();
 }
 
 Int_t PPimEpEm::GetEntry(Long64_t entry)
