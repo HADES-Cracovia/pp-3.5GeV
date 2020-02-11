@@ -45,6 +45,15 @@ void createHistos::Loop(char* output)
   const int nsignal=20;
   double sidebandmin=10;
   double sidebandmax=27;
+  TLine* line1=new TLine(1116-sidebandmax,0,1116-sidebandmax,120);
+  TLine* line2=new TLine(1116-sidebandmin,0,1116-sidebandmin,120);
+  TLine* line3=new TLine(1116+sidebandmin,0,1116+sidebandmin,120);
+  TLine* line4=new TLine(1116+sidebandmax,0,1116+sidebandmax,120);
+  /*line1->SetName("line1");
+  line2->SetName("line2");
+  line3->SetName("line3");
+  line4->SetName("line4");*/
+
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
@@ -88,7 +97,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.57;
+  double mlp_cut=0.54;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -103,6 +112,7 @@ void createHistos::Loop(char* output)
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
+
       if(isBest_new==1)
 	{
 	  hMPPim_start->Fill(m_inv_p_pim);
@@ -166,8 +176,9 @@ void createHistos::Loop(char* output)
 	  miss_m_vs_pip_pim->Fill(miss_mass_kp,m_inv_pip_pim);	  
 	}
 
-      if((m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
-	 ||(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax))
+      if(m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
+	background->Fill(m_inv_p_pim_pip_pim);
+      if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
 	background->Fill(m_inv_p_pim_pip_pim);
     }
 
@@ -262,6 +273,16 @@ void createHistos::Loop(char* output)
   hMPPim_TMVAMass->Write();
   hMPipPim_TMVAMass->Write(); 
 
+  line1->Write("line1");
+  line2->Write("line2");
+  line3->Write("line3");
+  line4->Write("line4");
+
+  line1->Delete();
+  line2->Delete();
+  line3->Delete();
+  line4->Delete();
+    
   hMPPim_start->Delete();
   hMPipPim_start->Delete();
   miss_m_vs_pip_p_start->Delete();

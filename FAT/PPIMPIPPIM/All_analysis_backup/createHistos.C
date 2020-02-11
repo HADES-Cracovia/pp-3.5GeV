@@ -67,13 +67,13 @@ void createHistos::Loop(char* output)
   int Kmax=950;
   int KdM=(Kmax-Kmin)/dM;
   //Histograms for all stages of analysis
-  TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identyfication cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identyfication cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
-  TH2F* miss_m_vs_pip_pim_start=new TH2F("miss_m_vs_pip_pim_start","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",100,500,1400,100,200,700);
+  TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identification cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identification cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH2F* miss_m_vs_pip_p_start=new TH2F("miss_m_vs_pip_p_start","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{p #pi^{+}};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi+ p}[MeV];N",90,500,1400,50,1100,1600);
   TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1450,200,250,700);
   TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
-  TH2F* miss_m_vs_pip_pim_TMVA=new TH2F("miss_m_vs_pip_pim_TMVA","M^{miss} vs. M_{#pi+ #pi-};M^{miss}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",100,500,1400,100,200,700);
+  TH2F* miss_m_vs_pip_p_TMVA=new TH2F("miss_m_vs_pip_p_TMVA","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{#pi^{+} p};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi^{+} p}[MeV];N",90,500,1400,50,1100,1600);
   TH2F* p_pim_vs_pip_pim_TMVA=new TH2F("p_pim_vs_pip_pim_TMVA","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1400,200,250,700);
   TH1F* hMPPim_TMVA_K0mass=new TH1F("hMPPim_TMVA_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
@@ -107,14 +107,14 @@ void createHistos::Loop(char* output)
 	{
 	  hMPPim_start->Fill(m_inv_p_pim);
 	  hMPipPim_start->Fill(m_inv_pip_pim);
-	  miss_m_vs_pip_pim_start->Fill(miss_mass_kp,m_inv_pip_pim);
+	  miss_m_vs_pip_p_start->Fill(miss_mass_kp,m_inv_p_pip);
 	  p_pim_vs_pip_pim_start->Fill(m_inv_p_pim,m_inv_pip_pim);
 
 	  if(mlp_output>mlp_cut)
 	    {
 	      hMPPim_TMVA->Fill(m_inv_p_pim);
 	      hMPipPim_TMVA->Fill(m_inv_pip_pim);
-	      miss_m_vs_pip_pim_TMVA->Fill(miss_mass_kp,m_inv_pip_pim);
+	      miss_m_vs_pip_p_TMVA->Fill(miss_mass_kp,m_inv_p_pip);
 	      p_pim_vs_pip_pim_TMVA->Fill(m_inv_p_pim,m_inv_pip_pim);
 	      if(m_inv_p_pim<1126 && m_inv_p_pim>1106 && miss_mass_kp>1077)
 		hMPipPim_TMVA_Lmass->Fill(m_inv_pip_pim);
@@ -148,7 +148,7 @@ void createHistos::Loop(char* output)
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
 	 //||m_inv_pip_pim>410 //replaced by graphical cut
-	 ||dist_ver_to_ver<20
+	 ||dist_ver_to_ver<5
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||p_theta>20 //to clean up proton sample
@@ -239,13 +239,23 @@ void createHistos::Loop(char* output)
   miss_m_vs_pip_pim->Write();
   graph_cut->Write();
 
+  styleTH1(hMPPim_start);
+  styleTH1(hMPipPim_start);
+  styleTH1(hMPPim_TMVA);
+  styleTH1(hMPipPim_TMVA);
+  styleTH1(hMPPim_TMVA_K0mass);
+  styleTH1(hMPipPim_TMVA_Lmass);
+  styleTH1(hMPPim_TMVAMass);
+  styleTH1(hMPipPim_TMVAMass);
+ 
+  
   hMPPim_start->Write();
   hMPipPim_start->Write();
-  miss_m_vs_pip_pim_start->Write();
+  miss_m_vs_pip_p_start->Write();
   p_pim_vs_pip_pim_start->Write();
   hMPPim_TMVA->Write();
   hMPipPim_TMVA->Write();
-  miss_m_vs_pip_pim_TMVA->Write();
+  miss_m_vs_pip_p_TMVA->Write();
   p_pim_vs_pip_pim_TMVA->Write();
   hMPPim_TMVA_K0mass->Write();
   hMPipPim_TMVA_Lmass->Write();
@@ -254,11 +264,11 @@ void createHistos::Loop(char* output)
 
   hMPPim_start->Delete();
   hMPipPim_start->Delete();
-  miss_m_vs_pip_pim_start->Delete();
+  miss_m_vs_pip_p_start->Delete();
   p_pim_vs_pip_pim_start->Delete();
   hMPPim_TMVA->Delete();
   hMPipPim_TMVA->Delete();
-  miss_m_vs_pip_pim_TMVA->Delete();
+  miss_m_vs_pip_p_TMVA->Delete();
   p_pim_vs_pip_pim_TMVA->Delete();
   hMPPim_TMVA_K0mass->Delete();
   hMPipPim_TMVA_Lmass->Delete();
