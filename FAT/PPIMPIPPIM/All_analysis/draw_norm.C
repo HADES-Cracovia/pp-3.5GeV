@@ -192,7 +192,7 @@ int draw_norm(void)
   hL1520_background->SetName("hL1520_background");
   hL1520_background->Sumw2(kFALSE);
 
-  TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("oryginal_spectrum");
+  TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("orginal_spectrum");
   
   
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
@@ -404,7 +404,7 @@ int draw_norm(void)
   cClean_ren->cd(2);
   hpure_signal->Rebin(rebin);
   hpure_signal->GetXaxis()->SetRangeUser(1360,1780);
-  hpure_signal->Draw();
+  hpure_signal->Draw("e1");
     
   //fit Voigt to data
   hpure_signal->Add(hclean_experiment,hclean_background,1,-1);
@@ -415,6 +415,26 @@ int draw_norm(void)
   voigt->SetParameter(3,50);
   hpure_signal->Fit(voigt,"RL");
   hpure_signal->Fit(voigt,"RL");
+
+  TLatex *printFormula1 = new TLatex();
+  double high=0.8;
+  char text4[10000];
+  char text5[10000];
+  char text6[10000];
+  char text7[10000];
+  sprintf(text4, "#sigma = %.2f MeV",voigt->GetParameter(2));
+  sprintf(text5, "#Gamma = %.2f MeV",voigt->GetParameter(3));
+  sprintf(text6, "#bar{M_{p #pi^{-} #pi^{+} #pi^{-}}} = %.1f MeV",voigt->GetParameter(1));
+  sprintf(text7, "#int = %.2f ",voigt->Integral(1400,1620)/hpure_signal->GetBinWidth(2));
+  printFormula1->SetNDC();
+  printFormula1->SetTextFont(32);
+  printFormula1->SetTextColor(1);
+  printFormula1->SetTextSize(0.04);
+  printFormula1->SetTextAlign(13);
+  printFormula1->DrawLatex(0.5,high,text4);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize(),text5);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*2,text6);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*5,text7);
 
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
@@ -434,6 +454,22 @@ int draw_norm(void)
   line3->Draw("same");
   line4->Draw("same");
 
+  TLatex *printFormula = new TLatex();
+  double high=0.8;
+  char text1[10000];
+  char text2[10000];
+  char text3[10000];
+  sprintf(text1, "#sigma = %.1f MeV",fVoigt->GetParameter(2));
+  sprintf(text2, "#Gamma = %.1f MeV",fVoigt->GetParameter(3));
+  sprintf(text3, "#bar{M_{p#pi^{-}}} = %.1f MeV",fVoigt->GetParameter(1));
+  printFormula->SetNDC();
+  printFormula->SetTextFont(32);
+  printFormula->SetTextColor(1);
+  printFormula->SetTextSize(0.05);
+  printFormula->SetTextAlign(13);
+  printFormula->DrawLatex(0.6,high, text1);
+  printFormula->DrawLatex(0.6,high-printFormula->GetTextSize(), text2);
+  printFormula->DrawLatex(0.6,high-printFormula->GetTextSize()*2 , text3);
 
   
   err_sum=hist_error(hpure_signal,int_min,int_max);

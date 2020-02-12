@@ -38,6 +38,8 @@ void createHistos::Loop(char* output)
   // METHOD2: replace line
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
+  gStyle->SetOptStat(0);
+
   if (fChain == 0) return;
   const int bin=200;
   const int xmin=1000;
@@ -49,16 +51,12 @@ void createHistos::Loop(char* output)
   TLine* line2=new TLine(1116-sidebandmin,0,1116-sidebandmin,120);
   TLine* line3=new TLine(1116+sidebandmin,0,1116+sidebandmin,120);
   TLine* line4=new TLine(1116+sidebandmax,0,1116+sidebandmax,120);
-  /*line1->SetName("line1");
-  line2->SetName("line2");
-  line3->SetName("line3");
-  line4->SetName("line4");*/
-
+  
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
-  TH1F* oryginal_spectrum=new TH1F("oryginal_spectrum","oryginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
+  TH1F* orginal_spectrum=new TH1F("orginal_spectrum","orginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
   TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
@@ -66,7 +64,7 @@ void createHistos::Loop(char* output)
   TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
   background->Sumw2();
   data->Sumw2();
-  oryginal_spectrum->Sumw2();
+  orginal_spectrum->Sumw2();
 
   int dM=1;
   int Lmin=1000;
@@ -168,7 +166,7 @@ void createHistos::Loop(char* output)
 	 //||dist_ver_to_ver<14
 	 )
 	continue;
-      oryginal_spectrum->Fill(m_inv_p_pim);
+      orginal_spectrum->Fill(m_inv_p_pim);
       
       if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
 	{
@@ -194,18 +192,18 @@ void createHistos::Loop(char* output)
   fVoigt_bg->SetParLimits(3,0,2);
   fVoigt_bg->SetParLimits(1,1112,1117);
   fVoigt_bg->SetRange(1106,1121);
-  oryginal_spectrum->Fit(fVoigt_bg,"R");
+  orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1100,1126);
-  oryginal_spectrum->Fit(fVoigt_bg,"R");
+  orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1092,1137);
-  oryginal_spectrum->Fit(fVoigt_bg,"R");
+  orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1088,1141); 
-  oryginal_spectrum->Fit(fVoigt_bg,"R");
+  orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1082,1141); 
-  oryginal_spectrum->Fit(fVoigt_bg,"R");
+  orginal_spectrum->Fit(fVoigt_bg,"R");
 
 
-  oryginal_spectrum->Draw();
+  orginal_spectrum->Draw();
   fbg->SetParameters(fVoigt_bg->GetParameter(4),fVoigt_bg->GetParameter(5),fVoigt_bg->GetParameter(6),fVoigt_bg->GetParameter(7),fVoigt_bg->GetParameter(8),fVoigt_bg->GetParameter(9));
   fVoigt->SetParameters(fVoigt_bg->GetParameter(0),fVoigt_bg->GetParameter(1),fVoigt_bg->GetParameter(2),fVoigt_bg->GetParameter(3));
   fVoigt->Draw("same");
@@ -213,10 +211,10 @@ void createHistos::Loop(char* output)
   fbg->Draw("same");
   fbg->SetLineColor(kBlue);
    
-  double intS=fVoigt->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
-  double intB=fbg->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
-  double intsideband=(fbg->Integral(1116-sidebandmax,1116-sidebandmin)+fbg->Integral(1116+sidebandmin,1116+sidebandmax))/oryginal_spectrum->GetBinWidth(1);
-  double intAll=fVoigt_bg->Integral(1116-sidebandmin,1116+sidebandmin)/oryginal_spectrum->GetBinWidth(1);
+  double intS=fVoigt->Integral(1116-sidebandmin,1116+sidebandmin)/orginal_spectrum->GetBinWidth(1);
+  double intB=fbg->Integral(1116-sidebandmin,1116+sidebandmin)/orginal_spectrum->GetBinWidth(1);
+  double intsideband=(fbg->Integral(1116-sidebandmax,1116-sidebandmin)+fbg->Integral(1116+sidebandmin,1116+sidebandmax))/orginal_spectrum->GetBinWidth(1);
+  double intAll=fVoigt_bg->Integral(1116-sidebandmin,1116+sidebandmin)/orginal_spectrum->GetBinWidth(1);
   
   cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
   cout<<"all in signal range: "<<intAll<<endl;
@@ -245,7 +243,7 @@ void createHistos::Loop(char* output)
   signal->Write();
   background->Write();
   data->Write();
-  oryginal_spectrum->Write();
+  orginal_spectrum->Write();
   missing_mass_K0_L->Write();
   miss_m_vs_pip_pim->Write();
   graph_cut->Write();
@@ -305,7 +303,7 @@ void createHistos::Loop(char* output)
   signal->Delete();
   background->Delete();
   data->Delete();
-  oryginal_spectrum->Delete();
+  orginal_spectrum->Delete();
   missing_mass_K0_L->Delete();
   miss_m_vs_pip_pim->Delete();
   graph_cut->Delete();
