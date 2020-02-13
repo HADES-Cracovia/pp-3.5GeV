@@ -315,6 +315,7 @@ int draw_norm(void)
   set_Y_name(hS1385_data);
   hS1385_data->SetAxisRange(1350,1800);
   hS1385_data->Draw("e1");
+  hS1385_background->Rebin(rebin_res);
   hS1385_background->SetLineColor(kRed);
   hS1385_background->Draw("samee1");
 
@@ -324,6 +325,7 @@ int draw_norm(void)
   hSDpp_data->SetAxisRange(1350,1800);
   hSDpp_data->Draw("e1");
   hSDpp_background->SetLineColor(kRed);
+  hSDpp_background->Rebin(rebin_res);
   hSDpp_background->SetAxisRange(1350,1800); 
   hSDpp_background->Draw("samee1");
 
@@ -333,6 +335,7 @@ int draw_norm(void)
   hLDpp_data->SetAxisRange(1350,1800);
   hLDpp_data->Draw("e1");
   hLDpp_background->SetLineColor(kRed);
+  hLDpp_background->Rebin(rebin_res);
   hLDpp_background->SetAxisRange(1350,1800);
   hLDpp_background->Draw("samee1");
 
@@ -342,6 +345,7 @@ int draw_norm(void)
   hL1520_data->SetAxisRange(1350,1800);
   hL1520_data->Draw("e1");  
   hL1520_background->SetLineColor(kRed);
+  hL1520_background->Rebin(rebin_res);
   hL1520_background->SetAxisRange(1350,1800);
   hL1520_background->Draw("samee1");
   
