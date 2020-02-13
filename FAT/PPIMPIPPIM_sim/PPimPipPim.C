@@ -244,6 +244,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
   if (tree == 0)
     {
       TChain * chain = new TChain("PPimPipPim_ID","");
+      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL/all.root/PPimPipPim_ID");
@@ -252,7 +253,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pKm/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/nK0bar/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SDppK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/hadron.root/PPimPipPim_ID");
      

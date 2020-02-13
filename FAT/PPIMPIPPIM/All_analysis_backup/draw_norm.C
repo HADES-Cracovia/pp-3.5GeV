@@ -1,3 +1,11 @@
+void set_Y_name(TH1* hist)
+{
+  char name[10000]; // enough to hold all numbers up to 64-bits
+  sprintf(name, "#frac{counts}{%.1f MeV}", hist->GetBinWidth(2));
+  cout<<"Y axis name: "<<name<<endl;
+  hist->GetYaxis()->SetTitle(name);
+}
+
 void setHistogramStyleData(TH1* hist)
 {
   hist->SetLineWidth(2);
@@ -5,11 +13,55 @@ void setHistogramStyleData(TH1* hist)
   hist->SetMarkerColor(hist->GetLineColor());
   hist->SetMarkerSize(2);
   hist->SetMarkerStyle(8);
+  set_Y_name(hist);
+
+  //hist->GetXaxis()->SetLabelFont(42);
+  hist->GetXaxis()->SetNdivisions(508);
+  //hist->GetXaxis()->SetLabelSize(0.05);
+  // hist->GetXaxis()->SetTitleSize(0.05);
+  //hist->GetXaxis()->SetTitleOffset(1.1);
+  //hist->GetXaxis()->SetTitleFont(42);
+
+  hist->GetYaxis()->SetNdivisions(508);
+  //hist->GetYaxis()->SetLabelFont(42);
+  //hist->GetYaxis()->SetLabelSize(0.05);
+  //hist->GetYaxis()->SetTitleOffset(0.8);
+  //hist->GetYaxis()->SetTitleSize(0.05);
+  //hist->GetYaxis()->SetTitleFont(42);  
+  
 }
 
 void setHistogramStyleSimul(TH1* hist)
 {
   hist->SetLineWidth(2);
+
+  hist->SetMarkerColor(hist->GetLineColor());
+  hist->SetMarkerSize(2);
+  hist->SetMarkerStyle(8);
+  hist->SetFillColor(hist->GetLineColor());
+  set_Y_name(hist);
+
+  //hist->GetXaxis()->SetLabelFont(42);
+  hist->GetXaxis()->SetNdivisions(508);
+  //hist->GetXaxis()->SetLabelSize(0.05);
+  //hist->GetXaxis()->SetTitleSize(0.05);
+  //hist->GetXaxis()->SetTitleOffset(1.1);
+  //hist->GetXaxis()->SetTitleFont(42);
+
+  hist->GetYaxis()->SetNdivisions(508);
+  //hist->GetYaxis()->SetLabelFont(42);
+  //hist->GetYaxis()->SetLabelSize(0.05);
+  //hist->GetYaxis()->SetTitleOffset(0.8);
+  //hist->GetYaxis()->SetTitleSize(0.05);
+  //hist->GetYaxis()->SetTitleFont(42);  
+  
+}
+
+void setLineStyle(TLine* line)
+{
+  line->SetLineWidth(4);
+  line->SetLineStyle(9);
+  line->SetLineColor(kRed-3);
 }
 
 double hist_error(TH1* hist, double x1=2, double x2=1)
@@ -84,15 +136,28 @@ void normalize(TH1* hist)
 
 }  
 
+
 int draw_norm(void)
 {
 
-  TF1 *voigt=new TF1("signal_voit","[0]*TMath::Voigt(x-[1],[2],[3],4)",1380,1750);
   TFile *fileS1385 = new TFile("SB_sim_S1385pK0.root","READ");
   TFile *fileSDpp = new TFile("SB_sim_SDppK0.root","READ");
   TFile *fileLDpp = new TFile("SB_sim_LDppK0.root","READ");
   TFile *fileL1520= new TFile("SB_sim_L1520pippim.root","READ");
+  TFile *fileLK0=new TFile("SB_sim_LK0ppip.root","READ");
   TFile *fileExp= new TFile("SB_experiment.root","READ");
+
+  
+  TF1* fVoigt_bg=(TF1*)fileExp->Get("fVoigt_bg");
+  TF1* fVoigt=(TF1*)fileExp->Get("fVoigt");
+  TF1* fbg=(TF1*)fileExp->Get("fbg");
+  TF1 *voigt=new TF1("signal_voit","[0]*TMath::Voigt(x-[1],[2],[3],4)",1380,1750); //only for pure signal
+
+  TLine* line1=(TLine*)fileExp->Get("line1");
+  TLine* line2=(TLine*)fileExp->Get("line2");
+  TLine* line3=(TLine*)fileExp->Get("line3");
+  TLine* line4=(TLine*)fileExp->Get("line4");
+
   
   //TFile *output= new TFile("pictures.root","RECREATE");
   TH1F *hS1385_data = (TH1F*)fileS1385->Get("data");
@@ -112,7 +177,16 @@ int draw_norm(void)
   hL1520_data->Sumw2(kFALSE);
   TH1F *hsum_data=(TH1F*)hS1385_data->Clone("hsum_data");
   hsum_data->Reset();
-  
+
+  TH1F *hexperiment_L=(TH1F*)fileExp->Get("hMPPim_TMVA_K0mass");
+  TH1F *hexperiemnt_K0=(TH1F*)fileExp->Get("hMPipPim_TMVA_Lmass");
+  TH1F *hsim_L=(TH1F*)fileLK0->Get("hMPPim_TMVA_K0mass");
+  TH1F *hsim_K0=(TH1F*)fileLK0->Get("hMPipPim_TMVA_Lmass");
+  TF1 *fK0_experiment_fit=(TF1 *)fileExp->Get("K0_fit");
+  TF1 *fK0_experiment_sig=(TF1 *)fileExp->Get("K0_signal");
+  TF1 *fL1116_experiment_fit=(TF1 *)fileExp->Get("L1116_fit");
+  TF1 *fL1116_experiment_sig=(TF1 *)fileExp->Get("L1116_signal");
+
   TH1F *hS1385_background = (TH1F*)fileS1385->Get("background");
   hS1385_background->SetName("hS1385_background");
   hS1385_background->Sumw2(kFALSE);
@@ -129,7 +203,7 @@ int draw_norm(void)
   hL1520_background->SetName("hL1520_background");
   hL1520_background->Sumw2(kFALSE);
 
-  TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("oryginal_spectrum");
+  TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("orginal_spectrum");
   
   
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
@@ -140,6 +214,7 @@ int draw_norm(void)
   TH1F *hclean_L1520_ren=(TH1F*)hL1520_background->Clone("hclean_L1520_ren");
   TH1F *hclean_sum_ren=(TH1F*)hL1520_background->Clone("hclean_sum_ren");
   TH1F *hpure_signal=(TH1F*)hL1520_background->Clone("hpure_signal");
+
   hsum_background->Reset();
   hclean_background->Reset();
   hclean_experiment->Reset();
@@ -155,11 +230,12 @@ int draw_norm(void)
   double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
   double downscale=3;//trigger downscale for simulated events
-  double cs[4]=
+  double cs[5]=
     {14.05/1000*scale/(nsim*downscale),//S1385
      9.26/1000*scale/(nsim*downscale),//SDpp
      29.45/1000*scale/(nsim*downscale),//LDpp
-     5.6/1000*scale/(100*100000*downscale)//L(1520)pK+->Lpi+pi-pK+
+     5.6/1000*scale/(100*100000*downscale),//L(1520)pK+->Lpi+pi-pK+
+     (2.57+14.05+9.26+29.45)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
     };
   double err[4]=
     {2.25/14.05,//S1385
@@ -174,6 +250,8 @@ int draw_norm(void)
   hSDpp_background->Scale(cs[1]);
   hLDpp_background->Scale(cs[2]);
   hL1520_background->Scale(cs[3]);
+  hsim_L->Scale(cs[4]);
+  hsim_K0->Scale(cs[4]);
 
   /*  hS1385_background->Sumw2();
   hSDpp_background->Sumw2();
@@ -229,96 +307,123 @@ int draw_norm(void)
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
-  
+  int rebin_res=2;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
   cRes->cd(1);
-  hS1385_data->Draw();
+  hS1385_data->Rebin(rebin_res);
+  set_Y_name(hS1385_data);
+  hS1385_data->SetAxisRange(1350,1800);
+  hS1385_data->Draw("e1");
   hS1385_background->SetLineColor(kRed);
-  hS1385_background->Draw("same");
+  hS1385_background->Draw("samee1");
+
   cRes->cd(2);
-  hSDpp_data->Draw();
+  hSDpp_data->Rebin(rebin_res);
+  set_Y_name(hSDpp_data);
+  hSDpp_data->SetAxisRange(1350,1800);
+  hSDpp_data->Draw("e1");
   hSDpp_background->SetLineColor(kRed);
-  hSDpp_background->Draw("same");
+  hSDpp_background->SetAxisRange(1350,1800); 
+  hSDpp_background->Draw("samee1");
+
   cRes->cd(3);
-  hLDpp_data->Draw();
+  hLDpp_data->Rebin(rebin_res);
+  set_Y_name(hLDpp_data);
+  hLDpp_data->SetAxisRange(1350,1800);
+  hLDpp_data->Draw("e1");
   hLDpp_background->SetLineColor(kRed);
-  hLDpp_background->Draw("same");
+  hLDpp_background->SetAxisRange(1350,1800);
+  hLDpp_background->Draw("samee1");
+
   cRes->cd(4);
-  hL1520_data->Draw();
+  hL1520_data->Rebin(rebin_res);
+  set_Y_name(hL1520_data);
+  hL1520_data->SetAxisRange(1350,1800);
+  hL1520_data->Draw("e1");  
   hL1520_background->SetLineColor(kRed);
-  hL1520_background->Draw("same");
+  hL1520_background->SetAxisRange(1350,1800);
+  hL1520_background->Draw("samee1");
   
   
   TCanvas *cSum=new TCanvas("cSum","cSum");
   int rebin2=2; //wrong error propagation for simul events
   hexperiment_data->Rebin(rebin2);
-  hexperiment_data->Draw();
+  hexperiment_data->SetAxisRange(1300,1800);
+  hexperiment_data->Draw("e1");
   setHistogramStyleData(hexperiment_data);
 
   hexperiment_background->Rebin(rebin2);
   hexperiment_background->SetLineColor(kRed);
-  hexperiment_background->Draw("same");
+  hexperiment_background->Draw("samee1");
   setHistogramStyleData(hexperiment_background);
 
   hsum_data->Rebin(rebin2);
-  hsum_data->Draw("same");
+  hsum_data->Draw("samee1");
   setHistogramStyleSimul(hsum_data);
   
   hsum_background->Rebin(rebin2);
   hsum_background->SetLineColor(kRed);
   setHistogramStyleSimul(hsum_background);
-  hsum_background->Draw("samee2");
+  hsum_background->Draw("samee1");
 
   int rebin=4;
   TCanvas *cClean=new TCanvas("cClean","cClean");
-  hclean_experiment->Draw();
+  hclean_experiment->Draw("e1");
   hclean_experiment->Rebin(rebin);
   
   hclean_background->SetLineColor(kRed);
   hclean_background->SetFillColor(kRed);
   hclean_background->Rebin(rebin);
-  hclean_background->Draw("samee2B");
+  hclean_background->Draw("samee2");
   setHistogramStyleSimul(hclean_background);
   
-  hclean_L1520->SetLineColor(kGreen);
+  hclean_L1520->SetLineColor(kGreen+3);
   hclean_L1520->Rebin(rebin);
-  hclean_L1520->Draw("same");
+  hclean_L1520->Draw("samee2");
+  hclean_L1520->SetFillStyle(3154);
   setHistogramStyleSimul(hclean_L1520);
   
   hclean_sum->Rebin(rebin);
   hclean_sum->SetLineColor(kMagenta);
-  hclean_sum->SetFillColor(kMagenta);
-  hclean_sum->Draw("samee1");
+  hclean_sum->SetFillStyle(3145);
+  hclean_sum->Draw("samee2");
   setHistogramStyleSimul(hclean_sum);
 
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
   cClean_ren->Divide(2);
   cClean_ren->cd(1);
-  hclean_experiment->Draw();
-  hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   setHistogramStyleData(hclean_experiment);
+  hclean_experiment->Draw("e1");
+  hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
+  
   
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin);
-  hclean_background->Draw("samee2B");
+  hclean_background->Draw("samee2");
   setHistogramStyleSimul(hclean_background);
-  hclean_L1520_ren->SetLineColor(kGreen);
+  hclean_background->SetFillStyle(3125);
+  
+  hclean_L1520_ren->SetLineColor(kGreen+3);
   hclean_L1520_ren->Rebin(rebin);
-  hclean_L1520_ren->Draw("same");
   setHistogramStyleSimul(hclean_L1520_ren);
+  hclean_L1520_ren->SetFillStyle(3154);
+  hclean_L1520_ren->Draw("samee2");
+  
 
   hclean_sum_ren->Rebin(rebin);
   hclean_sum_ren->SetLineColor(kMagenta);
   hclean_sum_ren->SetFillColor(kMagenta);
-  hclean_sum_ren->Draw("samee1B");
   setHistogramStyleSimul(hclean_sum_ren);
+  hclean_sum_ren->SetFillStyle(3145);
+  hclean_sum_ren->Draw("samee2");
+  
 
   cClean_ren->cd(2);
   hpure_signal->Rebin(rebin);
   hpure_signal->GetXaxis()->SetRangeUser(1360,1780);
-  hpure_signal->Draw();
+  hpure_signal->Draw("e1");
     
   //fit Voigt to data
   hpure_signal->Add(hclean_experiment,hclean_background,1,-1);
@@ -330,10 +435,65 @@ int draw_norm(void)
   hpure_signal->Fit(voigt,"RL");
   hpure_signal->Fit(voigt,"RL");
 
+  TLatex *printFormula1 = new TLatex();
+  double high=0.85;
+  char text4[10000];
+  char text5[10000];
+  char text6[10000];
+  char text7[10000];
+  char text8[10000];
+  sprintf(text4, "#sigma = %.2f MeV",voigt->GetParameter(2));
+  sprintf(text5, "#Gamma = %.2f MeV",voigt->GetParameter(3));
+  sprintf(text6, "#bar{M_{p #pi^{-} #pi^{+} #pi^{-}}} = %.1f MeV",voigt->GetParameter(1));
+  sprintf(text7, "#int_{1400 MeV}^{1620 MeV} = %.2f ",voigt->Integral(1400,1620)/hpure_signal->GetBinWidth(2));
+  sprintf(text8, "#sum_{1400 MeV}^{1620 MeV} = %.2f ",hpure_signal->Integral(hpure_signal->FindBin(1400),hpure_signal->FindBin(1620)));
+  printFormula1->SetNDC();
+  printFormula1->SetTextFont(32);
+  printFormula1->SetTextColor(1);
+  printFormula1->SetTextSize(0.04);
+  printFormula1->SetTextAlign(13);
+  printFormula1->DrawLatex(0.5,high,text4);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize(),text5);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*2,text6);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*4,text7);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*7,text8);
+
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
+  hexperiment_SB_spectrum->SetAxisRange(1050,1250);
+  setHistogramStyleData(hexperiment_SB_spectrum);
   hexperiment_SB_spectrum->Draw();
+  fVoigt->Draw("same");
+  fVoigt->SetLineColor(kGreen);
+  fbg->Draw("same");
+  fbg->SetLineColor(kBlue);
+  setLineStyle(line1);
+  setLineStyle(line2);
+  setLineStyle(line3);
+  setLineStyle(line4);
+  line1->Draw("same");
+  line2->Draw("same");
+  line3->Draw("same");
+  line4->Draw("same");
 
+  TLatex *printFormula = new TLatex();
+  double high=0.8;
+  char text1[10000];
+  char text2[10000];
+  char text3[10000];
+  sprintf(text1, "#sigma = %.1f MeV",fVoigt->GetParameter(2));
+  sprintf(text2, "#Gamma = %.1f MeV",fVoigt->GetParameter(3));
+  sprintf(text3, "#bar{M_{p#pi^{-}}} = %.1f MeV",fVoigt->GetParameter(1));
+  printFormula->SetNDC();
+  printFormula->SetTextFont(32);
+  printFormula->SetTextColor(1);
+  printFormula->SetTextSize(0.05);
+  printFormula->SetTextAlign(13);
+  printFormula->DrawLatex(0.6,high, text1);
+  printFormula->DrawLatex(0.6,high-printFormula->GetTextSize(), text2);
+  printFormula->DrawLatex(0.6,high-printFormula->GetTextSize()*2 , text3);
+
+  
   err_sum=hist_error(hpure_signal,int_min,int_max);
   
   cout<<"Integral for pK0L(1520) (CS from Laura paper):"<<endl;
@@ -349,6 +509,59 @@ int draw_norm(void)
   cout<<"****************error estimation****************"<<endl;
   cout<<"error sum= "<<err_sum<<endl;
   cout<<endl<<endl;
+
+  TCanvas* cLK0=new TCanvas("cLK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  int npx=300;
+  cLK0->Divide(2);
+
+  cLK0->cd(1);
+  hexperiment_L->SetAxisRange(1080,1200);
+  hexperiment_L->SetMinimum(0);
+  hexperiment_L->Draw("e1");
+  hsim_L->Draw("samee1");
+  hsim_L->SetLineColor(kMagenta+1);
+  fL1116_experiment_fit->SetNpx(npx);
+  fL1116_experiment_sig->SetNpx(npx);
+  fL1116_experiment_fit->Draw("same");
+  fL1116_experiment_sig->Draw("same");
+  fL1116_experiment_sig->SetLineWidth(3);
+  
+  cLK0->cd(2);
+  hexperiemnt_K0->SetAxisRange(300,650);
+  hexperiemnt_K0->SetMinimum(0);
+  hexperiemnt_K0->Draw("e1");  
+  hsim_K0->Draw("samee1");
+  hsim_K0->SetLineColor(kMagenta+1);
+  fK0_experiment_sig->SetNpx(npx);
+  fK0_experiment_fit->SetNpx(npx);
+  fK0_experiment_fit->Draw("same");
+  fK0_experiment_sig->Draw("same");
+  fK0_experiment_sig->SetLineWidth(3);
+
+  TCanvas* cL=new TCanvas("cL", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  hexperiment_L->SetAxisRange(1080,1200);
+  hexperiment_L->SetMinimum(0);
+  hexperiment_L->Draw("e1");
+  hsim_L->Draw("samee1");
+  hsim_L->SetLineColor(kMagenta+1);
+  fL1116_experiment_fit->SetNpx(npx);
+  fL1116_experiment_sig->SetNpx(npx);
+  fL1116_experiment_fit->Draw("same");
+  fL1116_experiment_sig->Draw("same");
+  fL1116_experiment_sig->SetLineWidth(3);
+  
+  
+  TCanvas* cK0=new TCanvas("cK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  hexperiemnt_K0->SetAxisRange(300,650);
+  hexperiemnt_K0->SetMinimum(0);
+  hexperiemnt_K0->Draw("e1");  
+  hsim_K0->Draw("samee1");
+  hsim_K0->SetLineColor(kMagenta+1);
+  fK0_experiment_sig->SetNpx(npx);
+  fK0_experiment_fit->SetNpx(npx);
+  fK0_experiment_fit->Draw("same");
+  fK0_experiment_sig->Draw("same");
+  fK0_experiment_sig->SetLineWidth(3);
   
   //save all
   TFile* output=new TFile("final_output.root","recreate");
@@ -376,11 +589,34 @@ int draw_norm(void)
   hclean_L1520_ren->Write();
   hclean_sum_ren->Write();
   hpure_signal->Write();
+
+  hexperiemnt_K0->Write();
+  hexperiment_L->Write();
+  hsim_K0->Write();
+  hsim_L->Write();
+
+  fK0_experiment_fit->Write();
+  fK0_experiment_sig->Write();
+  fL1116_experiment_fit->Write();
+  fL1116_experiment_sig->Write();
+
   
+  line1->Write();
+  line2->Write();
+  line3->Write();
+  line4->Write();
+
+  fbg->Write();
+  fVoigt_bg->Write();
+  fVoigt->Write();
+
   cClean_ren->Write();
   cRes->Write();
   cClean->Write();
   cSum->Write();
   cSB->Write();
+  cLK0->Write();
+  cK0->Write();
+  cL->Write();
 }
 

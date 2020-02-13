@@ -1,7 +1,7 @@
 void set_Y_name(TH1* hist)
 {
   char name[10000]; // enough to hold all numbers up to 64-bits
-  sprintf(name, "#frac{counts}{%.1f} #left[ #frac{1}{MeV} #right]", hist->GetBinWidth(2));
+  sprintf(name, "#frac{counts}{%.1f MeV}", hist->GetBinWidth(2));
   cout<<"Y axis name: "<<name<<endl;
   hist->GetYaxis()->SetTitle(name);
 }
@@ -144,8 +144,10 @@ int draw_norm(void)
   TFile *fileSDpp = new TFile("SB_sim_SDppK0.root","READ");
   TFile *fileLDpp = new TFile("SB_sim_LDppK0.root","READ");
   TFile *fileL1520= new TFile("SB_sim_L1520pippim.root","READ");
+  TFile *fileLK0=new TFile("SB_sim_LK0ppip.root","READ");
   TFile *fileExp= new TFile("SB_experiment.root","READ");
 
+  
   TF1* fVoigt_bg=(TF1*)fileExp->Get("fVoigt_bg");
   TF1* fVoigt=(TF1*)fileExp->Get("fVoigt");
   TF1* fbg=(TF1*)fileExp->Get("fbg");
@@ -175,7 +177,16 @@ int draw_norm(void)
   hL1520_data->Sumw2(kFALSE);
   TH1F *hsum_data=(TH1F*)hS1385_data->Clone("hsum_data");
   hsum_data->Reset();
-  
+
+  TH1F *hexperiment_L=(TH1F*)fileExp->Get("hMPPim_TMVA_K0mass");
+  TH1F *hexperiemnt_K0=(TH1F*)fileExp->Get("hMPipPim_TMVA_Lmass");
+  TH1F *hsim_L=(TH1F*)fileLK0->Get("hMPPim_TMVA_K0mass");
+  TH1F *hsim_K0=(TH1F*)fileLK0->Get("hMPipPim_TMVA_Lmass");
+  TF1 *fK0_experiment_fit=(TF1 *)fileExp->Get("K0_fit");
+  TF1 *fK0_experiment_sig=(TF1 *)fileExp->Get("K0_signal");
+  TF1 *fL1116_experiment_fit=(TF1 *)fileExp->Get("L1116_fit");
+  TF1 *fL1116_experiment_sig=(TF1 *)fileExp->Get("L1116_signal");
+
   TH1F *hS1385_background = (TH1F*)fileS1385->Get("background");
   hS1385_background->SetName("hS1385_background");
   hS1385_background->Sumw2(kFALSE);
@@ -203,6 +214,7 @@ int draw_norm(void)
   TH1F *hclean_L1520_ren=(TH1F*)hL1520_background->Clone("hclean_L1520_ren");
   TH1F *hclean_sum_ren=(TH1F*)hL1520_background->Clone("hclean_sum_ren");
   TH1F *hpure_signal=(TH1F*)hL1520_background->Clone("hpure_signal");
+
   hsum_background->Reset();
   hclean_background->Reset();
   hclean_experiment->Reset();
@@ -218,11 +230,12 @@ int draw_norm(void)
   double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
   double downscale=3;//trigger downscale for simulated events
-  double cs[4]=
+  double cs[5]=
     {14.05/1000*scale/(nsim*downscale),//S1385
      9.26/1000*scale/(nsim*downscale),//SDpp
      29.45/1000*scale/(nsim*downscale),//LDpp
-     5.6/1000*scale/(100*100000*downscale)//L(1520)pK+->Lpi+pi-pK+
+     5.6/1000*scale/(100*100000*downscale),//L(1520)pK+->Lpi+pi-pK+
+     (2.57+14.05+9.26+29.45)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
     };
   double err[4]=
     {2.25/14.05,//S1385
@@ -237,6 +250,8 @@ int draw_norm(void)
   hSDpp_background->Scale(cs[1]);
   hLDpp_background->Scale(cs[2]);
   hL1520_background->Scale(cs[3]);
+  hsim_L->Scale(cs[4]);
+  hsim_K0->Scale(cs[4]);
 
   /*  hS1385_background->Sumw2();
   hSDpp_background->Sumw2();
@@ -292,10 +307,11 @@ int draw_norm(void)
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
-  
+  int rebin_res=2;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
   cRes->cd(1);
+  hS1385_data->Rebin(rebin_res);
   set_Y_name(hS1385_data);
   hS1385_data->SetAxisRange(1350,1800);
   hS1385_data->Draw("e1");
@@ -303,6 +319,7 @@ int draw_norm(void)
   hS1385_background->Draw("samee1");
 
   cRes->cd(2);
+  hSDpp_data->Rebin(rebin_res);
   set_Y_name(hSDpp_data);
   hSDpp_data->SetAxisRange(1350,1800);
   hSDpp_data->Draw("e1");
@@ -311,6 +328,7 @@ int draw_norm(void)
   hSDpp_background->Draw("samee1");
 
   cRes->cd(3);
+  hLDpp_data->Rebin(rebin_res);
   set_Y_name(hLDpp_data);
   hLDpp_data->SetAxisRange(1350,1800);
   hLDpp_data->Draw("e1");
@@ -319,6 +337,7 @@ int draw_norm(void)
   hLDpp_background->Draw("samee1");
 
   cRes->cd(4);
+  hL1520_data->Rebin(rebin_res);
   set_Y_name(hL1520_data);
   hL1520_data->SetAxisRange(1350,1800);
   hL1520_data->Draw("e1");  
@@ -417,15 +436,17 @@ int draw_norm(void)
   hpure_signal->Fit(voigt,"RL");
 
   TLatex *printFormula1 = new TLatex();
-  double high=0.8;
+  double high=0.85;
   char text4[10000];
   char text5[10000];
   char text6[10000];
   char text7[10000];
+  char text8[10000];
   sprintf(text4, "#sigma = %.2f MeV",voigt->GetParameter(2));
   sprintf(text5, "#Gamma = %.2f MeV",voigt->GetParameter(3));
   sprintf(text6, "#bar{M_{p #pi^{-} #pi^{+} #pi^{-}}} = %.1f MeV",voigt->GetParameter(1));
-  sprintf(text7, "#int = %.2f ",voigt->Integral(1400,1620)/hpure_signal->GetBinWidth(2));
+  sprintf(text7, "#int_{1400 MeV}^{1620 MeV} = %.2f ",voigt->Integral(1400,1620)/hpure_signal->GetBinWidth(2));
+  sprintf(text8, "#sum_{1400 MeV}^{1620 MeV} = %.2f ",hpure_signal->Integral(hpure_signal->FindBin(1400),hpure_signal->FindBin(1620)));
   printFormula1->SetNDC();
   printFormula1->SetTextFont(32);
   printFormula1->SetTextColor(1);
@@ -434,7 +455,8 @@ int draw_norm(void)
   printFormula1->DrawLatex(0.5,high,text4);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize(),text5);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*2,text6);
-  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*5,text7);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*4,text7);
+  printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*7,text8);
 
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
@@ -487,6 +509,59 @@ int draw_norm(void)
   cout<<"****************error estimation****************"<<endl;
   cout<<"error sum= "<<err_sum<<endl;
   cout<<endl<<endl;
+
+  TCanvas* cLK0=new TCanvas("cLK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  int npx=300;
+  cLK0->Divide(2);
+
+  cLK0->cd(1);
+  hexperiment_L->SetAxisRange(1080,1200);
+  hexperiment_L->SetMinimum(0);
+  hexperiment_L->Draw("e1");
+  hsim_L->Draw("samee1");
+  hsim_L->SetLineColor(kMagenta+1);
+  fL1116_experiment_fit->SetNpx(npx);
+  fL1116_experiment_sig->SetNpx(npx);
+  fL1116_experiment_fit->Draw("same");
+  fL1116_experiment_sig->Draw("same");
+  fL1116_experiment_sig->SetLineWidth(3);
+  
+  cLK0->cd(2);
+  hexperiemnt_K0->SetAxisRange(300,650);
+  hexperiemnt_K0->SetMinimum(0);
+  hexperiemnt_K0->Draw("e1");  
+  hsim_K0->Draw("samee1");
+  hsim_K0->SetLineColor(kMagenta+1);
+  fK0_experiment_sig->SetNpx(npx);
+  fK0_experiment_fit->SetNpx(npx);
+  fK0_experiment_fit->Draw("same");
+  fK0_experiment_sig->Draw("same");
+  fK0_experiment_sig->SetLineWidth(3);
+
+  TCanvas* cL=new TCanvas("cL", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  hexperiment_L->SetAxisRange(1080,1200);
+  hexperiment_L->SetMinimum(0);
+  hexperiment_L->Draw("e1");
+  hsim_L->Draw("samee1");
+  hsim_L->SetLineColor(kMagenta+1);
+  fL1116_experiment_fit->SetNpx(npx);
+  fL1116_experiment_sig->SetNpx(npx);
+  fL1116_experiment_fit->Draw("same");
+  fL1116_experiment_sig->Draw("same");
+  fL1116_experiment_sig->SetLineWidth(3);
+  
+  
+  TCanvas* cK0=new TCanvas("cK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  hexperiemnt_K0->SetAxisRange(300,650);
+  hexperiemnt_K0->SetMinimum(0);
+  hexperiemnt_K0->Draw("e1");  
+  hsim_K0->Draw("samee1");
+  hsim_K0->SetLineColor(kMagenta+1);
+  fK0_experiment_sig->SetNpx(npx);
+  fK0_experiment_fit->SetNpx(npx);
+  fK0_experiment_fit->Draw("same");
+  fK0_experiment_sig->Draw("same");
+  fK0_experiment_sig->SetLineWidth(3);
   
   //save all
   TFile* output=new TFile("final_output.root","recreate");
@@ -515,6 +590,17 @@ int draw_norm(void)
   hclean_sum_ren->Write();
   hpure_signal->Write();
 
+  hexperiemnt_K0->Write();
+  hexperiment_L->Write();
+  hsim_K0->Write();
+  hsim_L->Write();
+
+  fK0_experiment_fit->Write();
+  fK0_experiment_sig->Write();
+  fL1116_experiment_fit->Write();
+  fL1116_experiment_sig->Write();
+
+  
   line1->Write();
   line2->Write();
   line3->Write();
@@ -529,5 +615,8 @@ int draw_norm(void)
   cClean->Write();
   cSum->Write();
   cSB->Write();
+  cLK0->Write();
+  cK0->Write();
+  cL->Write();
 }
 

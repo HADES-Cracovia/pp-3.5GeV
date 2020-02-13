@@ -20,13 +20,14 @@ int run_all(void)
       TFile* fsim_S1385pK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../S1385pK0_Rafal_part2.root","READ");
       TFile* fsim_LDppK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../LDppK0_Rafal_part2.root","READ");
       TFile* fsim_L1520pippim=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../pp_Lpippim_ver3_new_vertex.root","READ");
-
+      TFile* fsim_LK0ppip=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_pK0Lpip_ver2.root","READ");
       cout<<"load trees"<<endl;
       TTree* texperiment;
       TTree* tsim_SDppK0;
       TTree* tsim_S1385pK0;
       TTree* tsim_LDppK0;
       TTree* tsim_L1520pippim;
+      TTree* tsim_LK0ppip;
 
       fexperiment->GetObject("ppimpippim",texperiment);
       fexperiment->SetName("fexperiment");
@@ -38,6 +39,7 @@ int run_all(void)
       fsim_LDppK0->SetName("fsim_LDppK0");
       fsim_L1520pippim->GetObject("ppimpippim",tsim_L1520pippim);
       fsim_L1520pippim->SetName("fsim_L1520pippim");
+      fsim_LK0ppip->GetObject("ppimpippim",tsim_LK0ppip);
       
       cout<<"Run TMVA processes"<<endl;
       //Run TMVAeval
@@ -58,12 +60,16 @@ int run_all(void)
       TMVAeval* TM_sim_L1520pippim=new TMVAeval(tsim_L1520pippim);
       TM_sim_L1520pippim->Loop("TMVA_output_sim_L1520pippim.root");
 
-      texperiment->Delete();
-      tsim_SDppK0->Delete();
-      tsim_S1385pK0->Delete();
-      tsim_LDppK0->Delete();
-      tsim_L1520pippim->Delete();
-    
+      TMVAeval* TM_sim_LK0ppim=new TMVAeval(tsim_LK0ppip);
+      TM_sim_LK0ppim->Loop("TMVA_output_sim_LK0ppim.root");
+      /*
+      texperiment->delete();
+      tsim_SDppK0->delete();
+      tsim_S1385pK0->delete();
+      tsim_LDppK0->delete();
+      tsim_L1520pippim->delete();
+      TM_sim_LK0ppim->delete();
+      */
     }
   //Side-band part*************************
   
@@ -73,13 +79,15 @@ int run_all(void)
   TFile* f_sb_sim_S1385pK0=new TFile("TMVA_output_sim_S1385pK0.root","READ");
   TFile* f_sb_sim_LDppK0=new TFile("TMVA_output_sim_LDppK0.root","READ");
   TFile* f_sb_sim_L1520pippim=new TFile("TMVA_output_sim_L1520pippim.root","READ");
-
+  TFile* f_sb_sim_LK0ppip=new TFile("TMVA_output_sim_LK0ppim.root","READ");
+  
   cout<<"load trees for s-b"<<endl;
   TTree* t_sb_experiment;
   TTree* t_sb_sim_SDppK0;
   TTree* t_sb_sim_S1385pK0;
   TTree* t_sb_sim_LDppK0;
   TTree* t_sb_sim_L1520pippim;
+  TTree* t_sb_sim_LK0ppip;
 
   
   //Run createHistos
@@ -120,8 +128,14 @@ int run_all(void)
   createHistos* SB_sim_L1520pippim=new createHistos(t_sb_sim_L1520pippim);
   SB_sim_L1520pippim->Loop("SB_sim_L1520pippim.root");
   t_sb_sim_L1520pippim->Delete();
-  
-  
+
+  cout<<"Run making Side-Band for LK0ppip"<<endl;
+  f_sb_sim_LK0ppip->GetObject("TMVAeval",t_sb_sim_LK0ppip);
+  f_sb_sim_LK0ppip->SetName("f_sb_sim_LK0ppip");
+  createHistos* SB_sim_LK0ppip=new createHistos(t_sb_sim_LK0ppip);
+  SB_sim_LK0ppip->Loop("SB_sim_LK0ppip.root");
+  t_sb_sim_LK0ppip->Delete();
+   
    
   gROOT->ProcessLine(".x draw_norm.C");
 }

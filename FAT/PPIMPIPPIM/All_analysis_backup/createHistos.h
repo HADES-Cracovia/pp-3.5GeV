@@ -494,7 +494,7 @@ void styleTH1(TH1* hist)
 {
   hist->SetLineWidth(3);
   char name[10000]; // enough to hold all numbers up to 64-bits
-  sprintf(name, "#frac{counts}{%.1f} #left[ #frac{1}{MeV} #right]", hist->GetBinWidth(2));
+  sprintf(name, "#frac{counts}{%.1f MeV}", hist->GetBinWidth(2));
   cout<<"Y axis name: "<<name<<endl;
   hist->GetYaxis()->SetTitle(name);
   
