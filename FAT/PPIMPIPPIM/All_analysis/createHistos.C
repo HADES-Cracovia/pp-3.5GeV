@@ -189,12 +189,15 @@ void createHistos::Loop(char* output)
       if(m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
 	{
 	  background->Fill(m_inv_p_pim_pip_pim);
-	  hMPipPim_background->Fill(m_inv_pip_pim);
+	  //if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_background->Fill(m_inv_pip_pim);
 	}
       if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
 	{
-	  hMPipPim_background->Fill(m_inv_pip_pim);
 	  background->Fill(m_inv_p_pim_pip_pim);
+	  //if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_background->Fill(m_inv_pip_pim);
+	
 	}
     }
 
@@ -238,7 +241,7 @@ void createHistos::Loop(char* output)
   cout<<"all in signal range: "<<intAll<<endl;
 
   background->Scale(intB/intsideband);
-
+  hMPipPim_background->Scale(intB/intsideband);
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);

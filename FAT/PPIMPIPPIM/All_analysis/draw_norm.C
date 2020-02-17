@@ -516,8 +516,11 @@ int draw_norm(void)
   
   int rebin=4;
   TCanvas *cClean=new TCanvas("cClean","cClean");
+    
   hclean_experiment->Draw("e1");
   hclean_experiment->Rebin(rebin);
+hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
+  setHistogramStyleData(hclean_experiment);
   
   hclean_background->SetLineColor(kRed);
   hclean_background->SetFillColor(kRed);
@@ -537,23 +540,27 @@ int draw_norm(void)
   hclean_sum->Draw("samee2");
   setHistogramStyleSimul(hclean_sum);
 
+  int rebin_pippim=4;
   TCanvas *cClean_PipPim=new TCanvas("cClean_PipPim","cClean_PipPim");
+  
   hclean_experiment_PipPim->Draw("e1");
-  hclean_experiment_PipPim->Rebin(rebin);
+  hclean_experiment_PipPim->Rebin(rebin_pippim);
+  hclean_experiment_PipPim->GetXaxis()->SetRangeUser(250,450);
+  setHistogramStyleData(hclean_experiment_PipPim);
   
   hclean_background_PipPim->SetLineColor(kRed);
   hclean_background_PipPim->SetFillColor(kRed);
-  hclean_background_PipPim->Rebin(rebin);
+  hclean_background_PipPim->Rebin(rebin_pippim);
   hclean_background_PipPim->Draw("samee2");
   setHistogramStyleSimul(hclean_background_PipPim);
   
   hclean_L1520_PipPim->SetLineColor(kGreen+3);
-  hclean_L1520_PipPim->Rebin(rebin);
+  hclean_L1520_PipPim->Rebin(rebin_pippim);
   hclean_L1520_PipPim->Draw("samee2");
   hclean_L1520_PipPim->SetFillStyle(3154);
   setHistogramStyleSimul(hclean_L1520_PipPim);
   
-  hclean_sum_PipPim->Rebin(rebin);
+  hclean_sum_PipPim->Rebin(rebin_pippim);
   hclean_sum_PipPim->SetLineColor(kMagenta);
   hclean_sum_PipPim->SetFillStyle(3145);
   hclean_sum_PipPim->Draw("samee2");
@@ -563,11 +570,8 @@ int draw_norm(void)
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
   cClean_ren->Divide(2);
   cClean_ren->cd(1);
-  setHistogramStyleData(hclean_experiment);
   hclean_experiment->Draw("e1");
-  hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
-  
-  
+    
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin);
