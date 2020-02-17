@@ -58,6 +58,9 @@ void createHistos::Loop(char* output)
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* orginal_spectrum=new TH1F("orginal_spectrum","orginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
+  TH1F* hMPipPim_signal=new TH1F("hMPipPim_signal","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
+  TH1F* hMPipPim_background=new TH1F("hMPipPim_background","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
+  
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
   TF1* K0_fit=new TF1("K0_fit","[0]*TMath::Voigt(x-[1],[2],[3])+pol2(4)",483,506);
@@ -180,12 +183,19 @@ void createHistos::Loop(char* output)
 	{
 	  data->Fill(m_inv_p_pim_pip_pim);
 	  miss_m_vs_pip_pim->Fill(miss_mass_kp,m_inv_pip_pim);	  
+	  hMPipPim_signal->Fill(m_inv_pip_pim);
 	}
 
       if(m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
-	background->Fill(m_inv_p_pim_pip_pim);
+	{
+	  background->Fill(m_inv_p_pim_pip_pim);
+	  hMPipPim_background->Fill(m_inv_pip_pim);
+	}
       if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
-	background->Fill(m_inv_p_pim_pip_pim);
+	{
+	  hMPipPim_background->Fill(m_inv_pip_pim);
+	  background->Fill(m_inv_p_pim_pip_pim);
+	}
     }
 
   //normalize background to signal
@@ -276,6 +286,8 @@ void createHistos::Loop(char* output)
   signal->Write();
   background->Write();
   data->Write();
+  hMPipPim_signal->Write();
+  hMPipPim_background->Write();
   orginal_spectrum->Write();
   missing_mass_K0_L->Write();
   miss_m_vs_pip_pim->Write();
