@@ -91,7 +91,7 @@ int main()
 
   /************************************** O U T P U T   F I L E ******************************************/
   //outFileData = new TFile("pp_ppimeppim_full_stat_dedx_extended_2_new_miss_mass.root","recreate");
-  outFileData = new TFile("pp_fullstat_sigma.root","recreate");
+  outFileData = new TFile("pp_fullstat_ppimepep.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
@@ -103,7 +103,7 @@ int main()
   /*******************************************************************************************************/
 
   /************************** control ntuple ***************************/
-  tlo = new HNtuple("ppimeppim","ppimeppim");
+  tlo = new HNtuple("ppimepem","ppimepem");
   tlo->setFile( outFileData );
   /*********************************************************************/
 

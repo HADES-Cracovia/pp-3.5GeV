@@ -244,6 +244,7 @@ void PPimEpEm::Loop()
 	  //(*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
 	  //(*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
 	  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
+	  (*tlo)["dist_lambda_ver_ep_em"]=dist_lambda_ver_ep_em;
 	  //(*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
 	  //(*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
 	  //(*tlo)["dist_lambda2_ver_ep_pim"]=dist_lambda2_ver_ep_pim;

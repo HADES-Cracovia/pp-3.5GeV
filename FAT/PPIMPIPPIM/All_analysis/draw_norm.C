@@ -389,6 +389,12 @@ int draw_norm(void)
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
+  hclean_L1520_ren_PipPim->Add(hclean_L1520_PipPim,1);
+  hclean_L1520_ren_PipPim->Scale((experiment_int-backgroud_int)/sig_int);
+  hclean_sum_ren_PipPim->Add(hclean_L1520_ren_PipPim,1);
+  hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
+
+  
   int rebin_res=2;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
@@ -632,6 +638,31 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*4,text7);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*7,text8);
 
+  TCanvas *cClean_ren_PipPim=new TCanvas("cClean_ren_PipPim","cClean_ren_PipPim");
+  hclean_experiment_PipPim->Draw("e1");
+    
+  //hclean_experiment->Rebin(rebin_pippim);
+  //hclean_background->SetLineColor(kRed);
+  //hclean_background->Rebin(rebin_pippim);
+  hclean_background_PipPim->Draw("samee2");
+  setHistogramStyleSimul(hclean_background_PipPim);
+  hclean_background_PipPim->SetFillStyle(3125);
+  
+  hclean_L1520_ren_PipPim->SetLineColor(kGreen+3);
+  hclean_L1520_ren_PipPim->Rebin(rebin_pippim);
+  setHistogramStyleSimul(hclean_L1520_ren_PipPim);
+  hclean_L1520_ren_PipPim->SetFillStyle(3154);
+  hclean_L1520_ren_PipPim->Draw("samee2");
+  
+
+  hclean_sum_ren_PipPim->Rebin(rebin_pippim);
+  hclean_sum_ren_PipPim->SetLineColor(kMagenta);
+  hclean_sum_ren_PipPim->SetFillColor(kMagenta);
+  setHistogramStyleSimul(hclean_sum_ren_PipPim);
+  hclean_sum_ren_PipPim->SetFillStyle(3145);
+  hclean_sum_ren_PipPim->Draw("samee2");
+  
+  
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
   hexperiment_SB_spectrum->SetAxisRange(1050,1250);
@@ -785,6 +816,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   fVoigt->Write();
 
   cClean_ren->Write();
+  cClean_ren_PipPim->Write();
   cRes->Write();
   cRes_PipPim->Write();
   cClean->Write();
