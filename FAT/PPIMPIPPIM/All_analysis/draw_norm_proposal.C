@@ -36,7 +36,7 @@ void setHistogramStyleSimul(TH1* hist)
   hist->SetLineWidth(2);
 
   hist->SetMarkerColor(hist->GetLineColor());
-  hist->SetMarkerSize(2);
+  hist->SetMarkerSize(1);
   hist->SetMarkerStyle(8);
   hist->SetFillColor(hist->GetLineColor());
   set_Y_name(hist);
@@ -99,7 +99,7 @@ double hist_error(TH1* hist, double x1=2, double x2=1)
 
 void scale_error(TH1* hist, double err,bool verbose=0)
 {
-  cout<<endl<<"***scaling the histogram errors according to one relative error***"<<endl;
+  /*cout<<endl<<"***scaling the histogram errors according to one relative error***"<<endl;
   cout<<"hist name"<<hist->GetName()<<endl;
   cout<<"scaling error"<<err<<endl;
   
@@ -117,6 +117,12 @@ void scale_error(TH1* hist, double err,bool verbose=0)
       hist->SetBinError(i,error); 
     }
 
+  cout<<"***end of scale_error function***"<<endl<<endl;
+  */
+  cout<<endl<<"***scaling the histogram errors according expected statistical errors***"<<endl;
+  cout<<"hist name"<<hist->GetName()<<endl;
+  cout<<"scaling error"<<err<<endl;
+  hist->Sumw2();
   cout<<"***end of scale_error function***"<<endl<<endl;
   
 }
@@ -280,8 +286,8 @@ int draw_norm_proposal(void)
   //double nsim=40*TMath::Power(10,6);//number of simulated events
   double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
-  double downscale=3;//trigger downscale for simulated events
-  double sim_factor=14.3e2;//factor caused by ek=4.5
+  double downscale=1;//trigger downscale for simulated events
+  double sim_factor=3*14.3e2;//factor caused by ek=4.5, 3 because lack of trigger down scale
   double cs[5]=
     {14.05/1000*scale/(nsim*downscale)*sim_factor,//S1385
      9.26/1000*scale/(nsim*downscale)*sim_factor,//SDpp
@@ -396,7 +402,7 @@ int draw_norm_proposal(void)
   hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
 
   
-  int rebin_res=2;  
+  int rebin_res=1;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
   cRes->cd(1);
@@ -530,7 +536,7 @@ int draw_norm_proposal(void)
   hsum_background_PipPim->Draw("samee1");
 
   
-  int rebin=4;
+  int rebin=2;
   TCanvas *cClean=new TCanvas("cClean","cClean");
   /*
   hclean_experiment->Draw("e1");
