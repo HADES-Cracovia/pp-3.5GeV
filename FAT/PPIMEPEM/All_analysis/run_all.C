@@ -11,7 +11,7 @@ using namespace std;
 
 int run_all(void)
 { 
-  bool b_TMVAeval=1;//czy uruchamiac przeliczenie sieci na nowo
+  bool b_TMVAeval=0;//czy uruchamiac przeliczenie sieci na nowo
   
   if(b_TMVAeval)
     {

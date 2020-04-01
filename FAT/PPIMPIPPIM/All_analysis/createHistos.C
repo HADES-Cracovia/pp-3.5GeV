@@ -2,7 +2,7 @@
 #include "createHistos.h"
 #include <TCutG.h>
 #include <TH2.h>
-#include <TStyle.h>
+//#include <TSyle.h>
 #include <TCanvas.h>
 #include <TMath.h>
 #include <TGraphErrors.h>
@@ -13,6 +13,17 @@
 #include <TLine.h>
 
 using namespace std;
+void scale(TH1F* hist, double s)
+{
+  //hist->Scale(s);
+
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      hist->SetBinContent( j, hist->GetBinContent(j)*s );
+      hist->SetBinError( j, hist->GetBinError(j)*s );
+    }
+
+}
 
 void createHistos::Loop(char* output)
 {
@@ -241,8 +252,8 @@ void createHistos::Loop(char* output)
   cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
   cout<<"all in signal range: "<<intAll<<endl;
 
-  background->Scale(intB/intsideband);
-  hMPipPim_background->Scale(intB/intsideband);
+  scale(background,intB/intsideband);
+  scale(hMPipPim_background,intB/intsideband);
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);

@@ -76,7 +76,7 @@ void createHistos::Loop(char* output)
   data->Sumw2();
   orginal_spectrum->Sumw2();
 
-  int dM=1;
+  int dM=5;
   int Lmin=1000;
   int Lmax=1500;
   int LdM=(Lmax-Lmin)/dM;
@@ -107,7 +107,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0.57;
+  double mlp_cut=0;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -136,30 +136,31 @@ void createHistos::Loop(char* output)
 	      hMEpEm_TMVA->Fill(m_inv_ep_em);
 	      //miss_m_vs_ep_p_TMVA->Fill(miss_mass_kp,m_inv_p_ep);
 	      p_pim_vs_ep_em_TMVA->Fill(m_inv_p_pim,m_inv_ep_em);
-	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110 && miss_mass_kp>1077)
+	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
 		hMEpEm_TMVA_Lmass->Fill(m_inv_ep_em);
-	      if(m_inv_ep_em<500 && m_inv_ep_em>480 && miss_mass_kp>1077)
+	      if(m_inv_ep_em<500 && m_inv_ep_em>480)
 		hMPPim_TMVA_K0mass->Fill(m_inv_p_pim);
+	      /*
 	      if(graph_cut->IsInside(miss_mass_kp,m_inv_ep_em))
 		{
 		  hMPPim_TMVAMass->Fill(m_inv_p_pim);
 		  hMEpEm_TMVAMass->Fill(m_inv_ep_em);
 		}
+	      */
 	    }
 	}
       
       
       if(
 	 m_inv_ep_em<500
-	 && m_inv_ep_em>480
 	 && m_inv_p_pim<1126
 	 && m_inv_p_pim>1106
 	 && mlp_output<mlp_cut
-	 && miss_mass_kp>1077
+	 //&& miss_mass_kp>1077
 	 )//K0 and L(1116)
 	{
-	  dedx_lambda->Fill(ep_p,ep_dedx);
-	  missing_mass_K0_L->Fill(miss_mass_kp);
+	  //dedx_lambda->Fill(ep_p,ep_dedx);
+	  //missing_mass_K0_L->Fill(miss_mass_kp);
 	}
 
 
@@ -167,10 +168,10 @@ void createHistos::Loop(char* output)
       if(isBest!=1
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
-	 //||m_inv_ep_em>410 //replaced by graphical cut
+	 ||m_inv_ep_em>410 //replaced by graphical cut
 	 ||dist_ver_to_ver<5
 	 ||(oa_lambda>20)
-	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_ep_em))
+	 //||!(graph_cut->IsInside(miss_mass_kp,m_inv_ep_em))
 	 //||p_theta>20 //to clean up proton sample
 	 //||dist_ep_em>5
 	 //||dist_ep_em>150
@@ -330,7 +331,7 @@ void createHistos::Loop(char* output)
   line2->Write("line2");
   line3->Write("line3");
   line4->Write("line4");
-
+  /*
   line1->Delete();
   line2->Delete();
   line3->Delete();
@@ -367,7 +368,7 @@ void createHistos::Loop(char* output)
   missing_mass_K0_L->Delete();
   miss_m_vs_ep_em->Delete();
   graph_cut->Delete();
-
+  */
 
   MyFile->Close();
 }

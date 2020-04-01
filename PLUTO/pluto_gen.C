@@ -22,18 +22,18 @@ void pluto_gen()
   makeStaticData()->SetParticleSpin("Lambda1520", 3);
   makeStaticData()->SetParticleParity("Lambda1520", 1);
 
-  makeStaticData()->AddDecay("Lambda(1520) -->  n + K0bar", "Lambda1520", "n, K0bar", 0.216);//EPJ A47 47F. Wielandet  al
-  makeStaticData()->AddDecay("Lambda(1520) -->  p + K-", "Lambda1520", "p, K-", 0.234);//EPJ A47 47F. Wielandet  al
-  cout<<"load n antiK0 and p K+ decay channels"<<endl;
-  makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + Sigma", "Lambda1520", "pi0, Sigma0", 0.42);
-  makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Sigma", "Lambda1520", "pi0, pi0, Sigma0", 0.009);
-  cout<<"load Sigma decay channel"<<endl;
-  makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Lambda", "Lambda1520", "pi0, pi0, Lambda", 0.033);
-  makeStaticData()->AddDecay("Lambda(1520) -->  pi+ + pi- + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  n + K0bar", "Lambda1520", "n, K0bar", 0.216);//EPJ A47 47F. Wielandet  al
+  //makeStaticData()->AddDecay("Lambda(1520) -->  p + K-", "Lambda1520", "p, K-", 0.234);//EPJ A47 47F. Wielandet  al
+  //cout<<"load n antiK0 and p K+ decay channels"<<endl;
+  //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + Sigma", "Lambda1520", "pi0, Sigma0", 0.42);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Sigma", "Lambda1520", "pi0, pi0, Sigma0", 0.009);
+  //cout<<"load Sigma decay channel"<<endl;
+  //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Lambda", "Lambda1520", "pi0, pi0, Lambda", 0.033);
+  makeStaticData()->AddDecay("Lambda(1520) -->  rho[pi+ + pi-] + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
   cout<<"load pion decays channels"<<endl;
-  makeStaticData()->AddDecay("Lambda(1520) -->  gamma + Lambda", "Lambda1520", "g, Lambda", 0.0085);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  gamma + Lambda", "Lambda1520", "g, Lambda", 0.0085);
   //makeStaticData()->AddDecay("Lambda(1520) -->  Lambda + dilepton", "Lambda1520", "Lambda, dilepton", 0.0085 / 137. );
-  cout<<"load all decay channels"<<endl;
+  //cout<<"load all decay channels"<<endl;
 
   //makeStaticData()->AddDecay("Xi- -->  Lambda + pi", "Xi-", "Lambda, pi-", 1.);
   //newmodel = new PResonanceDalitz("Lambda1520_dalitz@Lambda1520_to_Lambda_dilepton","dgdm from Zetenyi/Wolf", -1);
@@ -66,13 +66,13 @@ void pluto_gen()
   pdm->SetVerbose(1);          // Print really useful info
   pdm->SetDefault("Lambda1520");
   PParticle *p = new PParticle("p",3.5);  // proton beam
-  PParticle *t = new PParticle("p");      // deuteron target
+  PParticle *t = new PParticle("p");      // proton target
   PParticle *s = new PParticle(*p +*t);  // composite quasiparticle
 
   c = new PDecayChannel;
   c->AddChannel(1,"p","K+","Lambda1520");
 
   pdm->InitReaction(s,c);
-  pdm->loop(1000,0,"pK+L1520",0,0,1,1,1);
+  pdm->loop(100000,0,"pK+L1520",0,0,1,1,1);
   //my_reaction1.Loop(1000);
 }
