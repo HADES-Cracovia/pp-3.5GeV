@@ -286,7 +286,7 @@ int draw_norm(void)
      9.26/1000*scale/(nsim*downscale),//SDpp
      29.45/1000*scale/(nsim*downscale),//LDpp
      5.6/1000*scale/(100*100000*downscale),//L(1520)pK+->Lpi+pi-pK+
-     (2.57+14.05+9.26+29.45)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
+     (2.57+14.05+9.26+29.45+5.0+3.5+2.3+14)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
     };
   double err[4]=
     {2.25/14.05,//S1385
@@ -389,6 +389,12 @@ int draw_norm(void)
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
+  hclean_L1520_ren_PipPim->Add(hclean_L1520_PipPim,1);
+  hclean_L1520_ren_PipPim->Scale((experiment_int-backgroud_int)/sig_int);
+  hclean_sum_ren_PipPim->Add(hclean_L1520_ren_PipPim,1);
+  hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
+
+  
   int rebin_res=2;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
   cRes->Divide(2,2);
@@ -632,6 +638,31 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*4,text7);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*7,text8);
 
+  TCanvas *cClean_ren_PipPim=new TCanvas("cClean_ren_PipPim","cClean_ren_PipPim");
+  hclean_experiment_PipPim->Draw("e1");
+    
+  //hclean_experiment->Rebin(rebin_pippim);
+  //hclean_background->SetLineColor(kRed);
+  //hclean_background->Rebin(rebin_pippim);
+  hclean_background_PipPim->Draw("samee2");
+  setHistogramStyleSimul(hclean_background_PipPim);
+  hclean_background_PipPim->SetFillStyle(3125);
+  
+  hclean_L1520_ren_PipPim->SetLineColor(kGreen+3);
+  hclean_L1520_ren_PipPim->Rebin(rebin_pippim);
+  setHistogramStyleSimul(hclean_L1520_ren_PipPim);
+  hclean_L1520_ren_PipPim->SetFillStyle(3154);
+  hclean_L1520_ren_PipPim->Draw("samee2");
+  
+
+  hclean_sum_ren_PipPim->Rebin(rebin_pippim);
+  hclean_sum_ren_PipPim->SetLineColor(kMagenta);
+  hclean_sum_ren_PipPim->SetFillColor(kMagenta);
+  setHistogramStyleSimul(hclean_sum_ren_PipPim);
+  hclean_sum_ren_PipPim->SetFillStyle(3145);
+  hclean_sum_ren_PipPim->Draw("samee2");
+  
+  
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
   hexperiment_SB_spectrum->SetAxisRange(1050,1250);
@@ -713,29 +744,110 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   fK0_experiment_sig->SetLineWidth(3);
 
   TCanvas* cL=new TCanvas("cL", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  TF1* L_sim_bg=new TF1("L_sim_bg","pol1(0)",1095,1135);
+  TF1* L_sim_sig_bg=new TF1("L_sim_sig_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol1(4)",1095,1135);
+  TF1* fL1116_experiment_fit_bg=new TF1("fL1116_experiment_fit_bg","pol2(0)",1095,1135);
+  fL1116_experiment_fit_bg->SetParameters(fL1116_experiment_fit->GetParameter(4),fL1116_experiment_fit->GetParameter(5),fL1116_experiment_fit->GetParameter(6));
+  L_sim_sig_bg->SetParameters(1494,1115,0.0004,5.4,47.3,-0.033);
   hexperiment_L->SetAxisRange(1080,1200);
   hexperiment_L->SetMinimum(0);
   hexperiment_L->Draw("e1");
   hsim_L->Draw("samee1");
   hsim_L->SetLineColor(kMagenta+1);
-  fL1116_experiment_fit->SetNpx(npx);
-  fL1116_experiment_sig->SetNpx(npx);
+  L_sim_bg->SetLineColor(kMagenta);
+  L_sim_bg->SetLineWidth(3);
+  L_sim_bg->SetLineStyle(2);
+  L_sim_sig_bg->SetLineColor(kMagenta);
+  L_sim_sig_bg->SetLineWidth(3);
+  L_sim_sig_bg->SetLineStyle(1);
+  L_sim_sig_bg->SetNpx(npx);
+
+  hsim_L->Fit(L_sim_sig_bg,"R");
+  L_sim_bg->SetParameters(L_sim_sig_bg->GetParameter(4),L_sim_sig_bg->GetParameter(5));
+  L_sim_bg->Draw("same");
+
+  //fL1116_experiment_sig->SetNpx(npx);
+  fL1116_experiment_fit->SetLineWidth(3);
+  fL1116_experiment_fit->SetLineColor(kBlue);
   fL1116_experiment_fit->Draw("same");
-  fL1116_experiment_sig->Draw("same");
-  fL1116_experiment_sig->SetLineWidth(3);
-  
+  //fL1116_experiment_sig->Draw("same");
+  //fL1116_experiment_sig->SetLineWidth(3);
+
+  fL1116_experiment_fit_bg->SetLineWidth(3);
+  fL1116_experiment_fit_bg->SetLineColor(kBlue);
+  fL1116_experiment_fit_bg->SetLineStyle(2);
+  fL1116_experiment_fit_bg->Draw("same");
+
+  TLatex *printFormula2 = new TLatex();
+  double high2=0.90;
+  char text9[10000];
+  char text10[10000];
+  char text11[10000];
+  sprintf(text9, "I_{exp}=#int_{1095}^{1135} S_{exp} = %.1f",fL1116_experiment_sig->Integral(1095,1135)/hsim_L->GetBinWidth(3));
+  sprintf(text10, "I_{simul}=#int_{1095}^{1135} S_{simul} = %.1f",(L_sim_sig_bg->Integral(1095,1135)-L_sim_bg->Integral(1095,1135))/hsim_L->GetBinWidth(3));
+  sprintf(text11, "I_{exp}/I_{simul} = %.2f",fL1116_experiment_sig->Integral(1095,1135)/(L_sim_sig_bg->Integral(1095,1135)-L_sim_bg->Integral(1095,1135)));
+  printFormula2->SetNDC();
+  printFormula2->SetTextFont(32);
+  printFormula2->SetTextColor(1);
+  printFormula2->SetTextSize(0.05);
+  printFormula2->SetTextAlign(13);
+  printFormula2->DrawLatex(0.6,high2, text9);
+  printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*4, text10);
+  printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*8 , text11);
+
   
   TCanvas* cK0=new TCanvas("cK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
+  TF1* K0_sim_bg=new TF1("K0_sim_bg","pol1(0)",450,550);
+  TF1* K0_sim_sig_bg=new TF1("K0_sim_sig_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol1(4)",450,550);
+  TF1* fK0_experiment_fit_bg=new TF1("fK0_experiment_fit_bg","pol2(0)",450,550);
+  fK0_experiment_fit_bg->SetParameters(fK0_experiment_fit->GetParameter(4),fK0_experiment_fit->GetParameter(5),fK0_experiment_fit->GetParameter(6));
+  K0_sim_sig_bg->SetParameters(1490,495,3.21,9.54,60.71,-0.1);
   hexperiemnt_K0->SetAxisRange(300,650);
   hexperiemnt_K0->SetMinimum(0);
   hexperiemnt_K0->Draw("e1");  
   hsim_K0->Draw("samee1");
   hsim_K0->SetLineColor(kMagenta+1);
-  fK0_experiment_sig->SetNpx(npx);
-  fK0_experiment_fit->SetNpx(npx);
+
+  K0_sim_bg->SetLineColor(kMagenta);
+  K0_sim_bg->SetLineWidth(4);
+  K0_sim_bg->SetLineStyle(2);
+  K0_sim_sig_bg->SetLineColor(kMagenta);
+  K0_sim_sig_bg->SetLineWidth(4);
+  K0_sim_sig_bg->SetLineStyle(1);
+  K0_sim_sig_bg->SetNpx(npx);
+
+  hsim_K0->Fit(K0_sim_sig_bg,"R");
+  K0_sim_bg->SetParameters(K0_sim_sig_bg->GetParameter(4),K0_sim_sig_bg->GetParameter(5));
+  K0_sim_bg->Draw("same");
+
+  fK0_experiment_fit->SetLineWidth(4);
+  fK0_experiment_fit->SetLineColor(kBlue);
   fK0_experiment_fit->Draw("same");
-  fK0_experiment_sig->Draw("same");
-  fK0_experiment_sig->SetLineWidth(3);
+  //fK0_experiment_sig->Draw("same");
+  //fK0_experiment_sig->SetLineWidth(3);
+
+  fK0_experiment_fit_bg->SetLineWidth(4);
+  fK0_experiment_fit_bg->SetLineColor(kBlue);
+  fK0_experiment_fit_bg->SetLineStyle(2);
+  fK0_experiment_fit_bg->Draw("same");
+
+  TLatex *printFormula3 = new TLatex();
+  double high3=0.90;
+  char text12[10000];
+  char text13[10000];
+  char text14[10000];
+  sprintf(text12, "I_{exp}=#int_{450}^{550} S_{exp} = %.1f",fK0_experiment_sig->Integral(450,550)/hsim_K0->GetBinWidth(3));
+  sprintf(text13, "I_{simul}=#int_{450}^{550} S_{simul} = %.1f",(K0_sim_sig_bg->Integral(450,550)-K0_sim_bg->Integral(450,550))/hsim_L->GetBinWidth(3));
+  sprintf(text14, "I_{exp}/I_{simul} = %.2f",fK0_experiment_sig->Integral(450,550)/(K0_sim_sig_bg->Integral(450,550)-K0_sim_bg->Integral(450,550)));
+  printFormula3->SetNDC();
+  printFormula3->SetTextFont(32);
+  printFormula3->SetTextColor(1);
+  printFormula3->SetTextSize(0.05);
+  printFormula3->SetTextAlign(13);
+  printFormula3->DrawLatex(0.6,high2, text12);
+  printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*4, text13);
+  printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*8 , text14);
+
   
   //save all
   TFile* output=new TFile("final_output.root","recreate");
@@ -785,6 +897,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   fVoigt->Write();
 
   cClean_ren->Write();
+  cClean_ren_PipPim->Write();
   cRes->Write();
   cRes_PipPim->Write();
   cClean->Write();

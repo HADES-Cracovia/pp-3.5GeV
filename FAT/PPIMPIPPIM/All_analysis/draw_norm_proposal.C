@@ -127,6 +127,20 @@ void scale_error(TH1* hist, double err,bool verbose=0)
   
 }
 
+void scale(TH1* hist,double sc)
+{
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      //double scale=1.0/(3.13 * TMath::Power(10,8)) *1000; /*to get micro barn*/
+      double binErr=hist->GetBinError(j);
+      hist->SetBinContent(j, hist->GetBinContent(j)*sc);
+      //hist->SetBinError( j, TMath::Sqrt( hist->GetBinContent(j) ) );
+      hist->SetBinError(j, binErr*sc);
+      //hist->GetYaxis()->SetTitle("#frac{dN}{dE} [#frac{#mu b}{MeV}]");
+    }
+
+}  
+
 
 void normalize(TH1* hist)
 {
@@ -286,7 +300,7 @@ int draw_norm_proposal(void)
   //double nsim=40*TMath::Power(10,6);//number of simulated events
   double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
-  double downscale=1;//trigger downscale for simulated events
+  double downscale=3;//trigger downscale for simulated events comensate by sim_factor
   double sim_factor=3*14.3e2;//factor caused by ek=4.5, 3 because lack of trigger down scale
   double cs[5]=
     {14.05/1000*scale/(nsim*downscale)*sim_factor,//S1385
@@ -304,22 +318,35 @@ int draw_norm_proposal(void)
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
 
-  hS1385_background->Scale(cs[0]);
-  hSDpp_background->Scale(cs[1]);
-  hLDpp_background->Scale(cs[2]);
-  hL1520_background->Scale(cs[3]);
-  hS1385_hMPipPim_background->Scale(cs[0]);
-  hSDpp_hMPipPim_background->Scale(cs[1]);
-  hLDpp_hMPipPim_background->Scale(cs[2]);
-  hL1520_hMPipPim_background->Scale(cs[3]);
-  hsim_L->Scale(cs[4]);
-  hsim_K0->Scale(cs[4]);
+  hS1385_background->Sumw2();
+  hSDpp_background->Sumw2();
+  hLDpp_background->Sumw2();
+  hL1520_background->Sumw2();
+  hS1385_hMPipPim_background->Sumw2();
+  hSDpp_hMPipPim_background->Sumw2();
+  hLDpp_hMPipPim_background->Sumw2();
+  hL1520_hMPipPim_background->Sumw2();
+  //hsim_L->Sumw2();
+  //hsim_K0->Sumw2();
+
+  
+  scale(hS1385_background,cs[0]);
+  scale(hSDpp_background,cs[1]);
+  scale(hLDpp_background,cs[2]);
+  scale(hL1520_background,cs[3]);
+  scale(hS1385_hMPipPim_background,cs[0]);
+  scale(hSDpp_hMPipPim_background,cs[1]);
+  scale(hLDpp_hMPipPim_background,cs[2]);
+  scale(hL1520_hMPipPim_background,cs[3]);
+  scale(hsim_L,cs[4]);
+  scale(hsim_K0,cs[4]);
 
   /*  hS1385_background->Sumw2();
   hSDpp_background->Sumw2();
   hLDpp_background->Sumw2();
   hL1520_background->Sumw2();
   */
+  /*
   scale_error(hS1385_background,err[0]);
   scale_error(hSDpp_background,err[1]);
   scale_error(hLDpp_background,err[2]);
@@ -328,22 +355,32 @@ int draw_norm_proposal(void)
   scale_error(hSDpp_hMPipPim_background,err[1]);
   scale_error(hLDpp_hMPipPim_background,err[2]);
   scale_error(hL1520_hMPipPim_background,err[3]);
+  */
+ hS1385_data->Sumw2();
+  hSDpp_data->Sumw2();
+  hLDpp_data->Sumw2();
+  hL1520_data->Sumw2();
+  hS1385_hMPipPim_signal->Sumw2();
+  hSDpp_hMPipPim_signal->Sumw2();
+  hLDpp_hMPipPim_signal->Sumw2();
+  hL1520_hMPipPim_signal->Sumw2();
+ 
   
-  
-  hS1385_data->Scale(cs[0]);
-  hSDpp_data->Scale(cs[1]);
-  hLDpp_data->Scale(cs[2]);
-  hL1520_data->Scale(cs[3]);
-  hS1385_hMPipPim_signal->Scale(cs[0]);
-  hSDpp_hMPipPim_signal->Scale(cs[1]);
-  hLDpp_hMPipPim_signal->Scale(cs[2]);
-  hL1520_hMPipPim_signal->Scale(cs[3]);
+  scale(hS1385_data,cs[0]);
+  scale(hSDpp_data,cs[1]);
+  scale(hLDpp_data,cs[2]);
+  scale(hL1520_data,cs[3]);
+  scale(hS1385_hMPipPim_signal,cs[0]);
+  scale(hSDpp_hMPipPim_signal,cs[1]);
+  scale(hLDpp_hMPipPim_signal,cs[2]);
+  scale(hL1520_hMPipPim_signal,cs[3]);
   /*
   hS1385_data->Sumw2();
   hSDpp_data->Sumw2();
   hLDpp_data->Sumw2();
   hL1520_data->Sumw2();
   */
+  /*
   scale_error(hS1385_data,err[0]);
   scale_error(hSDpp_data,err[1]);
   scale_error(hLDpp_data,err[2]);
@@ -352,7 +389,7 @@ int draw_norm_proposal(void)
   scale_error(hSDpp_hMPipPim_signal,err[1]);
   scale_error(hLDpp_hMPipPim_signal,err[2]);
   scale_error(hL1520_hMPipPim_signal,err[3]);
-    
+  */
   hsum_background->Add(hS1385_background);
   hsum_background->Add(hSDpp_background);
   hsum_background->Add(hLDpp_background);
@@ -870,7 +907,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
 
   
   //save all
-  TFile* output=new TFile("final_output.root","recreate");
+  TFile* output=new TFile("final_output_proposal.root","recreate");
 
   hS1385_data->Write();
   hSDpp_data->Write();

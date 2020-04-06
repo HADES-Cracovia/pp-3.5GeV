@@ -2,7 +2,7 @@
 #include "createHistos.h"
 #include <TCutG.h>
 #include <TH2.h>
-#include <TStyle.h>
+//#include <TSyle.h>
 #include <TCanvas.h>
 #include <TMath.h>
 #include <TGraphErrors.h>
@@ -13,6 +13,17 @@
 #include <TLine.h>
 
 using namespace std;
+void scale(TH1F* hist, double s)
+{
+  //hist->Scale(s);
+
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      hist->SetBinContent( j, hist->GetBinContent(j)*s );
+      hist->SetBinError( j, hist->GetBinError(j)*s );
+    }
+
+}
 
 void createHistos::Loop(char* output)
 {
@@ -171,7 +182,7 @@ void createHistos::Loop(char* output)
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||p_theta>20 //to clean up proton sample
-	 //||dist_pip_pim>15
+	 //||dist_pip_pim>5
 	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
 	 //||dist_ver_to_ver<14
@@ -183,19 +194,20 @@ void createHistos::Loop(char* output)
 	{
 	  data->Fill(m_inv_p_pim_pip_pim);
 	  miss_m_vs_pip_pim->Fill(miss_mass_kp,m_inv_pip_pim);	  
-	  hMPipPim_signal->Fill(m_inv_pip_pim);
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_signal->Fill(m_inv_pip_pim);
 	}
 
       if(m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
 	{
 	  background->Fill(m_inv_p_pim_pip_pim);
-	  //if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
 	    hMPipPim_background->Fill(m_inv_pip_pim);
 	}
       if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
 	{
 	  background->Fill(m_inv_p_pim_pip_pim);
-	  //if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
 	    hMPipPim_background->Fill(m_inv_pip_pim);
 	
 	}
@@ -240,8 +252,8 @@ void createHistos::Loop(char* output)
   cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
   cout<<"all in signal range: "<<intAll<<endl;
 
-  background->Scale(intB/intsideband);
-  hMPipPim_background->Scale(intB/intsideband);
+  scale(background,intB/intsideband);
+  scale(hMPipPim_background,intB/intsideband);
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);

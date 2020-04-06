@@ -1,6 +1,6 @@
 void pluto_gen()
 {
-  //makeDistributionManager();
+  makeDistributionManager();
   //gSystem->CompileMacro("PHadesAcc.C");
   //makeDistributionManager()->Disable("helicity_angles");
   //makeDistributionManager()->Exec("elementary");
@@ -29,7 +29,7 @@ void pluto_gen()
   //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Sigma", "Lambda1520", "pi0, pi0, Sigma0", 0.009);
   //cout<<"load Sigma decay channel"<<endl;
   //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Lambda", "Lambda1520", "pi0, pi0, Lambda", 0.033);
-  makeStaticData()->AddDecay("Lambda(1520) -->  rho[pi+ + pi-] + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
+  makeStaticData()->AddDecay("Lambda(1520) ->  rho0 [pi+ + pi-] + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
   cout<<"load pion decays channels"<<endl;
   //makeStaticData()->AddDecay("Lambda(1520) -->  gamma + Lambda", "Lambda1520", "g, Lambda", 0.0085);
   //makeStaticData()->AddDecay("Lambda(1520) -->  Lambda + dilepton", "Lambda1520", "Lambda, dilepton", 0.0085 / 137. );
