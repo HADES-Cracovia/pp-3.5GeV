@@ -82,17 +82,17 @@ namespace PATData {
   extern Bool_t PositronPositron;
 
   extern TLorentzVector *p;
-  extern TLorentzVector *pi, *em, *pim, *ep;
+  extern TLorentzVector *pi, *em, *pim, *ep, *ep1, *ep2, *em1, *em2;
   extern TLorentzVector *beam, *miss;
   extern TLorentzVector *proj;
   extern TLorentzVector *targ;
   extern TLorentzVector *gammappi;
-  extern TLorentzVector *gammapep;
+  extern TLorentzVector *gammapep,*gammapep1,*gammapep2;
   extern TLorentzVector *gammappim;
-  extern TLorentzVector *gammapem;
-  extern TLorentzVector *gammaemep;
-  extern TLorentzVector *gammapimep;
-  extern TLorentzVector *gammappimepem;
+  extern TLorentzVector *gammapem,*gammapem1,*gammapem2;
+  extern TLorentzVector *gammaemep,*gammaem1em2,*gammaep1ep2;
+  extern TLorentzVector *gammapimep,*gammapimep1;
+  extern TLorentzVector *gammappimepem,*gammappimep1ep2,*gammappimem1em2;
   extern TLorentzVector *ppi;
   extern TLorentzVector *ppi_miss;
   extern TLorentzVector *p_delta;

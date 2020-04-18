@@ -35,8 +35,8 @@ void AnalizaRho::Loop()
   TH1F *hparticlePID=new TH1F("hparticlePID","PID for all particles;pid",50,0,50);
   TH1F *hparticlePID_L1520=new TH1F("hparticlePID_L1520","PID for particles from L1520;pid",50,0,50);
   TH1F *hparticlePID_reaction=new TH1F("hparticlePID_reaction","PID for particles from primary vertex;pid",50,0,50);
-  TH1F *hMInvLPipPim=new TH1F("hMInvLPipPim","Invariant mass #Lambda #pi^{+} #pi^{-};M^{inv}_{#pi^{+} #pi^{-} #Lambda}[GeV]",500,1000,2000);
-  TH1F *hMInvPipPim=new TH1F("hMInvPipPim","Invariant mass #pi^{+} #pi^{-};M^{inv}_{#pi^{+} #pi^{-}}[GeV]",500,0,500);
+  TH1F *hMInvLPipPim=new TH1F("hMInvLPipPim","Invariant mass #Lambda #pi^{+} #pi^{-};M^{inv}_{#pi^{+} #pi^{-} #Lambda}[GeV]",500,1,2);
+  TH1F *hMInvPipPim=new TH1F("hMInvPipPim","Invariant mass #pi^{+} #pi^{-};M^{inv}_{#pi^{+} #pi^{-}}[GeV]",500,0,0.5);
     
   Long64_t nentries = fChain->GetEntries();
 
@@ -46,7 +46,7 @@ void AnalizaRho::Loop()
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      if(jentry % 100==0)
+      if(jentry % 1000==0)
 	{
 	  cout<<(100.0*jentry)/(1.0*nentries)<<"%"<<endl;
 	  //cout<<"nentries= "<<nentries<<endl;

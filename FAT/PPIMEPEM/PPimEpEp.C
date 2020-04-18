@@ -1,5 +1,5 @@
-#include "PPimEpEm.h"
-//#include "PPimEpEm_buffer.h"
+#include "PPimEpEp.h"
+//#include "PPimEpEp_buffer.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -13,7 +13,7 @@
 using namespace std;
 using namespace PATData;
 
-void PPimEpEm::Loop()
+void PPimEpEp::Loop()
 {
   int licznik = 0;
   if (fChain == 0) return;
@@ -56,84 +56,84 @@ void PPimEpEm::Loop()
 	  TVector3 v1, v2, v3, v4, v5;
 	  v2.SetXYZ(F*p_p*sin(D2R*p_theta)*cos(D2R*p_phi),F*p_p*sin(D2R*p_theta)*sin(D2R*p_phi),F*p_p*cos(D2R*p_theta));
 	  v3.SetXYZ(F*pim_p*sin(D2R*pim_theta)*cos(D2R*pim_phi),F*pim_p*sin(D2R*pim_theta)*sin(D2R*pim_phi),F*pim_p*cos(D2R*pim_theta));
-	  v4.SetXYZ(F*ep_p*sin(D2R*ep_theta)*cos(D2R*ep_phi),F*ep_p*sin(D2R*ep_theta)*sin(D2R*ep_phi),F*ep_p*cos(D2R*ep_theta));
-	  v5.SetXYZ(F*em_p*sin(D2R*em_theta)*cos(D2R*em_phi),F*em_p*sin(D2R*em_theta)*sin(D2R*em_phi),F*em_p*cos(D2R*em_theta));
+	  v4.SetXYZ(F*ep1_p*sin(D2R*ep1_theta)*cos(D2R*ep1_phi),F*ep1_p*sin(D2R*ep1_theta)*sin(D2R*ep1_phi),F*ep1_p*cos(D2R*ep1_theta));
+	  v5.SetXYZ(F*ep2_p*sin(D2R*ep2_theta)*cos(D2R*ep2_phi),F*ep2_p*sin(D2R*ep2_theta)*sin(D2R*ep2_phi),F*ep2_p*cos(D2R*ep2_theta));
 
 	  p->SetVectM( v2, 938.272013 );
 	  pim->SetVectM( v3, 139.57018 );
-	  ep->SetVectM( v4, 0.51099894 );
-	  em->SetVectM( v5, 0.51099894 );
+	  ep1->SetVectM( v4, 0.51099894 );
+	  ep2->SetVectM( v5, 0.51099894 );
 
-	  *gammapep = *p + *ep;
+	  *gammapep1 = *p + *ep1;
 	  *gammappim = *p + *pim;
-	  *gammapem = *p + *em;
-	  *gammapimep= *pim + *ep;
-	  *gammaemep= *em + *ep;
-	  *gammappimepem=*pim +*em + *ep + *p;
-	  *miss=*beam-*gammappimepem;
+	  *gammapep2 = *p + *ep2;
+	  *gammapimep1= *pim + *ep1;
+	  *gammaep2ep1= *ep2 + *ep1;
+	  *gammappimep1ep2=*pim +*ep2 + *ep1 + *p;
+	  *miss=*beam-*gammappimep1ep2;
 
 	  
 	  Float_t m_inv_ppim = gammappim->M();
-	  Float_t m_inv_pem = gammapem->M();
-	  Float_t m_inv_eppim = gammapimep->M();
-	  Float_t m_inv_epem = gammaemep->M();
-	  Float_t m_inv_ppimepem = gammappimepem->M();
+	  Float_t m_inv_pep2 = gammapep2->M();
+	  Float_t m_inv_ep1pim = gammapimep1->M();
+	  Float_t m_inv_ep1ep2 = gammaep2ep1->M();
+	  Float_t m_inv_ppimep1ep2 = gammappimep1ep2->M();
 	  Float_t oa = R2D * openingangle(*p, *pim);
 	  //Float_t oa_rich = R2D * openingangle(r1, r2);
 
 	  Float_t p_mass = p_p*p_p * (  1. / (p_beta*p_beta)  - 1. ) ;
 	  Float_t pi_mass = pim_p*pim_p * (  1. / (pim_beta*pim_beta_new)  - 1. ) ;
-	  Float_t ep_mass = ep_p*ep_p * (  1. / (ep_beta*ep_beta_new)  - 1. ) ;
+	  Float_t ep1_mass = ep1_p*ep1_p * (  1. / (ep1_beta*ep1_beta_new)  - 1. ) ;
 	  Float_t pim_mass = pim_p*pim_p * (  1. / (pim_beta*pim_beta_new)  - 1. ) ;
-	  Float_t em_mass = em_p*em_p * (  1. / (em_beta*em_beta_new)  - 1. ) ;
+	  Float_t ep2_mass = ep2_p*ep2_p * (  1. / (ep2_beta*ep2_beta_new)  - 1. ) ;
 
 	  TVector3 ver_p_pim=vertex(p_r,p_z,*p,pim_r,pim_z,*pim);
-	  TVector3 ver_p_em=vertex(p_r,p_z,*p,em_r,em_z,*em);
-	  TVector3 ver_ep_pim=vertex(ep_r,ep_z,*ep,pim_r,pim_z,*pim);
-	  TVector3 ver_ep_em=vertex(ep_r,ep_z,*ep,em_r,em_z,*em);
+	  TVector3 ver_p_ep2=vertex(p_r,p_z,*p,ep2_r,ep2_z,*ep2);
+	  TVector3 ver_ep1_pim=vertex(ep1_r,ep1_z,*ep1,pim_r,pim_z,*pim);
+	  TVector3 ver_ep1_ep2=vertex(ep1_r,ep1_z,*ep1,ep2_r,ep2_z,*ep2);
 
-	  TVector3 ver_to_ver=ver_p_pim-ver_ep_em;
-	  //TVector3 ver_to_ver_2=ver_p_em-ver_ep_pim;
+	  TVector3 ver_to_ver=ver_p_pim-ver_ep1_ep2;
+	  //TVector3 ver_to_ver_2=ver_p_ep2-ver_ep1_pim;
 
 	  Float_t oa_pim_p=R2D*openingangle(pim->Vect(),p->Vect());
-	  Float_t oa_em_p=R2D*openingangle(em->Vect(),p->Vect());
-	  Float_t oa_ep_p=R2D*openingangle(ep->Vect(),p->Vect());
-	  Float_t oa_pim_em=R2D*openingangle(pim->Vect(),em->Vect());
-	  Float_t oa_pim_ep=R2D*openingangle(pim->Vect(),ep->Vect());
-	  Float_t oa_em_ep=R2D*openingangle(em->Vect(),ep->Vect());
+	  Float_t oa_ep2_p=R2D*openingangle(ep2->Vect(),p->Vect());
+	  Float_t oa_ep1_p=R2D*openingangle(ep1->Vect(),p->Vect());
+	  Float_t oa_pim_ep2=R2D*openingangle(pim->Vect(),ep2->Vect());
+	  Float_t oa_pim_ep1=R2D*openingangle(pim->Vect(),ep1->Vect());
+	  Float_t oa_ep2_ep1=R2D*openingangle(ep2->Vect(),ep1->Vect());
                   
 	  Float_t oa_lambda=R2D*openingangle(ver_to_ver,gammappim->Vect());
-	  //Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammapem->Vect());
+	  //Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammapep2->Vect());
       
 	  Float_t dist_p_pim=trackDistance(p_r,p_z,*p,pim_r,pim_z,*pim);
-	  Float_t dist_p_em=trackDistance(p_r,p_z,*p,em_r,em_z,*em);
-	  Float_t dist_ep_pim=trackDistance(ep_r,ep_z,*ep,pim_r,pim_z,*pim);
-	  Float_t dist_ep_em=trackDistance(ep_r,ep_z,*ep,em_r,em_z,*em);
-	  Float_t dist_lambda_ep=trackDistance(ep_r,ep_z,*ep,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
-	  //Float_t dist_lambda2_ep=trackDistance(ep_r,ep_z,*ep,ver_p_em.Z(),getR(ver_p_em),*gammapem);
-	  Float_t dist_lambda_em=trackDistance(em_r,em_z,*em,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
-	  //Float_t dist_lambda2_pim=trackDistance(pim_r,pim_z,*pim,ver_p_em.Z(),getR(ver_p_em),*gammapem);
+	  Float_t dist_p_ep2=trackDistance(p_r,p_z,*p,ep2_r,ep2_z,*ep2);
+	  Float_t dist_ep1_pim=trackDistance(ep1_r,ep1_z,*ep1,pim_r,pim_z,*pim);
+	  Float_t dist_ep1_ep2=trackDistance(ep1_r,ep1_z,*ep1,ep2_r,ep2_z,*ep2);
+	  Float_t dist_lambda_ep1=trackDistance(ep1_r,ep1_z,*ep1,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
+	  //Float_t dist_lambda2_ep1=trackDistance(ep1_r,ep1_z,*ep1,ver_p_ep2.Z(),getR(ver_p_ep2),*gammapep2);
+	  Float_t dist_lambda_ep2=trackDistance(ep2_r,ep2_z,*ep2,getR(ver_p_pim),ver_p_pim.Z(),*gammappim);
+	  //Float_t dist_lambda2_pim=trackDistance(pim_r,pim_z,*pim,ver_p_ep2.Z(),getR(ver_p_ep2),*gammapep2);
 	  Float_t dist_ver_to_ver=ver_to_ver.Mag();
 	  //Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       
 
 	  //cout<<"p pim dist from main part:"<<dist_p_pim<<endl;
 	  Float_t dist_lambda_eVert=trackToPoint(ver_p_pim,gammappim->Vect(),eVert);
-	  //Float_t dist_lambda2_eVert=trackToPoint(ver_p_em,gammapem->Vect(),eVert);;
-	  Float_t dist_lambda_ver_ep_em=trackToPoint(ver_p_pim,gammappim->Vect(),ver_ep_em);;
-	  //Float_t dist_lambda2_ver_ep_pim=trackToPoint(ver_p_em,gammapem->Vect(),ver_ep_pim);;
+	  //Float_t dist_lambda2_eVert=trackToPoint(ver_p_ep2,gammapep2->Vect(),eVert);;
+	  Float_t dist_lambda_ver_ep1_ep2=trackToPoint(ver_p_pim,gammappim->Vect(),ver_ep1_ep2);;
+	  //Float_t dist_lambda2_ver_ep1_pim=trackToPoint(ver_p_ep2,gammapep2->Vect(),ver_ep1_pim);;
 
 	  Float_t dist_p_eVert=trackToPoint(ver_p_pim,p->Vect(),eVert);
-	  //Float_t dist_p2_eVert=trackToPoint(ver_p_em,p->Vect(),eVert);
+	  //Float_t dist_p2_eVert=trackToPoint(ver_p_ep2,p->Vect(),eVert);
 	  Float_t dist_pim_eVert=trackToPoint(ver_p_pim,pim->Vect(),eVert);
-	  //Float_t dist_em_eVert=trackToPoint(ver_p_em,em->Vect(),eVert);
+	  //Float_t dist_ep2_eVert=trackToPoint(ver_p_ep2,ep2->Vect(),eVert);
   	    
 	  Float_t lambda_mom_z;
 	  TLorentzVector lorentz_lambda1115;
 	  TLorentzVector lorentz_k0;
 
 	  lorentz_lambda1115=*gammappim;
-	  lorentz_k0=*gammaemep;
+	  lorentz_k0=*gammaep2ep1;
 	  dist_lambda_eVert=dist_lambda_eVert;
 	  lambda_mom_z=gammappim->Z();
 	  
@@ -182,20 +182,20 @@ void PPimEpEm::Loop()
 	  //(*tlo)["p_sim_vertex_y"]=p_sim_vertexy;
 	  //(*tlo)["p_sim_vertex_z"]=p_sim_vertexz;
 	  
-	  (*tlo)["ep_p"]=ep_p;
-	  (*tlo)["ep_theta"] = ep_theta;
-	  (*tlo)["ep_phi"] = ep_phi;
-	  (*tlo)["ep_beta"] = ep_beta_new;
-	  (*tlo)["ep_m"] = ep_mass;
-	  (*tlo)["ep_dedx"]=ep_dedx_mdc;
-	  (*tlo)["ep_q"]=ep_q;
+	  (*tlo)["ep1_p"]=ep1_p;
+	  (*tlo)["ep1_theta"] = ep1_theta;
+	  (*tlo)["ep1_phi"] = ep1_phi;
+	  (*tlo)["ep1_beta"] = ep1_beta_new;
+	  (*tlo)["ep1_m"] = ep1_mass;
+	  (*tlo)["ep1_dedx"]=ep1_dedx_mdc;
+	  (*tlo)["ep1_q"]=ep1_q;
 	  
-	  //(*tlo)["ep_sim_p"]=ep_sim_p;
-	  //(*tlo)["ep_sim_id"]=ep_sim_id;
-	  //(*tlo)["ep_sim_parentid"]=ep_sim_parentid;
-	  //(*tlo)["ep_sim_vertex_x"]=ep_sim_vertexx;
-	  //(*tlo)["ep_sim_vertex_y"]=ep_sim_vertexy;
-	  //(*tlo)["ep_sim_vertex_z"]=ep_sim_vertexz;
+	  //(*tlo)["ep1_sim_p"]=ep1_sim_p;
+	  //(*tlo)["ep1_sim_id"]=ep1_sim_id;
+	  //(*tlo)["ep1_sim_parentid"]=ep1_sim_parentid;
+	  //(*tlo)["ep1_sim_vertex_x"]=ep1_sim_vertexx;
+	  //(*tlo)["ep1_sim_vertex_y"]=ep1_sim_vertexy;
+	  //(*tlo)["ep1_sim_vertex_z"]=ep1_sim_vertexz;
 	  
 	  
 	  (*tlo)["pim_p"]=pim_p;
@@ -214,91 +214,91 @@ void PPimEpEm::Loop()
 	  //(*tlo)["pim_sim_vertex_z"]=pim_sim_vertexz;
 	  
 	  
-	  (*tlo)["em_p"]=em_p;
-	  (*tlo)["em_theta"] = em_theta;
-	  (*tlo)["em_phi"] = em_phi;
-	  (*tlo)["em_beta"] = em_beta_new;
-	  (*tlo)["em_m"] = em_mass;
-	  (*tlo)["em_dedx"]=em_dedx_mdc;
-	  (*tlo)["em_q"]=em_q;
+	  (*tlo)["ep2_p"]=ep2_p;
+	  (*tlo)["ep2_theta"] = ep2_theta;
+	  (*tlo)["ep2_phi"] = ep2_phi;
+	  (*tlo)["ep2_beta"] = ep2_beta_new;
+	  (*tlo)["ep2_m"] = ep2_mass;
+	  (*tlo)["ep2_dedx"]=ep2_dedx_mdc;
+	  (*tlo)["ep2_q"]=ep2_q;
 	  
-	  //(*tlo)["em_sim_p"]=em_sim_p;
-	  //(*tlo)["em_sim_id"]=em_sim_id;
-	  //(*tlo)["em_sim_parentid"]=em_sim_parentid;
-	  //(*tlo)["em_sim_vertex_x"]=em_sim_vertexx;
-	  //(*tlo)["em_sim_vertex_y"]=em_sim_vertexy;
-	  //(*tlo)["em_sim_vertex_z"]=em_sim_vertexz;
+	  //(*tlo)["ep2_sim_p"]=ep2_sim_p;
+	  //(*tlo)["ep2_sim_id"]=ep2_sim_id;
+	  //(*tlo)["ep2_sim_parentid"]=ep2_sim_parentid;
+	  //(*tlo)["ep2_sim_vertex_x"]=ep2_sim_vertexx;
+	  //(*tlo)["ep2_sim_vertex_y"]=ep2_sim_vertexy;
+	  //(*tlo)["ep2_sim_vertex_z"]=ep2_sim_vertexz;
 	  	  
 	  //(*tlo)["pim_sim_id"]=pim_sim_id;
 	  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
 
-	  (*tlo)["dist_ep_pim"]=dist_ep_pim;
-	  (*tlo)["dist_ep_em"] = dist_ep_em;
-	  (*tlo)["dist_ep_pim"] = dist_ep_pim;
+	  (*tlo)["dist_ep1_pim"]=dist_ep1_pim;
+	  (*tlo)["dist_ep1_ep2"] = dist_ep1_ep2;
+	  (*tlo)["dist_ep1_pim"] = dist_ep1_pim;
 	  (*tlo)["dist_p_pim"] = dist_p_pim;
-	  (*tlo)["dist_p_em"] = dist_p_em;
+	  (*tlo)["dist_p_ep2"] = dist_p_ep2;
 	  (*tlo)["dist_p_pim"] = dist_p_pim;
-	  (*tlo)["dist_lambda_em"] = dist_lambda_em;
-	  //(*tlo)["dist_lambda1_ep"] = dist_lambda1_ep;
+	  (*tlo)["dist_lambda_ep2"] = dist_lambda_ep2;
+	  //(*tlo)["dist_lambda1_ep1"] = dist_lambda1_ep1;
 	  //(*tlo)["dist_lambda_pim"] = dist_lambda_pim;
-	  (*tlo)["dist_lambda_ep"] = dist_lambda_ep;
+	  (*tlo)["dist_lambda_ep1"] = dist_lambda_ep1;
 	  (*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
 	  //(*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
 	  //(*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
 	  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-	  (*tlo)["dist_lambda_ver_ep_em"]=dist_lambda_ver_ep_em;
-	  //(*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
+	  (*tlo)["dist_lambda_ver_ep1_ep2"]=dist_lambda_ver_ep1_ep2;
+	  //(*tlo)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
 	  //(*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
-	  //(*tlo)["dist_lambda2_ver_ep_pim"]=dist_lambda2_ver_ep_pim;
+	  //(*tlo)["dist_lambda2_ver_ep1_pim"]=dist_lambda2_ver_ep1_pim;
 	  //(*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-	  //(*tlo)["dist_lambda_ver_ep_pim"]=dist_lambda_ver_ep_pim;
+	  //(*tlo)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
 	  (*tlo)["dist_p_eVert"]=dist_p_eVert;
 	  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
 	  //(*tlo)["dist_p2_eVert"]=dist_p2_eVert;
-	  //(*tlo)["dist_em_eVert"]=dist_em_eVert;
+	  //(*tlo)["dist_ep2_eVert"]=dist_ep2_eVert;
 	  //(*tlo)["dist_p_eVert"]=dist_p_eVert;
 	  //(*tlo)["dist_pim_eVert"]=dist_pim_eVert;
   
 
   
 	  (*tlo)["m_inv_p_pim"] = m_inv_ppim;
-	  (*tlo)["m_inv_p_em"] = m_inv_pem;
+	  (*tlo)["m_inv_p_ep2"] = m_inv_pep2;
 	  
-	  //(*tlo)["m_inv_p_pim_em"]=m_inv_ppimem;
-	  //(*tlo)["m_inv_p_pim_ep"]=m_inv_ppimep;
+	  //(*tlo)["m_inv_p_pim_ep2"]=m_inv_ppimep2;
+	  //(*tlo)["m_inv_p_pim_ep1"]=m_inv_ppimep1;
 
-	  (*tlo)["m_inv_ep_pim"] = m_inv_eppim;
-	  (*tlo)["m_inv_ep_em"] = m_inv_epem;
-	  //(*tlo)["m_inv_ep_pim"] = m_inv_eppim;
-	  (*tlo)["m_inv_p_pim_ep_em"] = m_inv_ppimepem;
-	  //(*tlo)["m_inv_p_ep"] = m_inv_pep;
+	  (*tlo)["m_inv_ep1_pim"] = m_inv_ep1pim;
+	  (*tlo)["m_inv_ep1_ep2"] = m_inv_ep1ep2;
+	  //(*tlo)["m_inv_ep1_pim"] = m_inv_ep1pim;
+	  (*tlo)["m_inv_p_pim_ep1_ep2"] = m_inv_ppimep1ep2;
+	  //(*tlo)["m_inv_p_ep1"] = m_inv_pep1;
   
 	  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
 	  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
 	  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
 
-	  (*tlo)["ver_p_em_x"]=ver_p_em.X();
-	  (*tlo)["ver_p_em_y"]=ver_p_em.Y();
-	  (*tlo)["ver_p_em_z"]=ver_p_em.Z();
+	  (*tlo)["ver_p_ep2_x"]=ver_p_ep2.X();
+	  (*tlo)["ver_p_ep2_y"]=ver_p_ep2.Y();
+	  (*tlo)["ver_p_ep2_z"]=ver_p_ep2.Z();
 
-	  (*tlo)["ver_ep_pim_x"]=ver_ep_pim.X();
-	  (*tlo)["ver_ep_pim_y"]=ver_ep_pim.Y();
-	  (*tlo)["ver_ep_pim_z"]=ver_ep_pim.Z();
+	  (*tlo)["ver_ep1_pim_x"]=ver_ep1_pim.X();
+	  (*tlo)["ver_ep1_pim_y"]=ver_ep1_pim.Y();
+	  (*tlo)["ver_ep1_pim_z"]=ver_ep1_pim.Z();
 
-	  (*tlo)["ver_ep_em_x"]=ver_ep_em.X();
-	  (*tlo)["ver_ep_em_y"]=ver_ep_em.Y();
-	  (*tlo)["ver_ep_em_z"]=ver_ep_em.Z();
+	  (*tlo)["ver_ep1_ep2_x"]=ver_ep1_ep2.X();
+	  (*tlo)["ver_ep1_ep2_y"]=ver_ep1_ep2.Y();
+	  (*tlo)["ver_ep1_ep2_z"]=ver_ep1_ep2.Z();
 
 	  (*tlo)["oa_lambda"]=oa_lambda;
 	  //(*tlo)["oa_lambda_2"]=oa_lambda_2;
 	  //(*tlo)["oa_lambda"]=oa_lambda;
 	  (*tlo)["oa_pim_p"]=oa_pim_p;
-	  (*tlo)["oa_em_p"]=oa_em_p;
+	  (*tlo)["oa_ep2_p"]=oa_ep2_p;
 	  //(*tlo)["oa_pim_p"]=oa_p_pim;
-	  (*tlo)["oa_ep_p"]=oa_ep_p;
-	  (*tlo)["oa_pim_em"]=oa_pim_em;
-	  (*tlo)["oa_pim_ep"]=oa_pim_ep;
-	  (*tlo)["oa_em_ep"]=oa_em_ep;
+	  (*tlo)["oa_ep1_p"]=oa_ep1_p;
+	  (*tlo)["oa_pim_ep2"]=oa_pim_ep2;
+	  (*tlo)["oa_pim_ep1"]=oa_pim_ep1;
+	  (*tlo)["oa_ep2_ep1"]=oa_ep2_ep1;
 	 
 	  (*tlo)["lambda_mom_z"]=lambda_mom_z;
 	  (*tlo)["simon_cuts"]=simon_cut;
@@ -321,7 +321,7 @@ void PPimEpEm::Loop()
 	}
     }
 }
-PPimEpEm::PPimEpEm(TTree *tree)
+PPimEpEp::PPimEpEp(TTree *tree)
 {
   // if parameter tree is not specified (or zero), connect the file
   // used to generate this class and read the Tree.
@@ -335,21 +335,21 @@ PPimEpEm::PPimEpEm(TTree *tree)
     Init(tree);*/
   if (tree == 0)
     {
-      TChain * chain = new TChain("PPimEpEm_ID","");
+      TChain * chain = new TChain("PPimEpEp_ID","");
       
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton00.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton02.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton03.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton04.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton05.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton06.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton07.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton08.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton09.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton10.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton11.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton12.root/PPimEpEm_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton01.root/PPimEpEm_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton00.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton02.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton03.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton04.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton05.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton06.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton07.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton08.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton09.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton10.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton11.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton12.root/PPimEpEp_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton01.root/PPimEpEp_ID");
       
       
       tree = chain;
@@ -358,19 +358,19 @@ PPimEpEm::PPimEpEm(TTree *tree)
   Init(tree);
 }
 
-PPimEpEm::~PPimEpEm()
+PPimEpEp::~PPimEpEp()
 {
   if (!fChain) return;
   delete fChain->GetCurrentFile();
 }
 
-Int_t PPimEpEm::GetEntry(Long64_t entry)
+Int_t PPimEpEp::GetEntry(Long64_t entry)
 {
   // Read contents of entry.
   if (!fChain) return 0;
   return fChain->GetEntry(entry);
 }
-Long64_t PPimEpEm::LoadTree(Long64_t entry)
+Long64_t PPimEpEp::LoadTree(Long64_t entry)
 {
   // Set the environment to read one entry
   if (!fChain) return -5;
@@ -383,7 +383,7 @@ Long64_t PPimEpEm::LoadTree(Long64_t entry)
   return centry;
 }
 
-void PPimEpEm::Init(TTree *tree)
+void PPimEpEp::Init(TTree *tree)
 {
   // The Init() function is called when the selector needs to initialize
   // a new tree or chain. Typically here the branch addresses and branch
@@ -517,114 +517,114 @@ void PPimEpEm::Init(TTree *tree)
   fChain->SetBranchAddress("pim_tofino_mult", &pim_tofino_mult, &b_pim_tofino_mult);
   fChain->SetBranchAddress("pim_track_length", &pim_track_length, &b_pim_track_length);
   fChain->SetBranchAddress("pim_z", &pim_z, &b_pim_z);
-  fChain->SetBranchAddress("em_beta", &em_beta, &b_em_beta);
-  fChain->SetBranchAddress("em_beta_new", &em_beta_new, &b_em_beta_new);
-  fChain->SetBranchAddress("em_dedx_in", &em_dedx_in, &b_em_dedx_in);
-  fChain->SetBranchAddress("em_dedx_in_sigma", &em_dedx_in_sigma, &b_em_dedx_in_sigma);
-  fChain->SetBranchAddress("em_dedx_mdc", &em_dedx_mdc, &b_em_dedx_mdc);
-  fChain->SetBranchAddress("em_dedx_mdc_sigma", &em_dedx_mdc_sigma, &b_em_dedx_mdc_sigma);
-  fChain->SetBranchAddress("em_dedx_out", &em_dedx_out, &b_em_dedx_out);
-  fChain->SetBranchAddress("em_dedx_out_sigma", &em_dedx_out_sigma, &b_em_dedx_out_sigma);
-  fChain->SetBranchAddress("em_dedx_tof", &em_dedx_tof, &b_em_dedx_tof);
-  fChain->SetBranchAddress("em_id", &em_id, &b_em_id);
-  fChain->SetBranchAddress("em_isring", &em_isring, &b_em_isring);
-  fChain->SetBranchAddress("em_kIsLepton", &em_kIsLepton, &b_em_kIsLepton);
-  fChain->SetBranchAddress("em_kIsUsed", &em_kIsUsed, &b_em_kIsUsed);
-  fChain->SetBranchAddress("em_mdcchi2", &em_mdcchi2, &b_em_mdcchi2);
-  fChain->SetBranchAddress("em_oa_hadr", &em_oa_hadr, &b_em_oa_hadr);
-  fChain->SetBranchAddress("em_oa_lept", &em_oa_lept, &b_em_oa_lept);
-  fChain->SetBranchAddress("em_p", &em_p, &b_em_p);
-  fChain->SetBranchAddress("em_phi", &em_phi, &b_em_phi);
-  fChain->SetBranchAddress("em_q", &em_q, &b_em_q);
-  fChain->SetBranchAddress("em_r", &em_r, &b_em_r);
-  fChain->SetBranchAddress("em_resolution", &em_resolution, &b_em_resolution);
-  fChain->SetBranchAddress("em_rkchi2", &em_rkchi2, &b_em_rkchi2);
-  fChain->SetBranchAddress("em_sector", &em_sector, &b_em_sector);
-  fChain->SetBranchAddress("em_shw_sum0", &em_shw_sum0, &b_em_shw_sum0);
-  fChain->SetBranchAddress("em_shw_sum1", &em_shw_sum1, &b_em_shw_sum1);
-  fChain->SetBranchAddress("em_shw_sum2", &em_shw_sum2, &b_em_shw_sum2);
+  fChain->SetBranchAddress("ep2_beta", &ep2_beta, &b_ep2_beta);
+  fChain->SetBranchAddress("ep2_beta_new", &ep2_beta_new, &b_ep2_beta_new);
+  fChain->SetBranchAddress("ep2_dedx_in", &ep2_dedx_in, &b_ep2_dedx_in);
+  fChain->SetBranchAddress("ep2_dedx_in_sigma", &ep2_dedx_in_sigma, &b_ep2_dedx_in_sigma);
+  fChain->SetBranchAddress("ep2_dedx_mdc", &ep2_dedx_mdc, &b_ep2_dedx_mdc);
+  fChain->SetBranchAddress("ep2_dedx_mdc_sigma", &ep2_dedx_mdc_sigma, &b_ep2_dedx_mdc_sigma);
+  fChain->SetBranchAddress("ep2_dedx_out", &ep2_dedx_out, &b_ep2_dedx_out);
+  fChain->SetBranchAddress("ep2_dedx_out_sigma", &ep2_dedx_out_sigma, &b_ep2_dedx_out_sigma);
+  fChain->SetBranchAddress("ep2_dedx_tof", &ep2_dedx_tof, &b_ep2_dedx_tof);
+  fChain->SetBranchAddress("ep2_id", &ep2_id, &b_ep2_id);
+  fChain->SetBranchAddress("ep2_isring", &ep2_isring, &b_ep2_isring);
+  fChain->SetBranchAddress("ep2_kIsLepton", &ep2_kIsLepton, &b_ep2_kIsLepton);
+  fChain->SetBranchAddress("ep2_kIsUsed", &ep2_kIsUsed, &b_ep2_kIsUsed);
+  fChain->SetBranchAddress("ep2_mdcchi2", &ep2_mdcchi2, &b_ep2_mdcchi2);
+  fChain->SetBranchAddress("ep2_oa_hadr", &ep2_oa_hadr, &b_ep2_oa_hadr);
+  fChain->SetBranchAddress("ep2_oa_lept", &ep2_oa_lept, &b_ep2_oa_lept);
+  fChain->SetBranchAddress("ep2_p", &ep2_p, &b_ep2_p);
+  fChain->SetBranchAddress("ep2_phi", &ep2_phi, &b_ep2_phi);
+  fChain->SetBranchAddress("ep2_q", &ep2_q, &b_ep2_q);
+  fChain->SetBranchAddress("ep2_r", &ep2_r, &b_ep2_r);
+  fChain->SetBranchAddress("ep2_resolution", &ep2_resolution, &b_ep2_resolution);
+  fChain->SetBranchAddress("ep2_rkchi2", &ep2_rkchi2, &b_ep2_rkchi2);
+  fChain->SetBranchAddress("ep2_sector", &ep2_sector, &b_ep2_sector);
+  fChain->SetBranchAddress("ep2_shw_sum0", &ep2_shw_sum0, &b_ep2_shw_sum0);
+  fChain->SetBranchAddress("ep2_shw_sum1", &ep2_shw_sum1, &b_ep2_shw_sum1);
+  fChain->SetBranchAddress("ep2_shw_sum2", &ep2_shw_sum2, &b_ep2_shw_sum2);
   /*
-    fChain->SetBranchAddress("em_sim_corrflag", &em_sim_corrflag, &b_em_sim_corrflag);
-    fChain->SetBranchAddress("em_sim_geninfo", &em_sim_geninfo, &b_em_sim_geninfo);
-    fChain->SetBranchAddress("em_sim_geninfo1", &em_sim_geninfo1, &b_em_sim_geninfo1);
-    fChain->SetBranchAddress("em_sim_geninfo2", &em_sim_geninfo2, &b_em_sim_geninfo2);
-    fChain->SetBranchAddress("em_sim_genweight", &em_sim_genweight, &b_em_sim_genweight);
-    fChain->SetBranchAddress("em_sim_id", &em_sim_id, &b_em_sim_id);
-    fChain->SetBranchAddress("em_sim_iscommon", &em_sim_iscommon, &b_em_sim_iscommon);
-    fChain->SetBranchAddress("em_sim_mediumid", &em_sim_mediumid, &b_em_sim_mediumid);
-    fChain->SetBranchAddress("em_sim_p", &em_sim_p, &b_em_sim_p);
-    fChain->SetBranchAddress("em_sim_parentid", &em_sim_parentid, &b_em_sim_parentid);
-    fChain->SetBranchAddress("em_sim_primaryflag", &em_sim_primaryflag, &b_em_sim_primaryflag);
-    fChain->SetBranchAddress("em_sim_processid", &em_sim_processid, &b_em_sim_processid);
-    fChain->SetBranchAddress("em_sim_px", &em_sim_px, &b_em_sim_px);
-    fChain->SetBranchAddress("em_sim_py", &em_sim_py, &b_em_sim_py);
-    fChain->SetBranchAddress("em_sim_pz", &em_sim_pz, &b_em_sim_pz);
-    fChain->SetBranchAddress("em_sim_vertexx", &em_sim_vertexx, &b_em_sim_vertexx);
-    fChain->SetBranchAddress("em_sim_vertexy", &em_sim_vertexy, &b_em_sim_vertexy);
-    fChain->SetBranchAddress("em_sim_vertexz", &em_sim_vertexz, &b_em_sim_vertexz);
+    fChain->SetBranchAddress("ep2_sim_corrflag", &ep2_sim_corrflag, &b_ep2_sim_corrflag);
+    fChain->SetBranchAddress("ep2_sim_geninfo", &ep2_sim_geninfo, &b_ep2_sim_geninfo);
+    fChain->SetBranchAddress("ep2_sim_geninfo1", &ep2_sim_geninfo1, &b_ep2_sim_geninfo1);
+    fChain->SetBranchAddress("ep2_sim_geninfo2", &ep2_sim_geninfo2, &b_ep2_sim_geninfo2);
+    fChain->SetBranchAddress("ep2_sim_genweight", &ep2_sim_genweight, &b_ep2_sim_genweight);
+    fChain->SetBranchAddress("ep2_sim_id", &ep2_sim_id, &b_ep2_sim_id);
+    fChain->SetBranchAddress("ep2_sim_iscommon", &ep2_sim_iscommon, &b_ep2_sim_iscommon);
+    fChain->SetBranchAddress("ep2_sim_mediumid", &ep2_sim_mediumid, &b_ep2_sim_mediumid);
+    fChain->SetBranchAddress("ep2_sim_p", &ep2_sim_p, &b_ep2_sim_p);
+    fChain->SetBranchAddress("ep2_sim_parentid", &ep2_sim_parentid, &b_ep2_sim_parentid);
+    fChain->SetBranchAddress("ep2_sim_primaryflag", &ep2_sim_primaryflag, &b_ep2_sim_primaryflag);
+    fChain->SetBranchAddress("ep2_sim_processid", &ep2_sim_processid, &b_ep2_sim_processid);
+    fChain->SetBranchAddress("ep2_sim_px", &ep2_sim_px, &b_ep2_sim_px);
+    fChain->SetBranchAddress("ep2_sim_py", &ep2_sim_py, &b_ep2_sim_py);
+    fChain->SetBranchAddress("ep2_sim_pz", &ep2_sim_pz, &b_ep2_sim_pz);
+    fChain->SetBranchAddress("ep2_sim_vertexx", &ep2_sim_vertexx, &b_ep2_sim_vertexx);
+    fChain->SetBranchAddress("ep2_sim_vertexy", &ep2_sim_vertexy, &b_ep2_sim_vertexy);
+    fChain->SetBranchAddress("ep2_sim_vertexz", &ep2_sim_vertexz, &b_ep2_sim_vertexz);
   */  
-  fChain->SetBranchAddress("em_system", &em_system, &b_em_system);
-  fChain->SetBranchAddress("em_theta", &em_theta, &b_em_theta);
-  fChain->SetBranchAddress("em_tof_exp", &em_tof_exp, &b_em_tof_exp);
-  fChain->SetBranchAddress("em_tof_mom", &em_tof_mom, &b_em_tof_mom);
-  fChain->SetBranchAddress("em_tof_new", &em_tof_new, &b_em_tof_new);
-  fChain->SetBranchAddress("em_tofino_mult", &em_tofino_mult, &b_em_tofino_mult);
-  fChain->SetBranchAddress("em_track_length", &em_track_length, &b_em_track_length);
-  fChain->SetBranchAddress("em_z", &em_z, &b_em_z);
-  fChain->SetBranchAddress("ep_beta", &ep_beta, &b_ep_beta);
-  fChain->SetBranchAddress("ep_beta_new", &ep_beta_new, &b_ep_beta_new);
-  fChain->SetBranchAddress("ep_dedx_in", &ep_dedx_in, &b_ep_dedx_in);
-  fChain->SetBranchAddress("ep_dedx_in_sigma", &ep_dedx_in_sigma, &b_ep_dedx_in_sigma);
-  fChain->SetBranchAddress("ep_dedx_mdc", &ep_dedx_mdc, &b_ep_dedx_mdc);
-  fChain->SetBranchAddress("ep_dedx_mdc_sigma", &ep_dedx_mdc_sigma, &b_ep_dedx_mdc_sigma);
-  fChain->SetBranchAddress("ep_dedx_out", &ep_dedx_out, &b_ep_dedx_out);
-  fChain->SetBranchAddress("ep_dedx_out_sigma", &ep_dedx_out_sigma, &b_ep_dedx_out_sigma);
-  fChain->SetBranchAddress("ep_dedx_tof", &ep_dedx_tof, &b_ep_dedx_tof);
-  fChain->SetBranchAddress("ep_id", &ep_id, &b_ep_id);
-  fChain->SetBranchAddress("ep_isring", &ep_isring, &b_ep_isring);
-  fChain->SetBranchAddress("ep_kIsLepton", &ep_kIsLepton, &b_ep_kIsLepton);
-  fChain->SetBranchAddress("ep_kIsUsed", &ep_kIsUsed, &b_ep_kIsUsed);
-  fChain->SetBranchAddress("ep_mdcchi2", &ep_mdcchi2, &b_ep_mdcchi2);
-  fChain->SetBranchAddress("ep_oa_hadr", &ep_oa_hadr, &b_ep_oa_hadr);
-  fChain->SetBranchAddress("ep_oa_lept", &ep_oa_lept, &b_ep_oa_lept);
-  fChain->SetBranchAddress("ep_p", &ep_p, &b_ep_p);
-  fChain->SetBranchAddress("ep_phi", &ep_phi, &b_ep_phi);
-  fChain->SetBranchAddress("ep_q", &ep_q, &b_ep_q);
-  fChain->SetBranchAddress("ep_r", &ep_r, &b_ep_r);
-  fChain->SetBranchAddress("ep_resolution", &ep_resolution, &b_ep_resolution);
-  fChain->SetBranchAddress("ep_rkchi2", &ep_rkchi2, &b_ep_rkchi2);
-  fChain->SetBranchAddress("ep_sector", &ep_sector, &b_ep_sector);
-  fChain->SetBranchAddress("ep_shw_sum0", &ep_shw_sum0, &b_ep_shw_sum0);
-  fChain->SetBranchAddress("ep_shw_sum1", &ep_shw_sum1, &b_ep_shw_sum1);
-  fChain->SetBranchAddress("ep_shw_sum2", &ep_shw_sum2, &b_ep_shw_sum2);
+  fChain->SetBranchAddress("ep2_system", &ep2_system, &b_ep2_system);
+  fChain->SetBranchAddress("ep2_theta", &ep2_theta, &b_ep2_theta);
+  fChain->SetBranchAddress("ep2_tof_exp", &ep2_tof_exp, &b_ep2_tof_exp);
+  fChain->SetBranchAddress("ep2_tof_mom", &ep2_tof_mom, &b_ep2_tof_mom);
+  fChain->SetBranchAddress("ep2_tof_new", &ep2_tof_new, &b_ep2_tof_new);
+  fChain->SetBranchAddress("ep2_tofino_mult", &ep2_tofino_mult, &b_ep2_tofino_mult);
+  fChain->SetBranchAddress("ep2_track_length", &ep2_track_length, &b_ep2_track_length);
+  fChain->SetBranchAddress("ep2_z", &ep2_z, &b_ep2_z);
+  fChain->SetBranchAddress("ep1_beta", &ep1_beta, &b_ep1_beta);
+  fChain->SetBranchAddress("ep1_beta_new", &ep1_beta_new, &b_ep1_beta_new);
+  fChain->SetBranchAddress("ep1_dedx_in", &ep1_dedx_in, &b_ep1_dedx_in);
+  fChain->SetBranchAddress("ep1_dedx_in_sigma", &ep1_dedx_in_sigma, &b_ep1_dedx_in_sigma);
+  fChain->SetBranchAddress("ep1_dedx_mdc", &ep1_dedx_mdc, &b_ep1_dedx_mdc);
+  fChain->SetBranchAddress("ep1_dedx_mdc_sigma", &ep1_dedx_mdc_sigma, &b_ep1_dedx_mdc_sigma);
+  fChain->SetBranchAddress("ep1_dedx_out", &ep1_dedx_out, &b_ep1_dedx_out);
+  fChain->SetBranchAddress("ep1_dedx_out_sigma", &ep1_dedx_out_sigma, &b_ep1_dedx_out_sigma);
+  fChain->SetBranchAddress("ep1_dedx_tof", &ep1_dedx_tof, &b_ep1_dedx_tof);
+  fChain->SetBranchAddress("ep1_id", &ep1_id, &b_ep1_id);
+  fChain->SetBranchAddress("ep1_isring", &ep1_isring, &b_ep1_isring);
+  fChain->SetBranchAddress("ep1_kIsLepton", &ep1_kIsLepton, &b_ep1_kIsLepton);
+  fChain->SetBranchAddress("ep1_kIsUsed", &ep1_kIsUsed, &b_ep1_kIsUsed);
+  fChain->SetBranchAddress("ep1_mdcchi2", &ep1_mdcchi2, &b_ep1_mdcchi2);
+  fChain->SetBranchAddress("ep1_oa_hadr", &ep1_oa_hadr, &b_ep1_oa_hadr);
+  fChain->SetBranchAddress("ep1_oa_lept", &ep1_oa_lept, &b_ep1_oa_lept);
+  fChain->SetBranchAddress("ep1_p", &ep1_p, &b_ep1_p);
+  fChain->SetBranchAddress("ep1_phi", &ep1_phi, &b_ep1_phi);
+  fChain->SetBranchAddress("ep1_q", &ep1_q, &b_ep1_q);
+  fChain->SetBranchAddress("ep1_r", &ep1_r, &b_ep1_r);
+  fChain->SetBranchAddress("ep1_resolution", &ep1_resolution, &b_ep1_resolution);
+  fChain->SetBranchAddress("ep1_rkchi2", &ep1_rkchi2, &b_ep1_rkchi2);
+  fChain->SetBranchAddress("ep1_sector", &ep1_sector, &b_ep1_sector);
+  fChain->SetBranchAddress("ep1_shw_sum0", &ep1_shw_sum0, &b_ep1_shw_sum0);
+  fChain->SetBranchAddress("ep1_shw_sum1", &ep1_shw_sum1, &b_ep1_shw_sum1);
+  fChain->SetBranchAddress("ep1_shw_sum2", &ep1_shw_sum2, &b_ep1_shw_sum2);
   /*
-    fChain->SetBranchAddress("ep_sim_corrflag", &ep_sim_corrflag, &b_ep_sim_corrflag);
-    fChain->SetBranchAddress("ep_sim_geninfo", &ep_sim_geninfo, &b_ep_sim_geninfo);
-    fChain->SetBranchAddress("ep_sim_geninfo1", &ep_sim_geninfo1, &b_ep_sim_geninfo1);
-    fChain->SetBranchAddress("ep_sim_geninfo2", &ep_sim_geninfo2, &b_ep_sim_geninfo2);
-    fChain->SetBranchAddress("ep_sim_genweight", &ep_sim_genweight, &b_ep_sim_genweight);
-    fChain->SetBranchAddress("ep_sim_id", &ep_sim_id, &b_ep_sim_id);
-    fChain->SetBranchAddress("ep_sim_iscommon", &ep_sim_iscommon, &b_ep_sim_iscommon);
-    fChain->SetBranchAddress("ep_sim_mediumid", &ep_sim_mediumid, &b_ep_sim_mediumid);
-    fChain->SetBranchAddress("ep_sim_p", &ep_sim_p, &b_ep_sim_p);
-    fChain->SetBranchAddress("ep_sim_parentid", &ep_sim_parentid, &b_ep_sim_parentid);
-    fChain->SetBranchAddress("ep_sim_primaryflag", &ep_sim_primaryflag, &b_ep_sim_primaryflag);
-    fChain->SetBranchAddress("ep_sim_processid", &ep_sim_processid, &b_ep_sim_processid);
-    fChain->SetBranchAddress("ep_sim_px", &ep_sim_px, &b_ep_sim_px);
-    fChain->SetBranchAddress("ep_sim_py", &ep_sim_py, &b_ep_sim_py);
-    fChain->SetBranchAddress("ep_sim_pz", &ep_sim_pz, &b_ep_sim_pz);
-    fChain->SetBranchAddress("ep_sim_vertexx", &ep_sim_vertexx, &b_ep_sim_vertexx);
-    fChain->SetBranchAddress("ep_sim_vertexy", &ep_sim_vertexy, &b_ep_sim_vertexy);
-    fChain->SetBranchAddress("ep_sim_vertexz", &ep_sim_vertexz, &b_ep_sim_vertexz);
+    fChain->SetBranchAddress("ep1_sim_corrflag", &ep1_sim_corrflag, &b_ep1_sim_corrflag);
+    fChain->SetBranchAddress("ep1_sim_geninfo", &ep1_sim_geninfo, &b_ep1_sim_geninfo);
+    fChain->SetBranchAddress("ep1_sim_geninfo1", &ep1_sim_geninfo1, &b_ep1_sim_geninfo1);
+    fChain->SetBranchAddress("ep1_sim_geninfo2", &ep1_sim_geninfo2, &b_ep1_sim_geninfo2);
+    fChain->SetBranchAddress("ep1_sim_genweight", &ep1_sim_genweight, &b_ep1_sim_genweight);
+    fChain->SetBranchAddress("ep1_sim_id", &ep1_sim_id, &b_ep1_sim_id);
+    fChain->SetBranchAddress("ep1_sim_iscommon", &ep1_sim_iscommon, &b_ep1_sim_iscommon);
+    fChain->SetBranchAddress("ep1_sim_mediumid", &ep1_sim_mediumid, &b_ep1_sim_mediumid);
+    fChain->SetBranchAddress("ep1_sim_p", &ep1_sim_p, &b_ep1_sim_p);
+    fChain->SetBranchAddress("ep1_sim_parentid", &ep1_sim_parentid, &b_ep1_sim_parentid);
+    fChain->SetBranchAddress("ep1_sim_primaryflag", &ep1_sim_primaryflag, &b_ep1_sim_primaryflag);
+    fChain->SetBranchAddress("ep1_sim_processid", &ep1_sim_processid, &b_ep1_sim_processid);
+    fChain->SetBranchAddress("ep1_sim_px", &ep1_sim_px, &b_ep1_sim_px);
+    fChain->SetBranchAddress("ep1_sim_py", &ep1_sim_py, &b_ep1_sim_py);
+    fChain->SetBranchAddress("ep1_sim_pz", &ep1_sim_pz, &b_ep1_sim_pz);
+    fChain->SetBranchAddress("ep1_sim_vertexx", &ep1_sim_vertexx, &b_ep1_sim_vertexx);
+    fChain->SetBranchAddress("ep1_sim_vertexy", &ep1_sim_vertexy, &b_ep1_sim_vertexy);
+    fChain->SetBranchAddress("ep1_sim_vertexz", &ep1_sim_vertexz, &b_ep1_sim_vertexz);
   */  
-  fChain->SetBranchAddress("ep_system", &ep_system, &b_ep_system);
-  fChain->SetBranchAddress("ep_theta", &ep_theta, &b_ep_theta);
-  fChain->SetBranchAddress("ep_tof_exp", &ep_tof_exp, &b_ep_tof_exp);
-  fChain->SetBranchAddress("ep_tof_mom", &ep_tof_mom, &b_ep_tof_mom);
-  fChain->SetBranchAddress("ep_tof_new", &ep_tof_new, &b_ep_tof_new);
-  fChain->SetBranchAddress("ep_tofino_mult", &ep_tofino_mult, &b_ep_tofino_mult);
-  fChain->SetBranchAddress("ep_track_length", &ep_track_length, &b_ep_track_length);
-  fChain->SetBranchAddress("ep_z", &ep_z, &b_ep_z);
+  fChain->SetBranchAddress("ep1_system", &ep1_system, &b_ep1_system);
+  fChain->SetBranchAddress("ep1_theta", &ep1_theta, &b_ep1_theta);
+  fChain->SetBranchAddress("ep1_tof_exp", &ep1_tof_exp, &b_ep1_tof_exp);
+  fChain->SetBranchAddress("ep1_tof_mom", &ep1_tof_mom, &b_ep1_tof_mom);
+  fChain->SetBranchAddress("ep1_tof_new", &ep1_tof_new, &b_ep1_tof_new);
+  fChain->SetBranchAddress("ep1_tofino_mult", &ep1_tofino_mult, &b_ep1_tofino_mult);
+  fChain->SetBranchAddress("ep1_track_length", &ep1_track_length, &b_ep1_track_length);
+  fChain->SetBranchAddress("ep1_z", &ep1_z, &b_ep1_z);
   fChain->SetBranchAddress("runnumber", &runnumber, &b_runnumber);
   fChain->SetBranchAddress("totalmult", &totalmult, &b_totalmult);
   fChain->SetBranchAddress("trigbit", &trigbit, &b_trigbit);
@@ -634,7 +634,7 @@ void PPimEpEm::Init(TTree *tree)
   Notify();
 }
 
-Bool_t PPimEpEm::Notify()
+Bool_t PPimEpEp::Notify()
 {
   // The Notify() function is called when a new file is opened. This
   // can be either for a new TTree in a TChain or when when a new TTree
@@ -645,14 +645,14 @@ Bool_t PPimEpEm::Notify()
   return kTRUE;
 }
 
-void PPimEpEm::Show(Long64_t entry)
+void PPimEpEp::Show(Long64_t entry)
 {
   // Print contents of entry.
   // If entry is not specified, print current entry
   if (!fChain) return;
   fChain->Show(entry);
 }
-Int_t PPimEpEm::Cut(Long64_t entry)
+Int_t PPimEpEp::Cut(Long64_t entry)
 {
   // This function may be called from Loop.
   // returns  1 if entry is accepted.

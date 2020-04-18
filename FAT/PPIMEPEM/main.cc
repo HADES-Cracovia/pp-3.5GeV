@@ -1,5 +1,6 @@
 //#include "PPim.h"
 #include "PPimEpEm.h"
+#include "PPimEpEp.h"
 //#include "EpEp.h"
 //#include "EmEm.h"
 #include "data.h"
@@ -73,13 +74,26 @@ int main()
   pim = new TLorentzVector(0,0,0,0);
   em = new TLorentzVector(0,0,0,0);
   ep = new TLorentzVector(0,0,0,0);
+  em1 = new TLorentzVector(0,0,0,0);
+  ep1 = new TLorentzVector(0,0,0,0);
+  em2 = new TLorentzVector(0,0,0,0);
+  ep2 = new TLorentzVector(0,0,0,0);
   pi = new TLorentzVector(0,0,0,0);
   gammapep = new TLorentzVector(0,0,0,0);
-  gammappim = new TLorentzVector(0,0,0,0);
   gammapem = new TLorentzVector(0,0,0,0);
+  gammapep1 = new TLorentzVector(0,0,0,0);
+  gammapem1 = new TLorentzVector(0,0,0,0);
+  gammapep2 = new TLorentzVector(0,0,0,0);
+  gammapem2 = new TLorentzVector(0,0,0,0);
+  gammappim = new TLorentzVector(0,0,0,0);
   gammapimep = new TLorentzVector(0,0,0,0);
+  gammapimep1 = new TLorentzVector(0,0,0,0);
   gammaemep = new TLorentzVector(0,0,0,0);
+  gammaem1em2 = new TLorentzVector(0,0,0,0);
+  gammaep1ep2 = new TLorentzVector(0,0,0,0);
   gammappimepem = new TLorentzVector(0,0,0,0);
+  gammappimep1ep2 = new TLorentzVector(0,0,0,0);
+  gammappimem1em2 = new TLorentzVector(0,0,0,0);
   gammappimem=new TLorentzVector(0,0,0,0);
   gammappimep=new TLorentzVector(0,0,0,0);
   gammapemep=new TLorentzVector(0,0,0,0);
@@ -194,6 +208,7 @@ int main()
 
   //PPim t;
   PPimEpEm t2;
+  PPimEpEp t3;
   //cout << "START PPIM!" << endl;
   //t.Loop();
   //cout << "STOP PPIM!" << endl;
@@ -201,6 +216,9 @@ int main()
   cout << "START PPimEpEm!" << endl;
   t2.Loop();
   cout << "STOP PPimEpEm!!" << endl;
+  cout << "START PPimEpEp!" << endl;
+  t3.Loop();
+  cout << "STOP PPimEpEp!!" << endl;
   
   /*EpEp t_back1;
     t_back1.Loop();
