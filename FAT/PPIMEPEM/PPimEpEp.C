@@ -150,173 +150,173 @@ void PPimEpEp::Loop()
 	  Float_t k0_w=lorentz_k0.Rapidity();
   
 	  //save all important variables
-	  (*tlo)["isBest"]=isBest;
-	  //(*tlo)["isBest_new"]=isBest_new;
-	  (*tlo)["event"]=event;
-	  (*tlo)["hneg_mult"]=hneg_mult;
-	  (*tlo)["hpos_mult"]=hpos_mult;
-	  (*tlo)["eVert_x"]=eVert_x;
-	  (*tlo)["eVert_y"]=eVert_y;
-	  (*tlo)["eVert_z"]=eVert_z;
-	  (*tlo)["totalmult"]=totalmult;
-	  (*tlo)["trigdownscaleflag"]=trigdownscaleflag;
-	  (*tlo)["trigdownscale"]=trigdownscale;
-	  (*tlo)["trigbit"]=trigbit;
-	  (*tlo)["trigdec"]=trigdec;
-	  (*tlo)["event_mult"]=event_mult;
-	  //(*tlo)["hypothesis"]=pim_no;
-	  //(*tlo)["hypothesis_quality"]=quality;
+	  (*tlo_epep)["isBest"]=isBest;
+	  //(*tlo_epep)["isBest_new"]=isBest_new;
+	  (*tlo_epep)["event"]=event;
+	  (*tlo_epep)["hneg_mult"]=hneg_mult;
+	  (*tlo_epep)["hpos_mult"]=hpos_mult;
+	  (*tlo_epep)["eVert_x"]=eVert_x;
+	  (*tlo_epep)["eVert_y"]=eVert_y;
+	  (*tlo_epep)["eVert_z"]=eVert_z;
+	  (*tlo_epep)["totalmult"]=totalmult;
+	  (*tlo_epep)["trigdownscaleflag"]=trigdownscaleflag;
+	  (*tlo_epep)["trigdownscale"]=trigdownscale;
+	  (*tlo_epep)["trigbit"]=trigbit;
+	  (*tlo_epep)["trigdec"]=trigdec;
+	  (*tlo_epep)["event_mult"]=event_mult;
+	  //(*tlo_epep)["hypothesis"]=pim_no;
+	  //(*tlo_epep)["hypothesis_quality"]=quality;
   
-	  (*tlo)["p_p"]=p_p;
-	  (*tlo)["p_theta"] = p_theta;
-	  (*tlo)["p_phi"] = p_phi;
-	  (*tlo)["p_beta"] = p_beta_new;
-	  (*tlo)["p_m"] = p_mass;
-	  (*tlo)["p_dedx"]=p_dedx_mdc;
-	  (*tlo)["p_q"]=p_q;
+	  (*tlo_epep)["p_p"]=p_p;
+	  (*tlo_epep)["p_theta"] = p_theta;
+	  (*tlo_epep)["p_phi"] = p_phi;
+	  (*tlo_epep)["p_beta"] = p_beta_new;
+	  (*tlo_epep)["p_m"] = p_mass;
+	  (*tlo_epep)["p_dedx"]=p_dedx_mdc;
+	  (*tlo_epep)["p_q"]=p_q;
 	  
-	  //(*tlo)["p_sim_p"]=p_sim_p;
-	  //(*tlo)["p_sim_id"]=p_sim_id;
-	  //(*tlo)["p_sim_parentid"]=p_sim_parentid;
-	  //(*tlo)["p_sim_vertex_x"]=p_sim_vertexx;
-	  //(*tlo)["p_sim_vertex_y"]=p_sim_vertexy;
-	  //(*tlo)["p_sim_vertex_z"]=p_sim_vertexz;
+	  //(*tlo_epep)["p_sim_p"]=p_sim_p;
+	  //(*tlo_epep)["p_sim_id"]=p_sim_id;
+	  //(*tlo_epep)["p_sim_parentid"]=p_sim_parentid;
+	  //(*tlo_epep)["p_sim_vertex_x"]=p_sim_vertexx;
+	  //(*tlo_epep)["p_sim_vertex_y"]=p_sim_vertexy;
+	  //(*tlo_epep)["p_sim_vertex_z"]=p_sim_vertexz;
 	  
-	  (*tlo)["ep1_p"]=ep1_p;
-	  (*tlo)["ep1_theta"] = ep1_theta;
-	  (*tlo)["ep1_phi"] = ep1_phi;
-	  (*tlo)["ep1_beta"] = ep1_beta_new;
-	  (*tlo)["ep1_m"] = ep1_mass;
-	  (*tlo)["ep1_dedx"]=ep1_dedx_mdc;
-	  (*tlo)["ep1_q"]=ep1_q;
+	  (*tlo_epep)["ep1_p"]=ep1_p;
+	  (*tlo_epep)["ep1_theta"] = ep1_theta;
+	  (*tlo_epep)["ep1_phi"] = ep1_phi;
+	  (*tlo_epep)["ep1_beta"] = ep1_beta_new;
+	  (*tlo_epep)["ep1_m"] = ep1_mass;
+	  (*tlo_epep)["ep1_dedx"]=ep1_dedx_mdc;
+	  (*tlo_epep)["ep1_q"]=ep1_q;
 	  
-	  //(*tlo)["ep1_sim_p"]=ep1_sim_p;
-	  //(*tlo)["ep1_sim_id"]=ep1_sim_id;
-	  //(*tlo)["ep1_sim_parentid"]=ep1_sim_parentid;
-	  //(*tlo)["ep1_sim_vertex_x"]=ep1_sim_vertexx;
-	  //(*tlo)["ep1_sim_vertex_y"]=ep1_sim_vertexy;
-	  //(*tlo)["ep1_sim_vertex_z"]=ep1_sim_vertexz;
-	  
-	  
-	  (*tlo)["pim_p"]=pim_p;
-	  (*tlo)["pim_theta"] = pim_theta;
-	  (*tlo)["pim_phi"] = pim_phi;
-	  (*tlo)["pim_beta"] = pim_beta_new;
-	  (*tlo)["pim_m"] = pim_mass;
-	  (*tlo)["pim_dedx"]=pim_dedx_mdc;
-	  (*tlo)["pim_q"]=pim_q;
-	  
-	  //(*tlo)["pim_sim_p"]=pim_sim_p;
-	  //(*tlo)["pim_sim_id"]=pim_sim_id;
-	  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
-	  //(*tlo)["pim_sim_vertex_x"]=pim_sim_vertexx;
-	  //(*tlo)["pim_sim_vertex_y"]=pim_sim_vertexy;
-	  //(*tlo)["pim_sim_vertex_z"]=pim_sim_vertexz;
+	  //(*tlo_epep)["ep1_sim_p"]=ep1_sim_p;
+	  //(*tlo_epep)["ep1_sim_id"]=ep1_sim_id;
+	  //(*tlo_epep)["ep1_sim_parentid"]=ep1_sim_parentid;
+	  //(*tlo_epep)["ep1_sim_vertex_x"]=ep1_sim_vertexx;
+	  //(*tlo_epep)["ep1_sim_vertex_y"]=ep1_sim_vertexy;
+	  //(*tlo_epep)["ep1_sim_vertex_z"]=ep1_sim_vertexz;
 	  
 	  
-	  (*tlo)["ep2_p"]=ep2_p;
-	  (*tlo)["ep2_theta"] = ep2_theta;
-	  (*tlo)["ep2_phi"] = ep2_phi;
-	  (*tlo)["ep2_beta"] = ep2_beta_new;
-	  (*tlo)["ep2_m"] = ep2_mass;
-	  (*tlo)["ep2_dedx"]=ep2_dedx_mdc;
-	  (*tlo)["ep2_q"]=ep2_q;
+	  (*tlo_epep)["pim_p"]=pim_p;
+	  (*tlo_epep)["pim_theta"] = pim_theta;
+	  (*tlo_epep)["pim_phi"] = pim_phi;
+	  (*tlo_epep)["pim_beta"] = pim_beta_new;
+	  (*tlo_epep)["pim_m"] = pim_mass;
+	  (*tlo_epep)["pim_dedx"]=pim_dedx_mdc;
+	  (*tlo_epep)["pim_q"]=pim_q;
 	  
-	  //(*tlo)["ep2_sim_p"]=ep2_sim_p;
-	  //(*tlo)["ep2_sim_id"]=ep2_sim_id;
-	  //(*tlo)["ep2_sim_parentid"]=ep2_sim_parentid;
-	  //(*tlo)["ep2_sim_vertex_x"]=ep2_sim_vertexx;
-	  //(*tlo)["ep2_sim_vertex_y"]=ep2_sim_vertexy;
-	  //(*tlo)["ep2_sim_vertex_z"]=ep2_sim_vertexz;
+	  //(*tlo_epep)["pim_sim_p"]=pim_sim_p;
+	  //(*tlo_epep)["pim_sim_id"]=pim_sim_id;
+	  //(*tlo_epep)["pim_sim_parentid"]=pim_sim_parentid;
+	  //(*tlo_epep)["pim_sim_vertex_x"]=pim_sim_vertexx;
+	  //(*tlo_epep)["pim_sim_vertex_y"]=pim_sim_vertexy;
+	  //(*tlo_epep)["pim_sim_vertex_z"]=pim_sim_vertexz;
+	  
+	  
+	  (*tlo_epep)["ep2_p"]=ep2_p;
+	  (*tlo_epep)["ep2_theta"] = ep2_theta;
+	  (*tlo_epep)["ep2_phi"] = ep2_phi;
+	  (*tlo_epep)["ep2_beta"] = ep2_beta_new;
+	  (*tlo_epep)["ep2_m"] = ep2_mass;
+	  (*tlo_epep)["ep2_dedx"]=ep2_dedx_mdc;
+	  (*tlo_epep)["ep2_q"]=ep2_q;
+	  
+	  //(*tlo_epep)["ep2_sim_p"]=ep2_sim_p;
+	  //(*tlo_epep)["ep2_sim_id"]=ep2_sim_id;
+	  //(*tlo_epep)["ep2_sim_parentid"]=ep2_sim_parentid;
+	  //(*tlo_epep)["ep2_sim_vertex_x"]=ep2_sim_vertexx;
+	  //(*tlo_epep)["ep2_sim_vertex_y"]=ep2_sim_vertexy;
+	  //(*tlo_epep)["ep2_sim_vertex_z"]=ep2_sim_vertexz;
 	  	  
-	  //(*tlo)["pim_sim_id"]=pim_sim_id;
-	  //(*tlo)["pim_sim_parentid"]=pim_sim_parentid;
+	  //(*tlo_epep)["pim_sim_id"]=pim_sim_id;
+	  //(*tlo_epep)["pim_sim_parentid"]=pim_sim_parentid;
 
-	  (*tlo)["dist_ep1_pim"]=dist_ep1_pim;
-	  (*tlo)["dist_ep1_ep2"] = dist_ep1_ep2;
-	  (*tlo)["dist_ep1_pim"] = dist_ep1_pim;
-	  (*tlo)["dist_p_pim"] = dist_p_pim;
-	  (*tlo)["dist_p_ep2"] = dist_p_ep2;
-	  (*tlo)["dist_p_pim"] = dist_p_pim;
-	  (*tlo)["dist_lambda_ep2"] = dist_lambda_ep2;
-	  //(*tlo)["dist_lambda1_ep1"] = dist_lambda1_ep1;
-	  //(*tlo)["dist_lambda_pim"] = dist_lambda_pim;
-	  (*tlo)["dist_lambda_ep1"] = dist_lambda_ep1;
-	  (*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
-	  //(*tlo)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
-	  //(*tlo)["dist_ver_to_ver"]=dist_ver_to_ver;
-	  (*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-	  (*tlo)["dist_lambda_ver_ep1_ep2"]=dist_lambda_ver_ep1_ep2;
-	  //(*tlo)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
-	  //(*tlo)["dist_lambda2_eVert"]=dist_lambda2_eVert;
-	  //(*tlo)["dist_lambda2_ver_ep1_pim"]=dist_lambda2_ver_ep1_pim;
-	  //(*tlo)["dist_lambda_eVert"]=dist_lambda_eVert;
-	  //(*tlo)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
-	  (*tlo)["dist_p_eVert"]=dist_p_eVert;
-	  (*tlo)["dist_pim_eVert"]=dist_pim_eVert;
-	  //(*tlo)["dist_p2_eVert"]=dist_p2_eVert;
-	  //(*tlo)["dist_ep2_eVert"]=dist_ep2_eVert;
-	  //(*tlo)["dist_p_eVert"]=dist_p_eVert;
-	  //(*tlo)["dist_pim_eVert"]=dist_pim_eVert;
+	  (*tlo_epep)["dist_ep1_pim"]=dist_ep1_pim;
+	  (*tlo_epep)["dist_ep1_ep2"] = dist_ep1_ep2;
+	  (*tlo_epep)["dist_ep1_pim"] = dist_ep1_pim;
+	  (*tlo_epep)["dist_p_pim"] = dist_p_pim;
+	  (*tlo_epep)["dist_p_ep2"] = dist_p_ep2;
+	  (*tlo_epep)["dist_p_pim"] = dist_p_pim;
+	  (*tlo_epep)["dist_lambda_ep2"] = dist_lambda_ep2;
+	  //(*tlo_epep)["dist_lambda1_ep1"] = dist_lambda1_ep1;
+	  //(*tlo_epep)["dist_lambda_pim"] = dist_lambda_pim;
+	  (*tlo_epep)["dist_lambda_ep1"] = dist_lambda_ep1;
+	  (*tlo_epep)["dist_ver_to_ver"]=dist_ver_to_ver;
+	  //(*tlo_epep)["dist_ver_to_ver_2"]=dist_ver_to_ver_2;
+	  //(*tlo_epep)["dist_ver_to_ver"]=dist_ver_to_ver;
+	  (*tlo_epep)["dist_lambda_eVert"]=dist_lambda_eVert;
+	  (*tlo_epep)["dist_lambda_ver_ep1_ep2"]=dist_lambda_ver_ep1_ep2;
+	  //(*tlo_epep)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
+	  //(*tlo_epep)["dist_lambda2_eVert"]=dist_lambda2_eVert;
+	  //(*tlo_epep)["dist_lambda2_ver_ep1_pim"]=dist_lambda2_ver_ep1_pim;
+	  //(*tlo_epep)["dist_lambda_eVert"]=dist_lambda_eVert;
+	  //(*tlo_epep)["dist_lambda_ver_ep1_pim"]=dist_lambda_ver_ep1_pim;
+	  (*tlo_epep)["dist_p_eVert"]=dist_p_eVert;
+	  (*tlo_epep)["dist_pim_eVert"]=dist_pim_eVert;
+	  //(*tlo_epep)["dist_p2_eVert"]=dist_p2_eVert;
+	  //(*tlo_epep)["dist_ep2_eVert"]=dist_ep2_eVert;
+	  //(*tlo_epep)["dist_p_eVert"]=dist_p_eVert;
+	  //(*tlo_epep)["dist_pim_eVert"]=dist_pim_eVert;
   
 
   
-	  (*tlo)["m_inv_p_pim"] = m_inv_ppim;
-	  (*tlo)["m_inv_p_ep2"] = m_inv_pep2;
+	  (*tlo_epep)["m_inv_p_pim"] = m_inv_ppim;
+	  (*tlo_epep)["m_inv_p_ep2"] = m_inv_pep2;
 	  
-	  //(*tlo)["m_inv_p_pim_ep2"]=m_inv_ppimep2;
-	  //(*tlo)["m_inv_p_pim_ep1"]=m_inv_ppimep1;
+	  //(*tlo_epep)["m_inv_p_pim_ep2"]=m_inv_ppimep2;
+	  //(*tlo_epep)["m_inv_p_pim_ep1"]=m_inv_ppimep1;
 
-	  (*tlo)["m_inv_ep1_pim"] = m_inv_ep1pim;
-	  (*tlo)["m_inv_ep1_ep2"] = m_inv_ep1ep2;
-	  //(*tlo)["m_inv_ep1_pim"] = m_inv_ep1pim;
-	  (*tlo)["m_inv_p_pim_ep1_ep2"] = m_inv_ppimep1ep2;
-	  //(*tlo)["m_inv_p_ep1"] = m_inv_pep1;
+	  (*tlo_epep)["m_inv_ep1_pim"] = m_inv_ep1pim;
+	  (*tlo_epep)["m_inv_ep1_ep2"] = m_inv_ep1ep2;
+	  //(*tlo_epep)["m_inv_ep1_pim"] = m_inv_ep1pim;
+	  (*tlo_epep)["m_inv_p_pim_ep1_ep2"] = m_inv_ppimep1ep2;
+	  //(*tlo_epep)["m_inv_p_ep1"] = m_inv_pep1;
   
-	  (*tlo)["ver_p_pim_x"]=ver_p_pim.X();
-	  (*tlo)["ver_p_pim_y"]=ver_p_pim.Y();
-	  (*tlo)["ver_p_pim_z"]=ver_p_pim.Z();
+	  (*tlo_epep)["ver_p_pim_x"]=ver_p_pim.X();
+	  (*tlo_epep)["ver_p_pim_y"]=ver_p_pim.Y();
+	  (*tlo_epep)["ver_p_pim_z"]=ver_p_pim.Z();
 
-	  (*tlo)["ver_p_ep2_x"]=ver_p_ep2.X();
-	  (*tlo)["ver_p_ep2_y"]=ver_p_ep2.Y();
-	  (*tlo)["ver_p_ep2_z"]=ver_p_ep2.Z();
+	  (*tlo_epep)["ver_p_ep2_x"]=ver_p_ep2.X();
+	  (*tlo_epep)["ver_p_ep2_y"]=ver_p_ep2.Y();
+	  (*tlo_epep)["ver_p_ep2_z"]=ver_p_ep2.Z();
 
-	  (*tlo)["ver_ep1_pim_x"]=ver_ep1_pim.X();
-	  (*tlo)["ver_ep1_pim_y"]=ver_ep1_pim.Y();
-	  (*tlo)["ver_ep1_pim_z"]=ver_ep1_pim.Z();
+	  (*tlo_epep)["ver_ep1_pim_x"]=ver_ep1_pim.X();
+	  (*tlo_epep)["ver_ep1_pim_y"]=ver_ep1_pim.Y();
+	  (*tlo_epep)["ver_ep1_pim_z"]=ver_ep1_pim.Z();
 
-	  (*tlo)["ver_ep1_ep2_x"]=ver_ep1_ep2.X();
-	  (*tlo)["ver_ep1_ep2_y"]=ver_ep1_ep2.Y();
-	  (*tlo)["ver_ep1_ep2_z"]=ver_ep1_ep2.Z();
+	  (*tlo_epep)["ver_ep1_ep2_x"]=ver_ep1_ep2.X();
+	  (*tlo_epep)["ver_ep1_ep2_y"]=ver_ep1_ep2.Y();
+	  (*tlo_epep)["ver_ep1_ep2_z"]=ver_ep1_ep2.Z();
 
-	  (*tlo)["oa_lambda"]=oa_lambda;
-	  //(*tlo)["oa_lambda_2"]=oa_lambda_2;
-	  //(*tlo)["oa_lambda"]=oa_lambda;
-	  (*tlo)["oa_pim_p"]=oa_pim_p;
-	  (*tlo)["oa_ep2_p"]=oa_ep2_p;
-	  //(*tlo)["oa_pim_p"]=oa_p_pim;
-	  (*tlo)["oa_ep1_p"]=oa_ep1_p;
-	  (*tlo)["oa_pim_ep2"]=oa_pim_ep2;
-	  (*tlo)["oa_pim_ep1"]=oa_pim_ep1;
-	  (*tlo)["oa_ep2_ep1"]=oa_ep2_ep1;
+	  (*tlo_epep)["oa_lambda"]=oa_lambda;
+	  //(*tlo_epep)["oa_lambda_2"]=oa_lambda_2;
+	  //(*tlo_epep)["oa_lambda"]=oa_lambda;
+	  (*tlo_epep)["oa_pim_p"]=oa_pim_p;
+	  (*tlo_epep)["oa_ep2_p"]=oa_ep2_p;
+	  //(*tlo_epep)["oa_pim_p"]=oa_p_pim;
+	  (*tlo_epep)["oa_ep1_p"]=oa_ep1_p;
+	  (*tlo_epep)["oa_pim_ep2"]=oa_pim_ep2;
+	  (*tlo_epep)["oa_pim_ep1"]=oa_pim_ep1;
+	  (*tlo_epep)["oa_ep2_ep1"]=oa_ep2_ep1;
 	 
-	  (*tlo)["lambda_mom_z"]=lambda_mom_z;
-	  (*tlo)["simon_cuts"]=simon_cut;
-	  (*tlo)["miss_mass_kp"]=miss->M();
+	  (*tlo_epep)["lambda_mom_z"]=lambda_mom_z;
+	  (*tlo_epep)["simon_cuts"]=simon_cut;
+	  (*tlo_epep)["miss_mass_kp"]=miss->M();
 
-	  (*tlo)["lambda_pt"]=lambda_pt;
-	  (*tlo)["lambda_w"]=lambda_w;
-	  (*tlo)["lambda_p"]=lorentz_lambda1115.P();
+	  (*tlo_epep)["lambda_pt"]=lambda_pt;
+	  (*tlo_epep)["lambda_w"]=lambda_w;
+	  (*tlo_epep)["lambda_p"]=lorentz_lambda1115.P();
 	  lorentz_lambda1115.Boost(-1*(beam->Vect()));
-	  (*tlo)["lambda_theta"]=lorentz_lambda1115.Theta();
+	  (*tlo_epep)["lambda_theta"]=lorentz_lambda1115.Theta();
   
-	  (*tlo)["k0_pt"]=k0_pt;
-	  (*tlo)["k0_w"]=k0_w;
-	  (*tlo)["k0_p"]=lorentz_k0.P();
+	  (*tlo_epep)["k0_pt"]=k0_pt;
+	  (*tlo_epep)["k0_w"]=k0_w;
+	  (*tlo_epep)["k0_p"]=lorentz_k0.P();
 	  lorentz_k0.Boost(-1*(beam->Vect()));
-	  (*tlo)["k0_theta"]=lorentz_k0.Theta();
+	  (*tlo_epep)["k0_theta"]=lorentz_k0.Theta();
     
-	  tlo->fill();	
+	  tlo_epep->fill();	
 	  
 	}
     }
@@ -348,7 +348,7 @@ PPimEpEp::PPimEpEp(TTree *tree)
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton09.root/PPimEpEp_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton10.root/PPimEpEp_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton11.root/PPimEpEp_ID");
-      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton12.root/PPimEpEp_ID");
+      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton12.root/PPimEpEp_ID");
       chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/lepton01.root/PPimEpEp_ID");
       
       

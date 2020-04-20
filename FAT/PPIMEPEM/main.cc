@@ -1,6 +1,7 @@
 //#include "PPim.h"
 #include "PPimEpEm.h"
 #include "PPimEpEp.h"
+#include "PPimEmEm.h"
 //#include "EpEp.h"
 //#include "EmEm.h"
 #include "data.h"
@@ -88,9 +89,10 @@ int main()
   gammappim = new TLorentzVector(0,0,0,0);
   gammapimep = new TLorentzVector(0,0,0,0);
   gammapimep1 = new TLorentzVector(0,0,0,0);
+  gammapimem1 = new TLorentzVector(0,0,0,0);
   gammaemep = new TLorentzVector(0,0,0,0);
-  gammaem1em2 = new TLorentzVector(0,0,0,0);
-  gammaep1ep2 = new TLorentzVector(0,0,0,0);
+  gammaem2em1 = new TLorentzVector(0,0,0,0);
+  gammaep2ep1 = new TLorentzVector(0,0,0,0);
   gammappimepem = new TLorentzVector(0,0,0,0);
   gammappimep1ep2 = new TLorentzVector(0,0,0,0);
   gammappimem1em2 = new TLorentzVector(0,0,0,0);
@@ -118,7 +120,11 @@ int main()
 
   /************************** control ntuple ***************************/
   tlo = new HNtuple("ppimepem","ppimepem");
+  tlo_epep = new HNtuple("ppimepep","ppimepep");
+  tlo_emem = new HNtuple("ppimemem","ppimemem");
   tlo->setFile( outFileData );
+  tlo_epep->setFile( outFileData );
+  tlo_emem->setFile( outFileData );
   /*********************************************************************/
 
   int beta_min=0;
@@ -209,6 +215,7 @@ int main()
   //PPim t;
   PPimEpEm t2;
   PPimEpEp t3;
+  PPimEmEm t4;
   //cout << "START PPIM!" << endl;
   //t.Loop();
   //cout << "STOP PPIM!" << endl;
@@ -219,6 +226,9 @@ int main()
   cout << "START PPimEpEp!" << endl;
   t3.Loop();
   cout << "STOP PPimEpEp!!" << endl;
+  cout << "START PPimEmEm!" << endl;
+  t4.Loop();
+  cout << "STOP PPimEmEm!!" << endl;
   
   /*EpEp t_back1;
     t_back1.Loop();
@@ -237,6 +247,7 @@ int main()
   outFileData->cd();
 
   tlo->Write();
+  tlo_epep->Write();
   /*
   p_p_beta->Write();
   pim_p_beta->Write();

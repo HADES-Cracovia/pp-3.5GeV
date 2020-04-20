@@ -11,7 +11,7 @@ namespace PATData
 
   TFile         *outFileData;
 
-  HNtuple       *tlo, *n_out, *n_ppim;
+  HNtuple       *tlo, *n_out, *n_ppim, *tlo_epep, *tlo_emem;
 
   HFilter       *filter;
   float         EFF, ACC;
@@ -86,8 +86,8 @@ namespace PATData
   TLorentzVector *gammapep,*gammapep1,*gammapep2;
   TLorentzVector *gammappim;
   TLorentzVector *gammapem,*gammapem1,*gammapem2;
-  TLorentzVector *gammapimep,*gammapimep1;
-  TLorentzVector *gammaemep,*gammaem1em2,*gammaep1ep2;
+  TLorentzVector *gammapimep,*gammapimep1,*gammapimem1;
+  TLorentzVector *gammaemep,*gammaem2em1,*gammaep2ep1;
   TLorentzVector *gammappimepem,*gammappimep1ep2,*gammappimem1em2;
   TLorentzVector *gammappimem;
   TLorentzVector *gammappimep;

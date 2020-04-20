@@ -18,7 +18,7 @@
 
 namespace PATData {
   extern TFile *outFileData;
-  extern HNtuple *tlo, *n_out, *n_ppim;
+  extern HNtuple *tlo, *n_out, *n_ppim, *tlo_epep, *tlo_emem;
   extern HFilter *filter;
   extern float EFF, ACC;
   extern int event_number, event_mult;
@@ -90,8 +90,8 @@ namespace PATData {
   extern TLorentzVector *gammapep,*gammapep1,*gammapep2;
   extern TLorentzVector *gammappim;
   extern TLorentzVector *gammapem,*gammapem1,*gammapem2;
-  extern TLorentzVector *gammaemep,*gammaem1em2,*gammaep1ep2;
-  extern TLorentzVector *gammapimep,*gammapimep1;
+  extern TLorentzVector *gammaemep,*gammaem2em1,*gammaep2ep1;
+  extern TLorentzVector *gammapimep,*gammapimep1,*gammapimem1;
   extern TLorentzVector *gammappimepem,*gammappimep1ep2,*gammappimem1em2;
   extern TLorentzVector *ppi;
   extern TLorentzVector *ppi_miss;
