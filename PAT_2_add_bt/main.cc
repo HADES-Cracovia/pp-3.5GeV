@@ -37,11 +37,11 @@ Bool_t myselecthadron(HPidTrackCand* pcand); // track cleaner methods
 /*********************************************************************************/
 
 Int_t simflag = 0;
-Int_t wallflag = 1;
+Int_t wallflag = 0;
 Int_t btflag=1;
 
 #define LEPTONS 1
-#define HADRONS 1
+//#define HADRONS 1
 
 /*********************************************************************************/
 
@@ -59,8 +59,11 @@ int main(Int_t argc, Char_t **argv)
 
     //    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/bt/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_2_add_bt/FILES/temp/";
-  
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppippim/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimpippim_dedx_3/";
+    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_1/FILES/ppimepem/";
+
     TString output_File  = inputFile;
     TString output_File2  = inputFile;
     //***----------------------------------------------------------
@@ -85,7 +88,7 @@ int main(Int_t argc, Char_t **argv)
 
     HPidTrackCleaner* cleaner = new HPidTrackCleaner();
     HPidTrackSorter::setIgnoreRICH();
-    HPidTrackSorter::setIgnoreInnerMDC();
+    //HPidTrackSorter::setIgnoreInnerMDC();
     cleaner->setUserSelectionLeptons(myselect);
     cleaner->setUserSelectionHadrons(myselecthadron);
     gHades->getTaskSet(context)->add(cleaner);
@@ -114,16 +117,16 @@ int main(Int_t argc, Char_t **argv)
     myHyps.add("LpLp",eLeptonPos,eLeptonPos);
     myHyps.add("LmLm",eLeptonNeg,eLeptonNeg);
     //***------------------------------------------------
-    myHyps.add("HLpLm",eHadronPos,eHadronPos,eLeptonPos,eLeptonNeg);
-    myHyps.add("HLpLp",eHadronPos,eHadronPos,eLeptonPos,eLeptonPos);
-    myHyps.add("HLmLm",eHadronPos,eHadronPos,eLeptonNeg,eLeptonNeg);
+    myHyps.add("HpHmLpLm",eHadronPos,eHadronNeg,eLeptonPos,eLeptonNeg);
+    myHyps.add("HpHmLpLp",eHadronPos,eHadronNeg,eLeptonPos,eLeptonPos);
+    myHyps.add("HpHmLmLm",eHadronPos,eHadronNeg,eLeptonNeg,eLeptonNeg);
 #endif
     //***------- hadron stuff ---------------------------
 #ifdef HADRONS
     //myHyps.add("HpHp", eHadronPos,eHadronPos);
     //myHyps.add("HpHm", eHadronPos,eHadronNeg);
     myHyps.add("HpHm", eHadronPos,eHadronNeg);
-    myHyps.add("HpHnHp", eHadronPos,eHadronPos,eHadronPos);
+    myHyps.add("HpHmHp", eHadronPos,eHadronPos,eHadronPos);
     myHyps.add("HpHmHpHm", eHadronPos,eHadronNeg,eHadronPos,eHadronNeg);
 #endif
     //***************************************************
@@ -137,9 +140,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids.add("HLpLp", "DEpEp",eDeuteron,ePositron,ePositron);
     //myPids.add("HLmLm", "DEmEm",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids.add("HLpLm", "PEpEm",eProton,ePositron,eElectron);
-    myPids.add("HLpLp", "PEpEp",eProton,ePositron,ePositron);
-    myPids.add("HLmLm", "PEmEm",eProton,eElectron,eElectron);
+    myPids.add("HpHmLpLm", "PPimEpEm",eProton,ePiMinus,ePositron,eElectron);
+    myPids.add("HpHmLpLp", "PPimEpEp",eProton,ePiMinus,ePositron,ePositron);
+    myPids.add("HpHmLmLm", "PPimEmEm",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids.add("LpLm", "EpEm",ePositron,eElectron);
     myPids.add("LpLp", "EpEp",ePositron,ePositron);
@@ -157,7 +160,7 @@ int main(Int_t argc, Char_t **argv)
     //myPids2.add("HpHm", "PipPim",ePiPlus,ePiMinus);
     myPids2.add("HpHm", "PPim",eProton,ePiMinus);
     //myPids2.add("HpHpHm", "PPPim",eProton,eProton,ePiMinus);
-    myPids2.add("HpHnHp", "PPimPip",eProton,ePiMinus,ePiPlus);
+    myPids2.add("HpHmHp", "PPimPip",eProton,ePiMinus,ePiPlus);
     myPids2.add("HpHmHpHm", "PPPipPim",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
@@ -175,9 +178,9 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A.add("HLpLp", "DEpEp_ID",eDeuteron,ePositron,ePositron);
     //myPids_A.add("HLmLm", "DEmEm_ID",eDeuteron,eElectron,eElectron);
     //***------------------------------------------------
-    myPids_A.add("HLpLm", "PEpEm_ID",eProton,ePositron,eElectron);
-    myPids_A.add("HLpLp", "PEpEp_ID",eProton,ePositron,ePositron);
-    myPids_A.add("HLmLm", "PEmEm_ID",eProton,eElectron,eElectron);
+    myPids_A.add("HpHmLpLm", "PPimEpEm_ID",eProton,ePiMinus,ePositron,eElectron);
+    myPids_A.add("HpHmLpLp", "PPimEpEp_ID",eProton,ePiMinus,ePositron,ePositron);
+    myPids_A.add("HpHmLmLm", "PPimEmEm_ID",eProton,ePiMinus,eElectron,eElectron);
     //***------------------------------------------------
     myPids_A.add("LpLm", "EpEm_ID",ePositron,eElectron);
     myPids_A.add("LpLp", "EpEp_ID",ePositron,ePositron);
@@ -194,7 +197,7 @@ int main(Int_t argc, Char_t **argv)
     //myPids_A2.add("HpHm", "PipPim_ID",ePiPlus,ePiMinus);
     myPids_A2.add("HpHm", "PPim_ID",eProton,ePiMinus);
     //myPids_A2.add("HpHpHm", "PPPim_ID",eProton,eProton,ePiMinus);
-    myPids_A2.add("HpHnHp", "PPimPip_ID",eProton,ePiMinus,ePiPlus);
+    myPids_A2.add("HpHmHp", "PPimPip_ID",eProton,ePiMinus,ePiPlus);
     myPids_A2.add("HpHmHpHm", "PPimPipPim_ID",eProton,ePiMinus,ePiPlus,ePiMinus);
 #endif
     //***************************************************
@@ -225,7 +228,8 @@ int main(Int_t argc, Char_t **argv)
     HTimeCut tCut2("all");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP125_PID_NEW_CUTS.root");
     // poprzedni staranny EXP HGraphCut tCut3("all","/u/przygoda/PAT/PP125_p_pip_CUT.root");
-    HGraphCut tCut3("all","/hera/hades/user/przygoda/PAT35/pp35_cuts.root"); // mass^2 versus mom
+    //HGraphCut tCut3("all","/hera/hades/user/przygoda/PAT35/pp35_cuts.root"); // mass^2 versus mom
+    HGraphCut tCut3("all","/lustre/nyx/hades/user/knowakow/PP/PAT_1/cut.root");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP125_p_p_CUT.root");
     //HGraphCut tCut3("all","/u/przygoda/PAT/PP_END_CUTS.root");
     // dla testow
@@ -363,7 +367,8 @@ Bool_t myselect(HPidTrackCand* pcand)
     if(!pTrack)                   return kFALSE;
     if (!pTrack->bIsAccepted[2])  return kFALSE;
     if (!pTrack->bIsAccepted[4])  return kFALSE;
-    if (pHit->iSystem<0)          return kFALSE;
+    //flag for reconstructed system!!!
+    //if (pHit->iSystem<0)          return kFALSE;
     //if (pTrack->nTofRecFlag[4]<1) return kFALSE;
     if (pTrack->fMomenta[4]>3000) return kFALSE;
     if (pTrack->fRKChiSquare>10000.) return kFALSE;
@@ -386,7 +391,8 @@ Bool_t myselecthadron(HPidTrackCand* pcand)
     if(!pTrack)                   return kFALSE;
     if (!pTrack->bIsAccepted[2])  return kFALSE;
     if (!pTrack->bIsAccepted[4])  return kFALSE;
-    if (pHit->iSystem<0)          return kFALSE;
+    //flaf for reconstruction in system!!!
+    //if (pHit->iSystem<0)          return kFALSE;
     if (pTrack->fMomenta[4]>3000) return kFALSE;
     if (pTrack->fRKChiSquare>10000.) return kFALSE;
     //if (pTrack->getBeta(4)<0.1)   return kFALSE;
