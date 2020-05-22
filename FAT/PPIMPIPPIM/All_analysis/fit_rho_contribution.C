@@ -25,20 +25,37 @@ int fit_rho_contribution(void)
       cout<<"n: "<<i<<" x: "<<x[i]<<" y: "<<y[i]<<endl;
     }
 
+  TFile* out=new TFile("rho_output.root","RECREATE");
   TGraph* chi_test=new TGraph(steps,x,y);
 
   TCanvas *cChi2=new TCanvas("cChi2");
   chi_test->Draw("AC*");
 
+  TCanvas *cContribution=new TCanvas("cContribution");
+  bez_rho_component->Draw();
+  bez_rho_component->SetLineColor(kGreen-3);
+  bez_rho_component->SetLineWidth(3);
+  rho_component->Draw("same");
+  rho_component->SetLineColor(kGreen+1);
+  rho_component->SetLineWidth(3);
+  
   TCanvas *cOptimal=new TCanvas("cOptimal");
-  double ww=0;
-  sum_component->Add(rho_component,bez_rho_component,ww,1.0-ww);
+  double ww=1;
+  TH1F* rho_component_copy=rho_component->Clone("rho_component_copy");
+  TH1F* bez_rho_component_copy=bez_rho_component->Clone("bez_rho_component_copy");
+  sum_component->Add(rho_component_copy,bez_rho_component_copy,ww,1.0-ww);
   sum_component->Add(bg_component);
   data_component->Draw();
   sum_component->Draw("same");
   bg_component->Draw("same");
-  rho_component->Scale(ww);
-  rho_component->Draw("same");
-  bez_rho_component->Scale(1.0-ww);
-  bez_rho_component->Draw("same");
+  rho_component_copy->Scale(ww);
+  rho_component_copy->Draw("same");
+  bez_rho_component_copy->Scale(1.0-ww);
+  bez_rho_component_copy->Draw("same");
+
+  cChi2->Write();
+  cContribution->Write();
+  cOptimal->Write();
+
+  out->Write();
 }
