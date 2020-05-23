@@ -184,7 +184,9 @@ void PPimPipPim::Loop()
                   
 	  Float_t oa_lambda_1=R2D*openingangle(ver_to_ver_1,gammappim1->Vect());
 	  Float_t oa_lambda_2=R2D*openingangle(ver_to_ver_2,gammappim2->Vect());
-      
+
+	  //Warning!!! odistance between Lambda track and smth. most probably wrong!, hHire I don't use it so doesen't metter. 
+	  
 	  Float_t dist_p_pim1=trackDistance(p_r,p_z,*p,pim1_r,pim1_z,*pim1);
 	  Float_t dist_p_pim2=trackDistance(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
 	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
@@ -373,17 +375,17 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   Float_t dist_p_pim2=trackDistance(s.p_r,s.p_z,*p,s.pim2_r,s.pim2_z,*pim2);
   Float_t dist_pip_pim1=trackDistance(s.pip_r,s.pip_z,*pip,s.pim1_r,s.pim1_z,*pim1);
   Float_t dist_pip_pim2=trackDistance(s.pip_r,s.pip_z,*pip,s.pim2_r,s.pim2_z,*pim2);
-  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
-  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
-  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
-  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+  Float_t dist_lambda1_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim1,*gammappim1);
+  Float_t dist_lambda2_pip=trackDistance(s.pip_r,s.pip_z,*pip,ver_p_pim2,*gammappim2);
+  Float_t dist_lambda1_pim2=trackDistance(s.pim2_r,s.pim2_z,*pim2,ver_p_pim1,*gammappim1);
+  Float_t dist_lambda2_pim1=trackDistance(s.pim1_r,s.pim1_z,*pim1,ver_p_pim2,*gammappim2);
   Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
   Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
 
   Float_t dist_lambda1_eVert=trackToPoint(ver_p_pim1,gammappim1->Vect(),eVert);
-  Float_t dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);;
-  Float_t dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);;
-  Float_t dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);;
+  Float_t dist_lambda2_eVert=trackToPoint(ver_p_pim2,gammappim2->Vect(),eVert);
+  Float_t dist_lambda1_ver_pip_pim=trackToPoint(ver_p_pim1,gammappim1->Vect(),ver_pip_pim2);
+  Float_t dist_lambda2_ver_pip_pim=trackToPoint(ver_p_pim2,gammappim2->Vect(),ver_pip_pim1);
 
   Float_t dist_p1_eVert=trackToPoint(ver_p_pim1,p->Vect(),eVert);
   Float_t dist_p2_eVert=trackToPoint(ver_p_pim2,p->Vect(),eVert);
@@ -447,7 +449,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       lorentz_k0=*gammapim2pip;
 
       //new vertex_pip_pim
-      ver_pip_pim=vertex(ver_p_pim.Pt(),ver_p_pim.Z(),lorentz_lambda1115,ver_pip_pim.Pt(),ver_pip_pim.Z(),lorentz_k0);
+      ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
       TVector3 ver_to_ver=ver_p_pim-ver_pip_pim;
       dist_ver_to_ver=ver_to_ver.Mag();
       oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());
@@ -477,7 +479,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       lorentz_k0=*gammapim1pip;
 
       //new vertex_pip_pim
-      ver_pip_pim=vertex(ver_p_pim.Pt(),ver_p_pim.Z(),lorentz_lambda1115,ver_pip_pim.Pt(),ver_pip_pim.Z(),lorentz_k0);
+      ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
       TVector3 ver_to_ver=ver_p_pim-ver_pip_pim;
       dist_ver_to_ver=ver_to_ver.Mag();
       oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());

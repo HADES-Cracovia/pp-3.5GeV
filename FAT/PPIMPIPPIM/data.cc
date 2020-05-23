@@ -195,6 +195,32 @@ namespace PATData
 
     return dist;
   }
+  double trackDistance(double r2, double z2, TLorentzVector v2, TVector3 base01, TLorentzVector v1)
+  {
+    return trackDistance(base01,v1,r2,z2,v2);
+  }
+  
+  double trackDistance(TVector3 base01, TLorentzVector v1, double r2, double z2, TLorentzVector v2)
+  {
+    double dist;
+    HGeomVector base_1, base_2, dir_1, dir_2;
+    HParticleTool p_tool;
+    double phi1, phi2;
+
+    base_1.setXYZ(base01.X(),base01.Y(),base01.Z());
+    dir_1.setXYZ(v1.X(),v1.Y(),v1.Z());
+    
+    //phi1=p_tool.getLabPhiDeg(v1)*D2R;
+    phi2=p_tool.getLabPhiDeg(v2)*D2R;
+            
+    //p_tool.calcSegVector(z1,r1,phi1,v1.Theta(),base_1,dir_1);
+    p_tool.calcSegVector(z2,r2,phi2,v2.Theta(),base_2,dir_2);
+
+    dist=p_tool.calculateMinimumDistance(base_1,dir_1,base_2,dir_2);
+
+    return dist;
+  }
+  
 
   TVector3 vertex(double r1,double z1,TLorentzVector v1, double r2,double z2,TLorentzVector v2)
   {
@@ -224,6 +250,26 @@ namespace PATData
     //cout<<"HGeomVector: "<<ver.getX()<<" " <<ver.getY()<<" "<<ver.getZ()<<endl;
     out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
     //cout<<"out vector"; out.Print(); cout<<endl;
+    return out; 
+  }
+  
+  TVector3 vertex2(TVector3 base_10,TLorentzVector v1, TVector3 base_20,TLorentzVector v2)
+  {
+    TVector3 out;
+    HGeomVector ver;
+    HGeomVector base_1, base_2, dir_1, dir_2;
+    HParticleTool p_tool;
+    double phi1, phi2;
+
+    base_1.setXYZ(base_10.X(),base_10.Y(),base_10.Z());
+    base_2.setXYZ(base_20.X(),base_20.Y(),base_20.Z());
+
+    dir_1.setXYZ(v1.X(),v1.Y(),v1.Z());
+    dir_2.setXYZ(v1.X(),v1.Y(),v1.Z());
+          
+    ver=p_tool.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
+    out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());
+    
     return out; 
   }
   
