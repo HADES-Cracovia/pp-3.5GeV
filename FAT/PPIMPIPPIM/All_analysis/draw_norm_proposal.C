@@ -1,3 +1,28 @@
+void mult_error(TH1* hist, double err,bool verbose=0)
+{
+  cout<<endl<<"***scaling the histogram by const value***"<<endl;
+  cout<<"hist name"<<hist->GetName()<<endl;
+  cout<<"scaling error "<<err<<endl;
+  
+  int nbin_min=1;
+  int nbin_max=hist->GetNbinsX();
+  for(int i=nbin_min;i<=nbin_max;i++)
+    {
+      //double cont=hist->GetBinContent(i);
+      double error=hist->GetBinError(i)*err;
+      if(verbose)
+	{
+	  cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
+	  cout<<"                       bin error:  "<<error<<endl;
+	}
+      hist->SetBinError(i,error); 
+    }
+
+  cout<<"***end of scale_error function***"<<endl<<endl;
+  
+}
+
+
 void set_Y_name(TH1* hist)
 {
   char name[10000]; // enough to hold all numbers up to 64-bits
@@ -100,24 +125,24 @@ double hist_error(TH1* hist, double x1=2, double x2=1)
 void scale_error(TH1* hist, double err,bool verbose=0)
 {
   /*cout<<endl<<"***scaling the histogram errors according to one relative error***"<<endl;
-  cout<<"hist name"<<hist->GetName()<<endl;
-  cout<<"scaling error"<<err<<endl;
+    cout<<"hist name"<<hist->GetName()<<endl;
+    cout<<"scaling error"<<err<<endl;
   
-  int nbin_min=1;
-  int nbin_max=hist->GetNbinsX();
-  for(int i=nbin_min;i<=nbin_max;i++)
+    int nbin_min=1;
+    int nbin_max=hist->GetNbinsX();
+    for(int i=nbin_min;i<=nbin_max;i++)
     {
-      double cont=hist->GetBinContent(i);
-      double error=hist->GetBinContent(i)*err;
-      if(verbose)
-	{
-	  cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
-	  cout<<"                       bin error:  "<<error<<endl;
-	}
-      hist->SetBinError(i,error); 
+    double cont=hist->GetBinContent(i);
+    double error=hist->GetBinContent(i)*err;
+    if(verbose)
+    {
+    cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
+    cout<<"                       bin error:  "<<error<<endl;
+    }
+    hist->SetBinError(i,error); 
     }
 
-  cout<<"***end of scale_error function***"<<endl<<endl;
+    cout<<"***end of scale_error function***"<<endl<<endl;
   */
   cout<<endl<<"***scaling the histogram errors according expected statistical errors***"<<endl;
   cout<<"hist name"<<hist->GetName()<<endl;
@@ -166,7 +191,10 @@ int draw_norm_proposal(void)
   TFile *fileL1520= new TFile("SB_sim_L1520pippim.root","READ");
   TFile *fileLK0=new TFile("SB_sim_LK0ppip.root","READ");
   TFile *fileExp= new TFile("SB_experiment.root","READ");
+  TFile *fileRho=new TFile("z_RHO.root","READ");
+  TFile *fileBezRho=new TFile("bez_RHO.root","READ");
 
+  
   TH1F *hexperiment_L=(TH1F*)fileExp->Get("hMPPim_TMVA_K0mass");
   TH1F *hexperiemnt_K0=(TH1F*)fileExp->Get("hMPipPim_TMVA_Lmass");
   TH1F *hsim_L=(TH1F*)fileLK0->Get("hMPPim_TMVA_K0mass");
@@ -257,7 +285,23 @@ int draw_norm_proposal(void)
   TH1F *hL1520_hMPipPim_background=(TH1F*)fileL1520->Get("hMPipPim_background");
   hL1520_hMPipPim_background->SetName("hL1520_hMPipPim_background");
   hL1520_hMPipPim_background->Sumw2(kFALSE);
- 
+  //RHO file
+  TH1F *hL1520_hMPipPim_rho_distribution=(TH1F*)fileRho->Get("histo1");
+  hL1520_hMPipPim_rho_distribution->SetName("hL1520_hMPipPim_rho_distribution");
+  TH1F *hL1520_hMPipPim_bez_rho_distribution=(TH1F*)fileBezRho->Get("histo1");
+  hL1520_hMPipPim_bez_rho_distribution->SetName("hL1520_hMPipPim_bez_rho_distribution");
+
+  TH1F *hL1520_hMPipPim_rho=(TH1F*)hL1520_hMPipPim_signal->Clone("hL1520_hMPipPim_rho");
+  hL1520_hMPipPim_rho->Reset();
+  hL1520_hMPipPim_rho->SetNameTitle("hL1520_hMPipPim_rho","M^{inv}_{#pi^{+} #pi^{-}} for #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV];counts");
+  TH1F *hL1520_hMPipPim_bez_rho=(TH1F*)hL1520_hMPipPim_signal->Clone("hL1520_hMPipPim_bez_rho");
+  hL1520_hMPipPim_bez_rho->Reset();
+  hL1520_hMPipPim_bez_rho->SetNameTitle("hL1520_hMPipPim_bez_rho","M^{inv}_{#pi^{+} #pi^{-}} for #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV];counts");
+
+  TH1F *hL1520_hMPipPim_efficiency=(TH1F*)hL1520_hMPipPim_background->Clone("hL1520_hMPipPim_efficiency");
+  hL1520_hMPipPim_efficiency->Reset();
+  hL1520_hMPipPim_efficiency->SetNameTitle("hL1520_hMPipPim_efficiency","Shape distortion by the limited acceptance;M^{inv}_{#pi^{+} #pi^{-}}[MeV];#frac{reconstructed}{simulated in 4 #pi}");
+  //end of HRO files 
   
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
   TH1F *hclean_background=(TH1F*)hS1385_background->Clone("hclean_background");
@@ -301,7 +345,7 @@ int draw_norm_proposal(void)
   double nsim=120*TMath::Power(10,6);
   double scale=3.13*TMath::Power(10,8);
   double downscale=3;//trigger downscale for simulated events comensate by sim_factor
-  double sim_factor=3*14.3e2;//factor caused by ek=4.5, 3 because lack of trigger down scale
+  double sim_factor=2.64*10e4*28/140;//3*14.3e2;//factor caused by ek=4.5, 3 because lack of trigger down scale
   double cs[5]=
     {14.05/1000*scale/(nsim*downscale)*sim_factor,//S1385
      9.26/1000*scale/(nsim*downscale)*sim_factor,//SDpp
@@ -318,17 +362,7 @@ int draw_norm_proposal(void)
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
 
-  hS1385_background->Sumw2();
-  hSDpp_background->Sumw2();
-  hLDpp_background->Sumw2();
-  hL1520_background->Sumw2();
-  hS1385_hMPipPim_background->Sumw2();
-  hSDpp_hMPipPim_background->Sumw2();
-  hLDpp_hMPipPim_background->Sumw2();
-  hL1520_hMPipPim_background->Sumw2();
-  //hsim_L->Sumw2();
-  //hsim_K0->Sumw2();
-
+  
   
   scale(hS1385_background,cs[0]);
   scale(hSDpp_background,cs[1]);
@@ -341,30 +375,32 @@ int draw_norm_proposal(void)
   scale(hsim_L,cs[4]);
   scale(hsim_K0,cs[4]);
 
-  /*  hS1385_background->Sumw2();
+  hS1385_background->Sumw2();
   hSDpp_background->Sumw2();
   hLDpp_background->Sumw2();
   hL1520_background->Sumw2();
+  hS1385_hMPipPim_background->Sumw2();
+  hSDpp_hMPipPim_background->Sumw2();
+  hLDpp_hMPipPim_background->Sumw2();
+  hL1520_hMPipPim_background->Sumw2();
+  //hsim_L->Sumw2();
+  //hsim_K0->Sumw2();
+
+  /*  hS1385_background->Sumw2();
+      hSDpp_background->Sumw2();
+      hLDpp_background->Sumw2();
+      hL1520_background->Sumw2();
   */
   /*
-  scale_error(hS1385_background,err[0]);
-  scale_error(hSDpp_background,err[1]);
-  scale_error(hLDpp_background,err[2]);
-  scale_error(hL1520_background,err[3]);
-  scale_error(hS1385_hMPipPim_background,err[0]);
-  scale_error(hSDpp_hMPipPim_background,err[1]);
-  scale_error(hLDpp_hMPipPim_background,err[2]);
-  scale_error(hL1520_hMPipPim_background,err[3]);
+    scale_error(hS1385_background,err[0]);
+    scale_error(hSDpp_background,err[1]);
+    scale_error(hLDpp_background,err[2]);
+    scale_error(hL1520_background,err[3]);
+    scale_error(hS1385_hMPipPim_background,err[0]);
+    scale_error(hSDpp_hMPipPim_background,err[1]);
+    scale_error(hLDpp_hMPipPim_background,err[2]);
+    scale_error(hL1520_hMPipPim_background,err[3]);
   */
- hS1385_data->Sumw2();
-  hSDpp_data->Sumw2();
-  hLDpp_data->Sumw2();
-  hL1520_data->Sumw2();
-  hS1385_hMPipPim_signal->Sumw2();
-  hSDpp_hMPipPim_signal->Sumw2();
-  hLDpp_hMPipPim_signal->Sumw2();
-  hL1520_hMPipPim_signal->Sumw2();
- 
   
   scale(hS1385_data,cs[0]);
   scale(hSDpp_data,cs[1]);
@@ -374,21 +410,32 @@ int draw_norm_proposal(void)
   scale(hSDpp_hMPipPim_signal,cs[1]);
   scale(hLDpp_hMPipPim_signal,cs[2]);
   scale(hL1520_hMPipPim_signal,cs[3]);
-  /*
+
   hS1385_data->Sumw2();
   hSDpp_data->Sumw2();
   hLDpp_data->Sumw2();
   hL1520_data->Sumw2();
+  hS1385_hMPipPim_signal->Sumw2();
+  hSDpp_hMPipPim_signal->Sumw2();
+  hLDpp_hMPipPim_signal->Sumw2();
+  hL1520_hMPipPim_signal->Sumw2();
+ 
+
+  /*
+    hS1385_data->Sumw2();
+    hSDpp_data->Sumw2();
+    hLDpp_data->Sumw2();
+    hL1520_data->Sumw2();
   */
   /*
-  scale_error(hS1385_data,err[0]);
-  scale_error(hSDpp_data,err[1]);
-  scale_error(hLDpp_data,err[2]);
-  scale_error(hL1520_data,err[3]);
-  scale_error(hS1385_hMPipPim_signal,err[0]);
-  scale_error(hSDpp_hMPipPim_signal,err[1]);
-  scale_error(hLDpp_hMPipPim_signal,err[2]);
-  scale_error(hL1520_hMPipPim_signal,err[3]);
+    scale_error(hS1385_data,err[0]);
+    scale_error(hSDpp_data,err[1]);
+    scale_error(hLDpp_data,err[2]);
+    scale_error(hL1520_data,err[3]);
+    scale_error(hS1385_hMPipPim_signal,err[0]);
+    scale_error(hSDpp_hMPipPim_signal,err[1]);
+    scale_error(hLDpp_hMPipPim_signal,err[2]);
+    scale_error(hL1520_hMPipPim_signal,err[3]);
   */
   hsum_background->Add(hS1385_background);
   hsum_background->Add(hSDpp_background);
@@ -427,14 +474,15 @@ int draw_norm_proposal(void)
   double sig_int=hclean_L1520->Integral(hclean_L1520->FindBin(int_min),hclean_L1520->FindBin(int_max));
   double backgroud_int=hclean_background->Integral(hclean_background->FindBin(int_min),hclean_background->FindBin(int_max));
   double experiment_int=hclean_experiment->Integral(hclean_experiment->FindBin(int_min),hclean_experiment->FindBin(int_max));
-
+  double scale_sig=7.2/5.6;//hard code from experiment part
+  
   hclean_L1520_ren->Add(hclean_L1520,1);
-  hclean_L1520_ren->Scale((experiment_int-backgroud_int)/sig_int);
+  hclean_L1520_ren->Scale(scale_sig);
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
   hclean_L1520_ren_PipPim->Add(hclean_L1520_PipPim,1);
-  hclean_L1520_ren_PipPim->Scale((experiment_int-backgroud_int)/sig_int);
+  hclean_L1520_ren_PipPim->Scale(scale_sig);
   hclean_sum_ren_PipPim->Add(hclean_L1520_ren_PipPim,1);
   hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
 
@@ -524,12 +572,12 @@ int draw_norm_proposal(void)
   
   int rebin2=2; //wrong error propagation for simul events
   TCanvas *cSum=new TCanvas("cSum","cSum");  
-  /*
+  
   hexperiment_data->Rebin(rebin2);
   hexperiment_data->SetAxisRange(1300,1800);
   hexperiment_data->Draw("e1");
   setHistogramStyleData(hexperiment_data);
-  */
+  
   hsum_data->Rebin(rebin2);
   hsum_data->SetAxisRange(1300,1800);
   hsum_data->Draw("samee1");
@@ -541,17 +589,17 @@ int draw_norm_proposal(void)
   setHistogramStyleSimul(hsum_background);
   hsum_background->Draw("samee1");
 
-  /*
+  
   hexperiment_background->SetAxisRange(1300,1800);
   hexperiment_background->Rebin(rebin2);
   hexperiment_background->SetLineColor(kRed);
   hexperiment_background->Draw("samee1");
   setHistogramStyleData(hexperiment_background);
-  */
+  
    
   
   TCanvas *cSum_PipPim=new TCanvas("cSum_PipPim","cSumPipPim");  
-  /*
+  
   hexperiment_hMPipPim_signal->Rebin(rebin2);
   hexperiment_hMPipPim_signal->SetAxisRange(250,450);
   hexperiment_hMPipPim_signal->Draw("e1");
@@ -561,7 +609,7 @@ int draw_norm_proposal(void)
   hexperiment_hMPipPim_background->SetLineColor(kRed);
   hexperiment_hMPipPim_background->Draw("samee1");
   setHistogramStyleData(hexperiment_hMPipPim_background);
-  */
+  
   hsum_hMPipPim_signal->Rebin(rebin2);
   hsum_hMPipPim_signal->SetAxisRange(250,450);
   hsum_hMPipPim_signal->Draw("samee1");
@@ -575,12 +623,12 @@ int draw_norm_proposal(void)
   
   int rebin=2;
   TCanvas *cClean=new TCanvas("cClean","cClean");
-  /*
-  hclean_experiment->Draw("e1");
+  
+  //hclean_experiment->Draw("e1");
   hclean_experiment->Rebin(rebin);
-hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
+  hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   setHistogramStyleData(hclean_experiment);
-  */
+  
   hclean_sum->Rebin(rebin);
   hclean_sum->GetXaxis()->SetRangeUser(1360,1780);
   hclean_sum->SetLineColor(kMagenta);
@@ -603,12 +651,12 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   
   int rebin_pippim=4;
   TCanvas *cClean_PipPim=new TCanvas("cClean_PipPim","cClean_PipPim");
-  /*
-  hclean_experiment_PipPim->Draw("e1");
+  
+  //hclean_experiment_PipPim->Draw("e1");
   hclean_experiment_PipPim->Rebin(rebin_pippim);
   hclean_experiment_PipPim->GetXaxis()->SetRangeUser(250,450);
   setHistogramStyleData(hclean_experiment_PipPim);
-  */
+  
   hclean_sum_PipPim->Rebin(rebin_pippim);
   hclean_sum_PipPim->GetXaxis()->SetRangeUser(250,450);
   hclean_sum_PipPim->SetLineColor(kMagenta);
@@ -627,12 +675,20 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   hclean_L1520_PipPim->Draw("samee2");
   hclean_L1520_PipPim->SetFillStyle(3154);
   setHistogramStyleSimul(hclean_L1520_PipPim);
-  
-  /*
+
+   
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
-  cClean_ren->Divide(2);
+  
+  cClean_ren->Divide(1);
   cClean_ren->cd(1);
-  hclean_experiment->Draw("e1");
+hclean_sum_ren->Rebin(rebin);
+  hclean_sum_ren->SetLineColor(kMagenta);
+  hclean_sum_ren->SetFillColor(kMagenta);
+  setHistogramStyleSimul(hclean_sum_ren);
+  hclean_sum_ren->SetFillStyle(3145);
+  hclean_sum_ren->Draw("samee2");
+  
+  //hclean_experiment->Draw("e1");
     
   //hclean_experiment->Rebin(rebin);
   //hclean_background->SetLineColor(kRed);
@@ -648,14 +704,8 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   hclean_L1520_ren->Draw("samee2");
   
 
-  hclean_sum_ren->Rebin(rebin);
-  hclean_sum_ren->SetLineColor(kMagenta);
-  hclean_sum_ren->SetFillColor(kMagenta);
-  setHistogramStyleSimul(hclean_sum_ren);
-  hclean_sum_ren->SetFillStyle(3145);
-  hclean_sum_ren->Draw("samee2");
   
-
+  /*
   cClean_ren->cd(2);
   hpure_signal->Rebin(rebin);
   hpure_signal->GetXaxis()->SetRangeUser(1360,1780);
@@ -694,9 +744,17 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*4,text7);
   printFormula1->DrawLatex(0.5,high-printFormula1->GetTextSize()*7,text8);
   */
-  /*
+  
   TCanvas *cClean_ren_PipPim=new TCanvas("cClean_ren_PipPim","cClean_ren_PipPim");
-  hclean_experiment_PipPim->Draw("e1");
+
+  hclean_sum_ren_PipPim->Rebin(rebin_pippim);
+  hclean_sum_ren_PipPim->SetLineColor(kMagenta);
+  hclean_sum_ren_PipPim->SetFillColor(kMagenta);
+  setHistogramStyleSimul(hclean_sum_ren_PipPim);
+  hclean_sum_ren_PipPim->SetFillStyle(3145);
+  hclean_sum_ren_PipPim->Draw("samee2");
+  
+  //hclean_experiment_PipPim->Draw("e1");
     
   //hclean_experiment->Rebin(rebin_pippim);
   //hclean_background->SetLineColor(kRed);
@@ -711,14 +769,42 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   hclean_L1520_ren_PipPim->SetFillStyle(3154);
   hclean_L1520_ren_PipPim->Draw("samee2");
   
-
-  hclean_sum_ren_PipPim->Rebin(rebin_pippim);
-  hclean_sum_ren_PipPim->SetLineColor(kMagenta);
-  hclean_sum_ren_PipPim->SetFillColor(kMagenta);
-  setHistogramStyleSimul(hclean_sum_ren_PipPim);
-  hclean_sum_ren_PipPim->SetFillStyle(3145);
+  TCanvas *cClean_ren_PipPim_rho=new TCanvas("cClean_ren_PipPim_rho","cClean_ren_PipPim_rho");
+  //hclean_experiment_PipPim->Draw("e1");
+    
+  //hclean_experiment->Rebin(rebin_pippim);
+  //hclean_background->SetLineColor(kRed);
+  //hclean_background->Rebin(rebin_pippim);
+  
   hclean_sum_ren_PipPim->Draw("samee2");
-  */
+  hclean_background_PipPim->Draw("samee2");
+  hclean_L1520_ren_PipPim->Draw("samee2");
+  
+  int rr=100000;
+  for(int r=0;r<rr;r++)
+    {
+      hL1520_hMPipPim_rho->Fill(hL1520_hMPipPim_rho_distribution->GetRandom()*1000);
+      hL1520_hMPipPim_bez_rho->Fill(hL1520_hMPipPim_bez_rho_distribution->GetRandom()*1000);
+    }
+
+  //rebin the same as data
+  hL1520_hMPipPim_rho->Rebin(rebin_pippim);
+  hL1520_hMPipPim_bez_rho->Rebin(rebin_pippim);
+  hL1520_hMPipPim_efficiency->Rebin(rebin_pippim);
+
+  hL1520_hMPipPim_efficiency->Divide(hclean_L1520_ren_PipPim, hL1520_hMPipPim_bez_rho);
+  hL1520_hMPipPim_rho->Multiply(hL1520_hMPipPim_efficiency);
+  hL1520_hMPipPim_rho->Scale(hclean_L1520_ren_PipPim->Integral()/hL1520_hMPipPim_rho->Integral());
+    
+
+  hL1520_hMPipPim_rho->Sumw2();
+  mult_error(hL1520_hMPipPim_rho,0.9);//scale up according to assumption that the same values has the same eror 
+  
+  hL1520_hMPipPim_rho->Draw("samee2");
+  hL1520_hMPipPim_rho->SetFillStyle(3195);
+  hL1520_hMPipPim_rho->SetFillColor(kGreen-4);
+  hL1520_hMPipPim_rho->SetLineColor(kGreen-4);
+  setHistogramStyleSimul(hL1520_hMPipPim_rho);
   
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
@@ -959,6 +1045,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cRes_PipPim->Write();
   cClean->Write();
   cClean_PipPim->Write();
+  cClean_ren_PipPim_rho->Write();
   cSum->Write();
   cSB->Write();
   cLK0->Write();

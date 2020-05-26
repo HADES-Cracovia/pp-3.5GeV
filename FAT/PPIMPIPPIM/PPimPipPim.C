@@ -191,10 +191,10 @@ void PPimPipPim::Loop()
 	  Float_t dist_p_pim2=trackDistance(p_r,p_z,*p,pim2_r,pim2_z,*pim2);
 	  Float_t dist_pip_pim1=trackDistance(pip_r,pip_z,*pip,pim1_r,pim1_z,*pim1);
 	  Float_t dist_pip_pim2=trackDistance(pip_r,pip_z,*pip,pim2_r,pim2_z,*pim2);
-	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
-	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
-	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,*pim2,ver_p_pim1.Z(),getR(ver_p_pim1),*gammappim1);
-	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,*pim1,ver_p_pim2.Z(),getR(ver_p_pim2),*gammappim2);
+	  Float_t dist_lambda1_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim1,*gammappim1);
+	  Float_t dist_lambda2_pip=trackDistance(pip_r,pip_z,*pip,ver_p_pim2,*gammappim2);
+	  Float_t dist_lambda1_pim2=trackDistance(pim2_r,pim2_z,*pim2,ver_p_pim1,*gammappim1);
+	  Float_t dist_lambda2_pim1=trackDistance(pim1_r,pim1_z,*pim1,ver_p_pim2,*gammappim2);
 	  Float_t dist_ver_to_ver_1=ver_to_ver_1.Mag();
 	  Float_t dist_ver_to_ver_2=ver_to_ver_2.Mag();
       

@@ -36,7 +36,7 @@ void make_background_from_data::Loop()
   if(fChain == 0)
     return;
 
-  TFile* outputFile = new TFile("input_from_data_miss_mass_4_new_vertex.root","recreate");
+  TFile* outputFile = new TFile("input_from_data_Rafal_poprawka.root","recreate");
   if( outputFile == 0 )
     {
       cout << "Error: file exampleEvents.root not found" << endl;
@@ -109,7 +109,8 @@ void make_background_from_data::Loop()
     
     if ((m_inv_p_pim<1110 ||m_inv_p_pim>1120)
         && isBest_new==1
-	&& miss_mass_kp>1077)
+	&& miss_mass_kp>1077
+	&& (m_inv_p_pim<1500 && m_inv_p_pim>900))
       background_data->Fill();
     
     else

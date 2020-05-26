@@ -22,13 +22,13 @@
 using namespace std;
 
 //______________________________________________________________________________
-void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t DesEntries = -1) {
+void TMVAClassification_data_driven_multiple(TString extraSuffix = "new_Vertex", Long64_t DesEntries = -1) {
   TMVA::Tools::Instance();
 
   cout << "==> Start TMVAClassification" << endl;
 
   //TString NameSuffix = (treeFile.Contains("_") ? treeFile(treeFile.First('_'), treeFile.Last('.') - treeFile.First('_')) : TString("New")) + extraSuffix;
-  TFile* outputFile = TFile::Open("TMVATraining_data_driven_miss_mass" + extraSuffix + ".root", "RECREATE");
+  TFile* outputFile = TFile::Open("TMVATraining_data_driven_miss_mass_poprawka_Rafal" + extraSuffix + ".root", "RECREATE");
 
   if(outputFile==0)
     cout<<"uninicialized output file"<<endl;
@@ -71,9 +71,9 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   //factory->AddVariable("pip_p","pip_p","mm",'F');
   factory->AddVariable("dist_p_pim", "dist_p_pim","mm",'F',0,150);
   factory->AddVariable("dist_pip_pim", "dist_pip_pim","mm",'F',0,150);
-  //factory->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
-  //factory->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
-  //factory->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
+  factory->AddVariable("eVert_x", "eVert_x","mm",'F',-60,60);
+  factory->AddVariable("eVert_y", "eVert_y","mm",'F',-60,60);
+  factory->AddVariable("eVert_z", "eVert_z","mm",'F',-100,40);
   factory->AddVariable("ver_pip_pim_x","ver_pip_pim_x","mm",'F',-80,80);
   factory->AddVariable("ver_pip_pim_y","ver_pip_pim_y","mm",'F',-80,80);
   factory->AddVariable("ver_pip_pim_z","ver_pip_pim_z","mm",'F',-150,150);
@@ -83,9 +83,9 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
   factory->AddVariable("oa_lambda", "oa_lambda","deg",'F',0,180);
   //factory->AddVariable("oa_pip_p","oa_pip_p","mm",'F');
   //factory->AddVariable("lambda_mom_z","lambda_mom_z","mm",'F');
-  //factory->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
-  //factory->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
-  //factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
+  factory->AddVariable("dist_p_eVert","dist_p_eVert","mm",'F',0,140);
+  factory->AddVariable("dist_pim_eVert","dist_pim_eVert","mm",'F',0,140);
+  factory->AddVariable("dist_lambda_eVert","dist_lambda_eVert","mm",'F',0,140);
   factory->AddVariable("dist_lambda_ver_pip_pim","dist_lambda_ver_pip_pim","mm",'F',0,140);
   factory->AddVariable("dist_ver_to_ver","dist_ver_to_ver","mm",'F',0,150);
   
@@ -94,7 +94,7 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
 
   //TFile* input    = TFile::Open(treeFile, "UPDATE");
   //TFile* input2   = TFile::Open("input_from_data_miss_mass_3.root", "UPDATE");
-  TFile* input2   = TFile::Open("input_from_data_miss_mass_4_new_vertex.root","UPDATE");
+  TFile* input2   = TFile::Open("input_from_data_Rafal_poprawka.root","UPDATE");
   cout<<"load input file"<<endl;
   //TTree* tSigAll  = (TTree*) input->Get("signal");
   //TTree* tBackAll = (TTree*) input->Get("background");
@@ -135,9 +135,9 @@ void TMVAClassification_data_driven(TString extraSuffix = "new_Vertex", Long64_t
 factory->BookMethod(TMVA::Types::kMLP, "kMLP_pca_ce_600_6(n+4)_no_ev", "!H:!V:NCycles=600:HiddenLayers=N+4,N+4,N+4,N+4,N+4,N+4:NeuronType=sigmoid:NeuronInputType=sum:EstimatorType=CE:TrainingMethod=BP:VarTransform=N,P:BPMode=sequential:CalculateErrors=True");
   
   
-//factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
+factory->BookMethod( TMVA::Types::kLikelihood, "Likelihood", "VarTransform=N,P" );
 
-  //factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
+  factory->BookMethod( TMVA::Types::kBDT, "BDT", "UseYesNoLeaf=False:nCuts=40" );
   
   factory->BookMethod( TMVA::Types::kCuts,"RecCuts","!V:FitMethod=GA");
   

@@ -121,6 +121,30 @@ void scale_error(TH1* hist, double err,bool verbose=0)
   
 }
 
+void mult_error(TH1* hist, double err,bool verbose=0)
+{
+  cout<<endl<<"***scaling the histogram by const value***"<<endl;
+  cout<<"hist name"<<hist->GetName()<<endl;
+  cout<<"scaling error "<<err<<endl;
+  
+  int nbin_min=1;
+  int nbin_max=hist->GetNbinsX();
+  for(int i=nbin_min;i<=nbin_max;i++)
+    {
+      //double cont=hist->GetBinContent(i);
+      double error=hist->GetBinError(i)*err;
+      if(verbose)
+	{
+	  cout<<"bin number: "<<i<<" bin contetnt: "<<cont<<endl;
+	  cout<<"                       bin error:  "<<error<<endl;
+	}
+      hist->SetBinError(i,error); 
+    }
+
+  cout<<"***end of scale_error function***"<<endl<<endl;
+  
+}
+
 
 void normalize(TH1* hist)
 {
@@ -146,7 +170,10 @@ int draw_norm(void)
   TFile *fileL1520= new TFile("SB_sim_L1520pippim.root","READ");
   TFile *fileLK0=new TFile("SB_sim_LK0ppip.root","READ");
   TFile *fileExp= new TFile("SB_experiment.root","READ");
+  TFile *fileRho=new TFile("z_RHO.root","READ");
+  TFile *fileBezRho=new TFile("bez_RHO.root","READ");
 
+  
   TH1F *hexperiment_L=(TH1F*)fileExp->Get("hMPPim_TMVA_K0mass");
   TH1F *hexperiemnt_K0=(TH1F*)fileExp->Get("hMPipPim_TMVA_Lmass");
   TH1F *hsim_L=(TH1F*)fileLK0->Get("hMPPim_TMVA_K0mass");
@@ -238,7 +265,23 @@ int draw_norm(void)
   hL1520_hMPipPim_background->SetName("hL1520_hMPipPim_background");
   hL1520_hMPipPim_background->Sumw2(kFALSE);
  
-  
+  //RHO file
+  TH1F *hL1520_hMPipPim_rho_distribution=(TH1F*)fileRho->Get("histo1");
+  hL1520_hMPipPim_rho_distribution->SetName("hL1520_hMPipPim_rho_distribution");
+  TH1F *hL1520_hMPipPim_bez_rho_distribution=(TH1F*)fileBezRho->Get("histo1");
+  hL1520_hMPipPim_bez_rho_distribution->SetName("hL1520_hMPipPim_bez_rho_distribution");
+
+  TH1F *hL1520_hMPipPim_rho=(TH1F*)hL1520_hMPipPim_signal->Clone("hL1520_hMPipPim_rho");
+  hL1520_hMPipPim_rho->Reset();
+  hL1520_hMPipPim_rho->SetNameTitle("hL1520_hMPipPim_rho","M^{inv}_{#pi^{+} #pi^{-}} for #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV];counts");
+  TH1F *hL1520_hMPipPim_bez_rho=(TH1F*)hL1520_hMPipPim_signal->Clone("hL1520_hMPipPim_bez_rho");
+  hL1520_hMPipPim_bez_rho->Reset();
+  hL1520_hMPipPim_bez_rho->SetNameTitle("hL1520_hMPipPim_bez_rho","M^{inv}_{#pi^{+} #pi^{-}} for #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV];counts");
+
+  TH1F *hL1520_hMPipPim_efficiency=(TH1F*)hL1520_hMPipPim_background->Clone("hL1520_hMPipPim_efficiency");
+  hL1520_hMPipPim_efficiency->Reset();
+  hL1520_hMPipPim_efficiency->SetNameTitle("hL1520_hMPipPim_efficiency","Shape distortion by the limited acceptance;M^{inv}_{#pi^{+} #pi^{-}}[MeV];#frac{reconstructed}{simulated in 4 #pi}");
+  //end of HRO files
   TH1F *hsum_background=(TH1F*)hS1385_background->Clone("hsum_background");
   TH1F *hclean_background=(TH1F*)hS1385_background->Clone("hclean_background");
   TH1F *hclean_experiment=(TH1F*)hexperiment_background->Clone("hclean_experiment");
@@ -661,8 +704,42 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   setHistogramStyleSimul(hclean_sum_ren_PipPim);
   hclean_sum_ren_PipPim->SetFillStyle(3145);
   hclean_sum_ren_PipPim->Draw("samee2");
+
+  TCanvas *cClean_ren_PipPim_rho=new TCanvas("cClean_ren_PipPim_rho","cClean_ren_PipPim_rho");
+  hclean_experiment_PipPim->Draw("e1");
+    
+  //hclean_experiment->Rebin(rebin_pippim);
+  //hclean_background->SetLineColor(kRed);
+  //hclean_background->Rebin(rebin_pippim);
+  hclean_background_PipPim->Draw("samee2");
+  hclean_L1520_ren_PipPim->Draw("samee2");
+  hclean_sum_ren_PipPim->Draw("samee2");
   
+  int rr=1000;
+  for(int r=0;r<10000;r++)
+    {
+      hL1520_hMPipPim_rho->Fill(hL1520_hMPipPim_rho_distribution->GetRandom()*1000);
+      hL1520_hMPipPim_bez_rho->Fill(hL1520_hMPipPim_bez_rho_distribution->GetRandom()*1000);
+    }
+
+  //rebin the same as data
+  hL1520_hMPipPim_rho->Rebin(rebin_pippim);
+  hL1520_hMPipPim_bez_rho->Rebin(rebin_pippim);
+  hL1520_hMPipPim_efficiency->Rebin(rebin_pippim);
+
+  hL1520_hMPipPim_efficiency->Divide(hclean_L1520_ren_PipPim, hL1520_hMPipPim_bez_rho);
+  hL1520_hMPipPim_rho->Multiply(hL1520_hMPipPim_efficiency);
+  hL1520_hMPipPim_rho->Scale(hclean_L1520_ren_PipPim->Integral()/hL1520_hMPipPim_rho->Integral());
+    
+
+  hL1520_hMPipPim_rho->Sumw2();
+  mult_error(hL1520_hMPipPim_rho,0.9);//scale up according to assumption that the same values has the same eror 
   
+  hL1520_hMPipPim_rho->Draw("samee2");
+  hL1520_hMPipPim_rho->SetFillStyle(3195);
+  hL1520_hMPipPim_rho->SetFillColor(kGreen-4);
+  hL1520_hMPipPim_rho->SetLineColor(kGreen-4);
+  setHistogramStyleSimul(hL1520_hMPipPim_rho);
   
   TCanvas *cSB=new TCanvas("cSB","Spectrum for side-band");
   hexperiment_SB_spectrum->SetAxisRange(1050,1250);
@@ -881,6 +958,17 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   hsim_K0->Write();
   hsim_L->Write();
 
+  hL1520_hMPipPim_efficiency->Write();
+  hL1520_hMPipPim_rho_distribution->Write();
+  hL1520_hMPipPim_bez_rho_distribution->Write();
+  hL1520_hMPipPim_rho->Write();
+  hL1520_hMPipPim_bez_rho->Write();
+
+  hclean_background_PipPim->Write();
+  hclean_experiment_PipPim->Write();
+  hclean_L1520_ren_PipPim->Write();
+  hclean_sum_ren_PipPim->Write();
+  
   fK0_experiment_fit->Write();
   fK0_experiment_sig->Write();
   fL1116_experiment_fit->Write();
@@ -902,6 +990,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cRes_PipPim->Write();
   cClean->Write();
   cClean_PipPim->Write();
+  cClean_ren_PipPim_rho->Write();
   cSum->Write();
   cSB->Write();
   cLK0->Write();
