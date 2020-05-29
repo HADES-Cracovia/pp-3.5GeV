@@ -449,7 +449,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       lorentz_k0=*gammapim2pip;
 
       //new vertex_pip_pim
-      ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
+      //ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
       TVector3 ver_to_ver=ver_p_pim-ver_pip_pim;
       dist_ver_to_ver=ver_to_ver.Mag();
       oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());
@@ -479,7 +479,7 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       lorentz_k0=*gammapim1pip;
 
       //new vertex_pip_pim
-      ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
+      //ver_pip_pim=vertex2(ver_p_pim,lorentz_lambda1115,ver_pip_pim,lorentz_k0);
       TVector3 ver_to_ver=ver_p_pim-ver_pip_pim;
       dist_ver_to_ver=ver_to_ver.Mag();
       oa_lambda=R2D*openingangle(ver_to_ver,lorentz_lambda1115.Vect());

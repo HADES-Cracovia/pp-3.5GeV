@@ -266,14 +266,14 @@ namespace PATData
 
     dir_1.setXYZ(v1.X(),v1.Y(),v1.Z());
     dir_2.setXYZ(v1.X(),v1.Y(),v1.Z());
-
+    /*
     
     cout<<"base1 "<<base_1.getX()<<" "<<base_1.getY()<<" "<<base_1.getZ()<<endl;
     cout<<"dir1 "<<dir_1.getX()<<" "<<dir_1.getY()<<" "<<dir_1.getZ()<<endl;
 
     cout<<"base2 "<<base_2.getX()<<" "<<base_2.getY()<<" "<<base_2.getZ()<<endl;
     cout<<"dir2 "<<dir_2.getX()<<" "<<dir_2.getY()<<" "<<dir_2.getZ()<<endl;
-    
+    */
     
     ver=p_tool.calcVertexAnalytical(base_1,dir_1,base_2,dir_2);
     out.SetXYZ(ver.getX(),ver.getY(),ver.getZ());

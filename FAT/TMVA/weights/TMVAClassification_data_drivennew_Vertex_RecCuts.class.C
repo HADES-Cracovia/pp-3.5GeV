@@ -10,9 +10,9 @@ Method         : Cuts::RecCuts
 TMVA Release   : 4.2.0         [262656]
 ROOT Release   : 5.34/34       [336418]
 Creator        : knowakow
-Date           : Mon Aug 12 21:06:29 2019
+Date           : Fri May 29 10:35:58 2020
 Host           : Linux lxbuild05 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt20-1+deb8u4 (2016-02-29) x86_64 GNU/Linux
-Dir            : /lustre/nyx/hades/user/knowakow/PP/FAT/TMVA
+Dir            : /lustre/hades/user/knowakow/PP/FAT/TMVA
 Training events: 400568
 Analysis type  : [Classification]
 
@@ -40,6 +40,12 @@ CutRangeMin[0]: "-1.000000e+00" [Minimum of allowed cut range (set per variable)
     CutRangeMin[8]: "-1.000000e+00"
     CutRangeMin[9]: "-1.000000e+00"
     CutRangeMin[10]: "-1.000000e+00"
+    CutRangeMin[11]: "-1.000000e+00"
+    CutRangeMin[12]: "-1.000000e+00"
+    CutRangeMin[13]: "-1.000000e+00"
+    CutRangeMin[14]: "-1.000000e+00"
+    CutRangeMin[15]: "-1.000000e+00"
+    CutRangeMin[16]: "-1.000000e+00"
 CutRangeMax[0]: "-1.000000e+00" [Maximum of allowed cut range (set per variable)]
     CutRangeMax[1]: "-1.000000e+00"
     CutRangeMax[2]: "-1.000000e+00"
@@ -51,6 +57,12 @@ CutRangeMax[0]: "-1.000000e+00" [Maximum of allowed cut range (set per variable)
     CutRangeMax[8]: "-1.000000e+00"
     CutRangeMax[9]: "-1.000000e+00"
     CutRangeMax[10]: "-1.000000e+00"
+    CutRangeMax[11]: "-1.000000e+00"
+    CutRangeMax[12]: "-1.000000e+00"
+    CutRangeMax[13]: "-1.000000e+00"
+    CutRangeMax[14]: "-1.000000e+00"
+    CutRangeMax[15]: "-1.000000e+00"
+    CutRangeMax[16]: "-1.000000e+00"
 VarProp[0]: "NotEnforced" [Categorisation of cuts]
     VarProp[1]: "NotEnforced"
     VarProp[2]: "NotEnforced"
@@ -62,23 +74,35 @@ VarProp[0]: "NotEnforced" [Categorisation of cuts]
     VarProp[8]: "NotEnforced"
     VarProp[9]: "NotEnforced"
     VarProp[10]: "NotEnforced"
+    VarProp[11]: "NotEnforced"
+    VarProp[12]: "NotEnforced"
+    VarProp[13]: "NotEnforced"
+    VarProp[14]: "NotEnforced"
+    VarProp[15]: "NotEnforced"
+    VarProp[16]: "NotEnforced"
 ##
 
 
 #VAR -*-*-*-*-*-*-*-*-*-*-*-* variables *-*-*-*-*-*-*-*-*-*-*-*-
 
-NVar 11
-dist_p_pim                    dist_p_pim                    dist_p_pim                    dist_p_pim                    mm                                'F'    [4.45244913863e-05,591.79876709]
-dist_pip_pim                  dist_pip_pim                  dist_pip_pim                  dist_pip_pim                  mm                                'F'    [2.60141878243e-05,680.619262695]
-ver_pip_pim_x                 ver_pip_pim_x                 ver_pip_pim_x                 ver_pip_pim_x                 mm                                'F'    [-27109.4433594,117643.984375]
-ver_pip_pim_y                 ver_pip_pim_y                 ver_pip_pim_y                 ver_pip_pim_y                 mm                                'F'    [-30494.9765625,336199.4375]
-ver_pip_pim_z                 ver_pip_pim_z                 ver_pip_pim_z                 ver_pip_pim_z                 mm                                'F'    [-848390.4375,742903.3125]
-ver_p_pim_x                   ver_p_pim_x                   ver_p_pim_x                   ver_p_pim_x                   mm                                'F'    [-4408.59033203,5815.69433594]
-ver_p_pim_y                   ver_p_pim_y                   ver_p_pim_y                   ver_p_pim_y                   mm                                'F'    [-10921.9150391,10528.8847656]
-ver_p_pim_z                   ver_p_pim_z                   ver_p_pim_z                   ver_p_pim_z                   mm                                'F'    [-36484.0898438,32938.125]
-oa_lambda                     oa_lambda                     oa_lambda                     oa_lambda                     deg                               'F'    [0.0153690213338,179.980255127]
-dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       mm                                'F'    [0.0131534170359,76398.515625]
-dist_ver_to_ver               dist_ver_to_ver               dist_ver_to_ver               dist_ver_to_ver               mm                                'F'    [0.0941462889314,914557.375]
+NVar 17
+dist_p_pim                    dist_p_pim                    dist_p_pim                    dist_p_pim                    mm                                'F'    [1.01507907857e-06,603.52923584]
+dist_pip_pim                  dist_pip_pim                  dist_pip_pim                  dist_pip_pim                  mm                                'F'    [3.43821229762e-05,572.798339844]
+eVert_x                       eVert_x                       eVert_x                       eVert_x                       mm                                'F'    [-5827.08349609,273.897399902]
+eVert_y                       eVert_y                       eVert_y                       eVert_y                       mm                                'F'    [-303.891357422,2914.54443359]
+eVert_z                       eVert_z                       eVert_z                       eVert_z                       mm                                'F'    [-403.549713135,6252.6796875]
+ver_pip_pim_x                 ver_pip_pim_x                 ver_pip_pim_x                 ver_pip_pim_x                 mm                                'F'    [-4931.35351562,54311.2734375]
+ver_pip_pim_y                 ver_pip_pim_y                 ver_pip_pim_y                 ver_pip_pim_y                 mm                                'F'    [-7147.14501953,30107.1289062]
+ver_pip_pim_z                 ver_pip_pim_z                 ver_pip_pim_z                 ver_pip_pim_z                 mm                                'F'    [-27947.3457031,94062.0859375]
+ver_p_pim_x                   ver_p_pim_x                   ver_p_pim_x                   ver_p_pim_x                   mm                                'F'    [-2923.45874023,3421.23803711]
+ver_p_pim_y                   ver_p_pim_y                   ver_p_pim_y                   ver_p_pim_y                   mm                                'F'    [-10921.9150391,7084.95996094]
+ver_p_pim_z                   ver_p_pim_z                   ver_p_pim_z                   ver_p_pim_z                   mm                                'F'    [-36484.0898438,11360.6660156]
+oa_lambda                     oa_lambda                     oa_lambda                     oa_lambda                     deg                               'F'    [0.0298797897995,179.989089966]
+dist_p_eVert                  dist_p_eVert                  dist_p_eVert                  dist_p_eVert                  mm                                'F'    [0.00858939718455,8478.03027344]
+dist_pim_eVert                dist_pim_eVert                dist_pim_eVert                dist_pim_eVert                mm                                'F'    [0.0148080633953,3835.61425781]
+dist_lambda_eVert             dist_lambda_eVert             dist_lambda_eVert             dist_lambda_eVert             mm                                'F'    [0.00939705595374,8235.5390625]
+dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       dist_lambda_ver_pip_pim       mm                                'F'    [0.00914021674544,76398.515625]
+dist_ver_to_ver               dist_ver_to_ver               dist_ver_to_ver               dist_ver_to_ver               mm                                'F'    [0.175918266177,112732.6875]
 NSpec 0
 
 
@@ -121,11 +145,11 @@ class ReadRecCuts : public IClassifierReader {
    ReadRecCuts( std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadRecCuts" ),
-        fNvars( 11 ),
+        fNvars( 17 ),
         fIsNormalised( false )
    {      
       // the training input variables
-      const char* inputVars[] = { "dist_p_pim", "dist_pip_pim", "ver_pip_pim_x", "ver_pip_pim_y", "ver_pip_pim_z", "ver_p_pim_x", "ver_p_pim_y", "ver_p_pim_z", "oa_lambda", "dist_lambda_ver_pip_pim", "dist_ver_to_ver" };
+      const char* inputVars[] = { "dist_p_pim", "dist_pip_pim", "eVert_x", "eVert_y", "eVert_z", "ver_pip_pim_x", "ver_pip_pim_y", "ver_pip_pim_z", "ver_p_pim_x", "ver_p_pim_y", "ver_p_pim_z", "oa_lambda", "dist_p_eVert", "dist_pim_eVert", "dist_lambda_eVert", "dist_lambda_ver_pip_pim", "dist_ver_to_ver" };
 
       // sanity checks
       if (theInputVars.size() <= 0) {
@@ -171,6 +195,18 @@ class ReadRecCuts : public IClassifierReader {
       fVmax[9] = 0;
       fVmin[10] = 0;
       fVmax[10] = 0;
+      fVmin[11] = 0;
+      fVmax[11] = 0;
+      fVmin[12] = 0;
+      fVmax[12] = 0;
+      fVmin[13] = 0;
+      fVmax[13] = 0;
+      fVmin[14] = 0;
+      fVmax[14] = 0;
+      fVmin[15] = 0;
+      fVmax[15] = 0;
+      fVmin[16] = 0;
+      fVmax[16] = 0;
 
       // initialize input variable types
       fType[0] = 'F';
@@ -184,6 +220,12 @@ class ReadRecCuts : public IClassifierReader {
       fType[8] = 'F';
       fType[9] = 'F';
       fType[10] = 'F';
+      fType[11] = 'F';
+      fType[12] = 'F';
+      fType[13] = 'F';
+      fType[14] = 'F';
+      fType[15] = 'F';
+      fType[16] = 'F';
 
       // initialize constants
       Initialize();
@@ -215,15 +257,15 @@ class ReadRecCuts : public IClassifierReader {
    // normalisation of input variables
    const bool fIsNormalised;
    bool IsNormalised() const { return fIsNormalised; }
-   double fVmin[11];
-   double fVmax[11];
+   double fVmin[17];
+   double fVmax[17];
    double NormVariable( double x, double xmin, double xmax ) const {
       // normalise to output range: [-1, 1]
       return 2*(x - xmin)/(xmax - xmin) - 1.0;
    }
 
    // type of input variable: 'F' or 'I'
-   char   fType[11];
+   char   fType[17];
 
    // initialize internal variables
    void Initialize();
