@@ -1,9 +1,8 @@
-
 #define createHistos_cxx
 #include "createHistos.h"
 #include <TCutG.h>
 #include <TH2.h>
-#include <TStyle.h>
+//#include <TSyle.h>
 #include <TCanvas.h>
 #include <TMath.h>
 #include <TGraphErrors.h>
@@ -14,6 +13,17 @@
 #include <TLine.h>
 
 using namespace std;
+void scale(TH1F* hist, double s)
+{
+  //hist->Scale(s);
+
+  for (Int_t j=1; j<hist->GetNbinsX()+1; ++j)
+    {
+      hist->SetBinContent( j, hist->GetBinContent(j)*s );
+      hist->SetBinError( j, hist->GetBinError(j)*s );
+    }
+
+}
 
 void createHistos::Loop(char* output)
 {
@@ -56,11 +66,11 @@ void createHistos::Loop(char* output)
   
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
-  TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- e^{+} e^{-}}[MeV]",bin,xmin,xmax);
-  TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- e^{+} e^{-}}[MeV]",bin,xmin,xmax);
+  TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
+  TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* orginal_spectrum=new TH1F("orginal_spectrum","orginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
-  TH1F* hMEpEm_signal=new TH1F("hMEpEm_signal","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
-  TH1F* hMEpEm_background=new TH1F("hMEpEm_background","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
+  TH1F* hMPipPim_signal=new TH1F("hMPipPim_signal","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
+  TH1F* hMPipPim_background=new TH1F("hMPipPim_background","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520)",120,0,600);
   
   TGraphErrors* resi=new TGraphErrors(bin);
   TF1* background_fit=new TF1("background_fit","pol2(0)",1000,1200);
@@ -71,12 +81,12 @@ void createHistos::Loop(char* output)
   
   TH1F* missing_mass_K0_L=new TH1F("missing_mass_K0_L","missing mass for #Lambda K^{0} candidates",1000,600,1600);
   TH2F* dedx_lambda=new TH2F("dedx_lambda","de/dx for #Lambda events",250,0,2000,250,0,18);
-  TH2F* miss_m_vs_ep_em=new TH2F("miss_m_vs_ep_em","M^{miss} vs. M_{e^{+} e^{-}}",50,1340,1650,50,200,450);
+  TH2F* miss_m_vs_pip_pim=new TH2F("miss_m_vs_pip_pim","M^{miss} vs. M_{#pi+ #pi-}",50,1340,1650,50,200,450);
   background->Sumw2();
   data->Sumw2();
   orginal_spectrum->Sumw2();
 
-  int dM=5;
+  int dM=1;
   int Lmin=1000;
   int Lmax=1500;
   int LdM=(Lmax-Lmin)/dM;
@@ -85,20 +95,20 @@ void createHistos::Loop(char* output)
   int KdM=(Kmax-Kmin)/dM;
   //Histograms for all stages of analysis
   TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identification cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMEpEm_start=new TH1F("hMEpEm_start","M^{inv}_{e^{+} e^{-}} after identification cuts; M^{inv}_{e^{+} e^{-}} [MeV];N",KdM,Kmin,Kmax);
-  TH2F* miss_m_vs_ep_p_start=new TH2F("miss_m_vs_ep_p_start","M^{miss}_{p #pi^{-} e^{+} e^{-}} vs. M_{p #pi^{+}};M^{miss}_{p #pi^{-} e^{+} e^{-}}[MeV];M^{inv}_{#pi+ p}[MeV];N",90,500,1400,50,1100,1600);
-  TH2F* p_pim_vs_ep_em_start=new TH2F("p_pim_vs_ep_em_start","M_{p #pi-} vs. M_{e^{+} e^{-}};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{e^{+} e^{-}}[MeV];N",200,1050,1450,200,250,700);
+  TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identification cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH2F* miss_m_vs_pip_p_start=new TH2F("miss_m_vs_pip_p_start","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{p #pi^{+}};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi+ p}[MeV];N",90,500,1400,50,1100,1600);
+  TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1450,200,250,700);
   TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMEpEm_TMVA=new TH1F("hMEpEm_TMVA","M^{inv}_{e^{+} e^{-}} after MLP; M^{inv}_{e^{+} e^{-}} [MeV];N",KdM,Kmin,Kmax);
-  TH2F* miss_m_vs_ep_p_TMVA=new TH2F("miss_m_vs_ep_p_TMVA","M^{miss}_{p #pi^{-} e^{+} e^{-}} vs. M_{#pi^{+} p};M^{miss}_{p #pi^{-} e^{+} e^{-}}[MeV];M^{inv}_{#pi^{+} p}[MeV];N",90,500,1400,50,1100,1600);
-  TH2F* p_pim_vs_ep_em_TMVA=new TH2F("p_pim_vs_ep_em_TMVA","M_{p #pi-} vs. M_{e^{+} e^{-}};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{e^{+} e^{-}}[MeV];N",200,1050,1400,200,250,700);
+  TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH2F* miss_m_vs_pip_p_TMVA=new TH2F("miss_m_vs_pip_p_TMVA","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{#pi^{+} p};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi^{+} p}[MeV];N",90,500,1400,50,1100,1600);
+  TH2F* p_pim_vs_pip_pim_TMVA=new TH2F("p_pim_vs_pip_pim_TMVA","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1400,200,250,700);
   TH1F* hMPPim_TMVA_K0mass=new TH1F("hMPPim_TMVA_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMEpEm_TMVA_Lmass=new TH1F("hMEpEm_TMVA_Lmass","M^{inv}_{e^{+} e^{-}} after MLP and a gate for #Lambda; M^{inv}_{e^{+} e^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   TH1F* hMPPim_TMVAMass=new TH1F("hMPPim_TMVAMass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMEpEm_TMVAMass=new TH1F("hMEpEm_TMVAMass","M^{inv}_{e^{+} e^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{e^{+} e^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH1F* hMPipPim_TMVAMass=new TH1F("hMPipPim_TMVAMass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   
   hMPPim_TMVA_K0mass->Sumw2();
-  hMEpEm_TMVA_Lmass->Sumw2();
+  hMPipPim_TMVA_Lmass->Sumw2();
   
   
   TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
@@ -107,7 +117,7 @@ void createHistos::Loop(char* output)
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
 
-  double mlp_cut=0;
+  double mlp_cut=0.57;
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
@@ -123,58 +133,57 @@ void createHistos::Loop(char* output)
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       // if (Cut(ientry) < 0) continue;
 
-      if(isBest==1)
+      if(isBest_new==1)
 	{
 	  hMPPim_start->Fill(m_inv_p_pim);
-	  hMEpEm_start->Fill(m_inv_ep_em);
-	  //miss_m_vs_ep_p_start->Fill(miss_mass_kp,m_inv_p_ep);
-	  p_pim_vs_ep_em_start->Fill(m_inv_p_pim,m_inv_ep_em);
+	  hMPipPim_start->Fill(m_inv_pip_pim);
+	  miss_m_vs_pip_p_start->Fill(miss_mass_kp,m_inv_p_pip);
+	  p_pim_vs_pip_pim_start->Fill(m_inv_p_pim,m_inv_pip_pim);
 
 	  if(mlp_output>mlp_cut)
 	    {
 	      hMPPim_TMVA->Fill(m_inv_p_pim);
-	      hMEpEm_TMVA->Fill(m_inv_ep_em);
-	      //miss_m_vs_ep_p_TMVA->Fill(miss_mass_kp,m_inv_p_ep);
-	      p_pim_vs_ep_em_TMVA->Fill(m_inv_p_pim,m_inv_ep_em);
-	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110)
-		hMEpEm_TMVA_Lmass->Fill(m_inv_ep_em);
-	      if(m_inv_ep_em<500 && m_inv_ep_em>480)
+	      hMPipPim_TMVA->Fill(m_inv_pip_pim);
+	      miss_m_vs_pip_p_TMVA->Fill(miss_mass_kp,m_inv_p_pip);
+	      p_pim_vs_pip_pim_TMVA->Fill(m_inv_p_pim,m_inv_pip_pim);
+	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110 && miss_mass_kp>1077)
+		hMPipPim_TMVA_Lmass->Fill(m_inv_pip_pim);
+	      if(m_inv_pip_pim<500 && m_inv_pip_pim>480 && miss_mass_kp>1077)
 		hMPPim_TMVA_K0mass->Fill(m_inv_p_pim);
-	      /*
-	      if(graph_cut->IsInside(miss_mass_kp,m_inv_ep_em))
+	      if(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 		{
 		  hMPPim_TMVAMass->Fill(m_inv_p_pim);
-		  hMEpEm_TMVAMass->Fill(m_inv_ep_em);
+		  hMPipPim_TMVAMass->Fill(m_inv_pip_pim);
 		}
-	      */
 	    }
 	}
       
       
       if(
-	 m_inv_ep_em<500
+	 m_inv_pip_pim<500
+	 && m_inv_pip_pim>480
 	 && m_inv_p_pim<1126
 	 && m_inv_p_pim>1106
 	 && mlp_output<mlp_cut
-	 //&& miss_mass_kp>1077
+	 && miss_mass_kp>1077
 	 )//K0 and L(1116)
 	{
-	  //dedx_lambda->Fill(ep_p,ep_dedx);
-	  //missing_mass_K0_L->Fill(miss_mass_kp);
+	  dedx_lambda->Fill(pip_p,pip_dedx);
+	  missing_mass_K0_L->Fill(miss_mass_kp);
 	}
 
 
       //all events for final pictures
-      if(isBest!=1
+      if(isBest_new!=1
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
-	 ||m_inv_ep_em>410 //replaced by graphical cut
+	 //||m_inv_pip_pim>410 //replaced by graphical cut
 	 ||dist_ver_to_ver<5
 	 ||(oa_lambda>20)
-	 //||!(graph_cut->IsInside(miss_mass_kp,m_inv_ep_em))
+	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||p_theta>20 //to clean up proton sample
-	 //||dist_ep_em>5
-	 //||dist_ep_em>150
+	 //||dist_pip_pim>5
+	 //||dist_pip_pim>150
 	 //||ver_p_pim_z<-5
 	 //||dist_ver_to_ver<14
 	 )
@@ -183,23 +192,23 @@ void createHistos::Loop(char* output)
       
       if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
 	{
-	  data->Fill(m_inv_p_pim_ep_em);
-	  miss_m_vs_ep_em->Fill(miss_mass_kp,m_inv_ep_em);	  
-	  if(m_inv_p_pim_ep_em>1440 && m_inv_p_pim_ep_em<1600)
-	    hMEpEm_signal->Fill(m_inv_ep_em);
+	  data->Fill(m_inv_p_pim_pip_pim);
+	  miss_m_vs_pip_pim->Fill(miss_mass_kp,m_inv_pip_pim);	  
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_signal->Fill(m_inv_pip_pim);
 	}
 
       if(m_inv_p_pim<1116.-sidebandmin && m_inv_p_pim>1116.-sidebandmax)
 	{
-	  background->Fill(m_inv_p_pim_ep_em);
-	  if(m_inv_p_pim_ep_em>1440 && m_inv_p_pim_ep_em<1600)
-	    hMEpEm_background->Fill(m_inv_ep_em);
+	  background->Fill(m_inv_p_pim_pip_pim);
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_background->Fill(m_inv_pip_pim);
 	}
       if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
 	{
-	  background->Fill(m_inv_p_pim_ep_em);
-	  if(m_inv_p_pim_ep_em>1440 && m_inv_p_pim_ep_em<1600)
-	    hMEpEm_background->Fill(m_inv_ep_em);
+	  background->Fill(m_inv_p_pim_pip_pim);
+	  if(m_inv_p_pim_pip_pim>1440 && m_inv_p_pim_pip_pim<1600)
+	    hMPipPim_background->Fill(m_inv_pip_pim);
 	
 	}
     }
@@ -243,8 +252,8 @@ void createHistos::Loop(char* output)
   cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
   cout<<"all in signal range: "<<intAll<<endl;
 
-  background->Scale(intB/intsideband);
-  hMEpEm_background->Scale(intB/intsideband);
+  scale(background,intB/intsideband);
+  scale(hMPipPim_background,intB/intsideband);
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);
@@ -270,14 +279,14 @@ void createHistos::Loop(char* output)
   //L1116_signal->Draw("same");
 
   K0_fit->SetParameters(1528*r_f*r_f,492,0.03,11,1207*r_f,-3.3*r_f,0.002*r_f);
-  hMEpEm_TMVA_Lmass->Rebin(r_f);
-  hMEpEm_TMVA_Lmass->Fit(K0_fit,"R0");
+  hMPipPim_TMVA_Lmass->Rebin(r_f);
+  hMPipPim_TMVA_Lmass->Fit(K0_fit,"R0");
   K0_fit->SetRange(476,510);
-  hMEpEm_TMVA_Lmass->Fit(K0_fit,"R0");
+  hMPipPim_TMVA_Lmass->Fit(K0_fit,"R0");
   K0_fit->SetRange(466,523);
-  hMEpEm_TMVA_Lmass->Fit(K0_fit,"R0");
+  hMPipPim_TMVA_Lmass->Fit(K0_fit,"R0");
   K0_fit->SetRange(450,536);
-  hMEpEm_TMVA_Lmass->Fit(K0_fit,"R0");
+  hMPipPim_TMVA_Lmass->Fit(K0_fit,"R0");
   K0_signal->SetParameters(K0_fit->GetParameter(0),K0_fit->GetParameter(1),K0_fit->GetParameter(2),K0_fit->GetParameter(3));
   K0_signal->SetLineColor(kGreen-2);
   //K0_signal->Draw("same");
@@ -292,35 +301,35 @@ void createHistos::Loop(char* output)
   signal->Write();
   background->Write();
   data->Write();
-  hMEpEm_signal->Write();
-  hMEpEm_background->Write();
+  hMPipPim_signal->Write();
+  hMPipPim_background->Write();
   orginal_spectrum->Write();
   missing_mass_K0_L->Write();
-  miss_m_vs_ep_em->Write();
+  miss_m_vs_pip_pim->Write();
   graph_cut->Write();
 
   styleTH1(hMPPim_start);
-  styleTH1(hMEpEm_start);
+  styleTH1(hMPipPim_start);
   styleTH1(hMPPim_TMVA);
-  styleTH1(hMEpEm_TMVA);
+  styleTH1(hMPipPim_TMVA);
   styleTH1(hMPPim_TMVA_K0mass);
-  styleTH1(hMEpEm_TMVA_Lmass);
+  styleTH1(hMPipPim_TMVA_Lmass);
   styleTH1(hMPPim_TMVAMass);
-  styleTH1(hMEpEm_TMVAMass);
+  styleTH1(hMPipPim_TMVAMass);
  
   
   hMPPim_start->Write();
-  hMEpEm_start->Write();
-  miss_m_vs_ep_p_start->Write();
-  p_pim_vs_ep_em_start->Write();
+  hMPipPim_start->Write();
+  miss_m_vs_pip_p_start->Write();
+  p_pim_vs_pip_pim_start->Write();
   hMPPim_TMVA->Write();
-  hMEpEm_TMVA->Write();
-  miss_m_vs_ep_p_TMVA->Write();
-  p_pim_vs_ep_em_TMVA->Write();
+  hMPipPim_TMVA->Write();
+  miss_m_vs_pip_p_TMVA->Write();
+  p_pim_vs_pip_pim_TMVA->Write();
   hMPPim_TMVA_K0mass->Write();
-  hMEpEm_TMVA_Lmass->Write();
+  hMPipPim_TMVA_Lmass->Write();
   hMPPim_TMVAMass->Write();
-  hMEpEm_TMVAMass->Write(); 
+  hMPipPim_TMVAMass->Write(); 
 
   K0_fit->Write();
   K0_signal->Write();
@@ -331,24 +340,24 @@ void createHistos::Loop(char* output)
   line2->Write("line2");
   line3->Write("line3");
   line4->Write("line4");
-  /*
+
   line1->Delete();
   line2->Delete();
   line3->Delete();
   line4->Delete();
     
   hMPPim_start->Delete();
-  hMEpEm_start->Delete();
-  miss_m_vs_ep_p_start->Delete();
-  p_pim_vs_ep_em_start->Delete();
+  hMPipPim_start->Delete();
+  miss_m_vs_pip_p_start->Delete();
+  p_pim_vs_pip_pim_start->Delete();
   hMPPim_TMVA->Delete();
-  hMEpEm_TMVA->Delete();
-  miss_m_vs_ep_p_TMVA->Delete();
-  p_pim_vs_ep_em_TMVA->Delete();
+  hMPipPim_TMVA->Delete();
+  miss_m_vs_pip_p_TMVA->Delete();
+  p_pim_vs_pip_pim_TMVA->Delete();
   hMPPim_TMVA_K0mass->Delete();
-  hMEpEm_TMVA_Lmass->Delete();
+  hMPipPim_TMVA_Lmass->Delete();
   hMPPim_TMVAMass->Delete();
-  hMEpEm_TMVAMass->Delete();
+  hMPipPim_TMVAMass->Delete();
 
   K0_fit->Delete();
   K0_signal->Delete();
@@ -366,9 +375,9 @@ void createHistos::Loop(char* output)
   data->Delete();
   orginal_spectrum->Delete();
   missing_mass_K0_L->Delete();
-  miss_m_vs_ep_em->Delete();
+  miss_m_vs_pip_pim->Delete();
   graph_cut->Delete();
-  */
+
 
   MyFile->Close();
 }

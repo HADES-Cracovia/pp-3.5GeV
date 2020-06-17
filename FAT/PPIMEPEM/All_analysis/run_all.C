@@ -5,27 +5,22 @@
 #include "TTree.h"
 #include <iostream>
 
-#define B_EXPERIMENT 1//czy brac pod uwage pliki z eksperymentu
-#define B_SIM 0//czy brac pod uwage pliki z symulacji
 using namespace std;
 
 int run_all(void)
-{ 
+{
+  bool experiment=1;//czy brac pod uwage pliki z eksperymentu
   bool b_TMVAeval=0;//czy uruchamiac przeliczenie sieci na nowo
-  
+
   if(b_TMVAeval)
     {
       cout<<"Load all files"<<endl;
-#if B_EXPERIMENT==1
-      TFile* fexperiment=new TFile("../pp_fullstat_ppimepep.root","READ");
-#endif
-#if B_SIM==1
+      TFile* fexperiment=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root","READ");
       TFile* fsim_SDppK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../SDppK0_Rafal_part2.root","READ");
       TFile* fsim_S1385pK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../S1385pK0_Rafal_part2.root","READ");
       TFile* fsim_LDppK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../LDppK0_Rafal_part2.root","READ");
       TFile* fsim_L1520pippim=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../pp_Lpippim_ver3_new_vertex.root","READ");
-#endif
-      //TFile* fsim_LK0ppip=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_pK0Lpip_ver2.root","READ");
+      TFile* fsim_LK0ppip=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/pp_pK0Lpip_ver2.root","READ");
       cout<<"load trees"<<endl;
       TTree* texperiment;
       TTree* tsim_SDppK0;
@@ -33,28 +28,26 @@ int run_all(void)
       TTree* tsim_LDppK0;
       TTree* tsim_L1520pippim;
       TTree* tsim_LK0ppip;
-#if B_EXPERIMENT==1
-      fexperiment->GetObject("ppimepem",texperiment);
+
+      fexperiment->GetObject("ppimpippim",texperiment);
       fexperiment->SetName("fexperiment");
-#endif
-#if B_SIM==1
-      fsim_SDppK0->GetObject("ppimepem",tsim_SDppK0);
+      fsim_SDppK0->GetObject("ppimpippim",tsim_SDppK0);
       fsim_SDppK0->SetName("fsim_SDppK0");
-      fsim_S1385pK0->GetObject("ppimepem",tsim_S1385pK0);
+      fsim_S1385pK0->GetObject("ppimpippim",tsim_S1385pK0);
       fsim_S1385pK0->SetName("fsim_S1385pK0");
-      fsim_LDppK0->GetObject("ppimepem",tsim_LDppK0);
+      fsim_LDppK0->GetObject("ppimpippim",tsim_LDppK0);
       fsim_LDppK0->SetName("fsim_LDppK0");
-      fsim_L1520pippim->GetObject("ppimepem",tsim_L1520pippim);
+      fsim_L1520pippim->GetObject("ppimpippim",tsim_L1520pippim);
       fsim_L1520pippim->SetName("fsim_L1520pippim");
-      fsim_LK0ppip->GetObject("ppimepem",tsim_LK0ppip);
-#endif
+      fsim_LK0ppip->GetObject("ppimpippim",tsim_LK0ppip);
+      
       cout<<"Run TMVA processes"<<endl;
       //Run TMVAeval
-#if B_EXPERIMENT==1
-      TMVAeval* TMexperiment=new TMVAeval(texperiment);
-      TMexperiment->Loop("TMVA_output_experiement.root");
-#endif
-#if B_SIM==1
+      if(experiment)
+	{
+	  TMVAeval* TMexperiment=new TMVAeval(texperiment);
+	  TMexperiment->Loop("TMVA_output_experiement.root");
+	}
       TMVAeval* TM_sim_SDppK0=new TMVAeval(tsim_SDppK0);
       TM_sim_SDppK0->Loop("TMVA_output_sim_SDppK0.root");
 
@@ -69,21 +62,25 @@ int run_all(void)
 
       TMVAeval* TM_sim_LK0ppim=new TMVAeval(tsim_LK0ppip);
       TM_sim_LK0ppim->Loop("TMVA_output_sim_LK0ppim.root");
-#endif
+      /*
+      texperiment->delete();
+      tsim_SDppK0->delete();
+      tsim_S1385pK0->delete();
+      tsim_LDppK0->delete();
+      tsim_L1520pippim->delete();
+      TM_sim_LK0ppim->delete();
+      */
     }
   //Side-band part*************************
   
   cout<<"Load all files for s-b"<<endl;
-#if B_EXPERIMENT==1
   TFile* f_sb_experiment=new TFile("TMVA_output_experiement.root","READ");
-#endif
-#if B_SIM==1
   TFile* f_sb_sim_SDppK0=new TFile("TMVA_output_sim_SDppK0.root","READ");
   TFile* f_sb_sim_S1385pK0=new TFile("TMVA_output_sim_S1385pK0.root","READ");
   TFile* f_sb_sim_LDppK0=new TFile("TMVA_output_sim_LDppK0.root","READ");
   TFile* f_sb_sim_L1520pippim=new TFile("TMVA_output_sim_L1520pippim.root","READ");
   TFile* f_sb_sim_LK0ppip=new TFile("TMVA_output_sim_LK0ppim.root","READ");
-#endif
+  
   cout<<"load trees for s-b"<<endl;
   TTree* t_sb_experiment;
   TTree* t_sb_sim_SDppK0;
@@ -94,15 +91,16 @@ int run_all(void)
 
   
   //Run createHistos
-#if B_EXPERIMENT==1
-  cout<<"Run making Side-Band for experiment"<<endl;
-  f_sb_experiment->GetObject("TMVAeval",t_sb_experiment);
-  f_sb_experiment->SetName("f_sb_experiment");
-  createHistos* SB_experiment=new createHistos(t_sb_experiment);
-  SB_experiment->Loop("SB_experiment.root");
-  t_sb_experiment->Delete();
-#endif
-#if B_SIM==1
+  if(experiment)
+    {
+      cout<<"Run making Side-Band for experiment"<<endl;
+      f_sb_experiment->GetObject("TMVAeval",t_sb_experiment);
+      f_sb_experiment->SetName("f_sb_experiment");
+      createHistos* SB_experiment=new createHistos(t_sb_experiment);
+      SB_experiment->Loop("SB_experiment.root");
+      t_sb_experiment->Delete();
+    }
+
   cout<<"Run making Side-Band for SDppK0"<<endl;
   f_sb_sim_SDppK0->GetObject("TMVAeval",t_sb_sim_SDppK0);
   f_sb_sim_SDppK0->SetName("f_sb_sim_SDppK0");
@@ -137,7 +135,7 @@ int run_all(void)
   createHistos* SB_sim_LK0ppip=new createHistos(t_sb_sim_LK0ppip);
   SB_sim_LK0ppip->Loop("SB_sim_LK0ppip.root");
   t_sb_sim_LK0ppip->Delete();
-#endif   
    
-  //gROOT->ProcessLine(".x draw_norm.C");
+   
+  gROOT->ProcessLine(".x draw_norm.C");
 }

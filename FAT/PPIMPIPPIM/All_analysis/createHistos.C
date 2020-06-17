@@ -251,9 +251,14 @@ void createHistos::Loop(char* output)
   
   cout<<"signal integral: "<<intS<<endl<<"beckground integral: "<<intB<<endl<<"sideband integral: "<<intsideband<<endl;
   cout<<"all in signal range: "<<intAll<<endl;
-
+  
   scale(background,intB/intsideband);
   scale(hMPipPim_background,intB/intsideband);
+  
+  
+  //scale(background,intB/intsideband);
+  //scale(hMPipPim_background,intB/intsideband);
+
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);

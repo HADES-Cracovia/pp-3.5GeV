@@ -11,7 +11,7 @@
 #include <TMath.h>
 #include <iostream>
 
-void TMVAeval::Loop(char*  output)
+void TMVAeval::Loop()
 {
   //   In a ROOT session, you can do:
   //      Root > .L TMVAeval.C
@@ -38,9 +38,9 @@ void TMVAeval::Loop(char*  output)
   //by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
 
-  TFile* outFileData = new TFile(output,"recreate");
+  TFile* outFileData = new TFile("TMVAoutput.root","recreate");
   if(outFileData!=0)
-    std::cout<<"Output file created: "<<output<<endl;
+    std::cout<<"Output file created: "<<"TMVAoutput.root"<<endl;
   
   HNtuple *tlo = new HNtuple("TMVAeval","TMVAeval_after TMVA");
   tlo->setFile( outFileData );
