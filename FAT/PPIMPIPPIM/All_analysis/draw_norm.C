@@ -430,11 +430,12 @@ int draw_norm(void)
      5.6/1000*scale/(100*100000*downscale),//L(1520)pK+->Lpi+pi-pK+
      (2.57+14.05+9.26+29.45+5.0+3.5+2.3+14)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
     };
-  double err[4]=
+  double err[5]=
     {2.25/14.05,//S1385
      1.47/9.26,//SDpp
      2.55/29.45,//LDpp
-     2/5.6//L(1520)pK+->Lpi+pi-pK+
+     2/5.6,//L(1520)pK+->Lpi+pi-pK+
+     TMath::Sqrt(2.06*2.06+1.4*1.4+0.65*0.65+1.+1.+2.*2.+3.5*0.2*3.5*0.2)*0.5
     };
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
@@ -659,11 +660,17 @@ int draw_norm(void)
   setHistogramStyleSimul(hclean_pt_experiment_sum);
     
   TCanvas* cW_signal=new TCanvas("cW_signal", "rapidity for signal");
+  TLine* line_Wmean=new TLine(hclean_w_experiment->GetMean(),0,hclean_w_experiment->GetMean(),50);
+  line_Wmean->SetLineWidth(4);
+  line_Wmean->SetLineColor(kBlue);
+  line_Wmean->SetLineStyle(10);
+
   cW_signal->Divide(2);
   cW_signal->cd(1);
   hexperiment_L1520_w->Draw("e1");
   hexperiment_L1520_w_SB->Draw("samee1");
   hexperiment_L1520_w_SB->SetLineColor(kRed);
+
   cW_signal->cd(2);
   hclean_w_experiment->Draw("e1");
   setHistogramStyleData(hclean_w_experiment);
@@ -679,6 +686,7 @@ int draw_norm(void)
   hclean_w_experiment_sum->SetFillStyle(0);
   hclean_w_experiment_sum->SetLineColor(kMagenta);
   setHistogramStyleSimul(hclean_w_experiment_sum);
+  line_Wmean->Draw();
   
   
   int rebin_res=2;  
@@ -1170,7 +1178,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   L_sim_bg->Draw("same");
 
   TLatex *printFormula4 = new TLatex();
-  double nuc_cs=(2.57+14.05+9.26+29.45);
+  double nuc_cs=(2.57+14.05+9.26+29.45+5.0+3.5+2.3+14)*0.5;
   double high4=0.85;
   double cs_L_sim,cs_L,cs_L_err;
   cs_L=hsigL_pure->IntegralAndError(hsigL_pure->FindBin(1100),hsigL_pure->FindBin(1130),cs_L_err);
@@ -1178,12 +1186,12 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   //cout<<cs_L_sim<<" "<<cs_L<<" "<<cs_L_err<<endl;
   char text15[10000];
   char text16[10000];
-  sprintf(text15, "#sigma_{simul} = #sigma_{pp} A^{2/3} =%.1f #mu b",nuc_cs);
-  sprintf(text16, "#sigma_{exp} = %.1f #pm %.1f #mu b",nuc_cs*cs_L/cs_L_sim,nuc_cs*cs_L_err/cs_L_sim);
+  sprintf(text15, " #sigma_{simul} =%.0f #mu b",nuc_cs);
+  sprintf(text16, "#sigma_{exp} = %.0f #pm %.0f #mu b",nuc_cs*cs_L/cs_L_sim,nuc_cs*cs_L_err/cs_L_sim);
   printFormula4->SetNDC();
   printFormula4->SetTextFont(32);
   printFormula4->SetTextColor(1);
-  printFormula4->SetTextSize(0.05);
+  printFormula4->SetTextSize(0.04);
   printFormula4->SetTextAlign(13);
   printFormula4->DrawLatex(0.37,high4, text15);
   printFormula4->DrawLatex(0.38,high4-printFormula->GetTextSize()*2, text16);
@@ -1210,12 +1218,12 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
 
   char text17[10000];
   char text18[10000];
-  sprintf(text17, "#sigma_{simul} = #sigma_{pp} A^{2/3} =%.1f #mu b",nuc_cs);
-  sprintf(text18, "#sigma_{exp} = %.1f #pm %.1f #mu b",nuc_cs*cs_K0/cs_K0_sim,nuc_cs*cs_K0_err/cs_K0_sim);
+  sprintf(text17,  " #sigma_{simul} =%.0f  #mu b",nuc_cs);
+  sprintf(text18, "#sigma_{exp} = %.0f #pm %.0f #mu b",nuc_cs*cs_K0/cs_K0_sim,nuc_cs*cs_K0_err/cs_K0_sim);
   printFormula5->SetNDC();
   printFormula5->SetTextFont(32);
   printFormula5->SetTextColor(1);
-  printFormula5->SetTextSize(0.05);
+  printFormula5->SetTextSize(0.04);
   printFormula5->SetTextAlign(13);
   printFormula5->DrawLatex(0.3,high4, text17);
   printFormula5->DrawLatex(0.37,high4-printFormula->GetTextSize()*2, text18);
