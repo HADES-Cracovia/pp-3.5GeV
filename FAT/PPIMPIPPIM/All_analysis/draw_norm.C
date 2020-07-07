@@ -638,6 +638,11 @@ int draw_norm(void)
   hL1520_L1520_w_SB->SetLineColor(kRed);
  
   TCanvas* cPt_signal=new TCanvas("cPt_signal", "p_{t} for signal");
+  TLine* line_Ptmean=new TLine(hclean_pt_experiment->GetMean(),0,hclean_pt_experiment->GetMean(),50);
+  line_Ptmean->SetLineWidth(4);
+  line_Ptmean->SetLineColor(kBlue);
+  line_Ptmean->SetLineStyle(10);
+
   cPt_signal->Divide(2);
   cPt_signal->cd(1);
   hexperiment_L1520_pt->Draw("e1");
@@ -658,7 +663,8 @@ int draw_norm(void)
   hclean_pt_experiment_sum->SetLineColor(kMagenta);
   hclean_pt_experiment_sum->SetFillStyle(0);
   setHistogramStyleSimul(hclean_pt_experiment_sum);
-    
+  line_Ptmean->Draw("same");
+
   TCanvas* cW_signal=new TCanvas("cW_signal", "rapidity for signal");
   TLine* line_Wmean=new TLine(hclean_w_experiment->GetMean(),0,hclean_w_experiment->GetMean(),50);
   line_Wmean->SetLineWidth(4);
