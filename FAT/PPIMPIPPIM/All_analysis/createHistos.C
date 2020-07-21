@@ -61,7 +61,7 @@ void createHistos::Loop(char* output)
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=27;
+  double sidebandmax=33;
   TLine* line1=new TLine(1116-sidebandmax,0,1116-sidebandmax,120);
   TLine* line2=new TLine(1116-sidebandmin,0,1116-sidebandmin,120);
   TLine* line3=new TLine(1116+sidebandmin,0,1116+sidebandmin,120);
@@ -312,11 +312,16 @@ void createHistos::Loop(char* output)
 
   //Fit K0 i L1116
   double r_f=2; //r_f rebin fit histograms
-  L1116_fit->SetParameters(1845*r_f*r_f*r_f,1115,0.059,7.5,-24741*r_f,44*r_f,-0.019*r_f);
+  L1116_fit->SetParameters(1390,1115,2.72,1.6,-23941.3,42.8,-0.019);
   hMPPim_TMVA_K0mass->Rebin(r_f);
+  L1116_fit->SetRange(1105,1125);
   hMPPim_TMVA_K0mass->Fit(L1116_fit,"R0");
-  L1116_fit->SetRange(1088,1147);
+  L1116_fit->SetRange(1100,1130);
   hMPPim_TMVA_K0mass->Fit(L1116_fit,"R0");
+  L1116_fit->SetRange(1090,1140);
+  hMPPim_TMVA_K0mass->Fit(L1116_fit,"R0");
+  hMPPim_TMVA_K0mass->Fit(L1116_fit,"R0");
+  hMPPim_TMVA_K0mass->Fit(L1116_fit,"R0"); 
   L1116_signal->SetParameters(L1116_fit->GetParameter(0),L1116_fit->GetParameter(1),L1116_fit->GetParameter(2),L1116_fit->GetParameter(3));
   L1116_signal->SetLineColor(kGreen-2);
   //L1116_signal->Draw("same");

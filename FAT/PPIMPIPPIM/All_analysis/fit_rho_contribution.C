@@ -7,7 +7,7 @@ int fit_rho_contribution(void)
   TH1F* data_component=(TH1F*)fin->Get("hclean_experiment_PipPim");
   TH1F* sum_component=(TH1F*)fin->Get("hclean_sum_ren_PipPim");
   
-  const int steps=10000;
+  const int steps=500;
   double x[steps];
   double y[steps];
   double resi[steps];
@@ -18,7 +18,7 @@ int fit_rho_contribution(void)
       sum_component->Add(rho_component,bez_rho_component,(double)i/(double)steps,(double)(steps-i)/(double)steps);
       sum_component->Add(bg_component);
 
-      double chi=sum_component->Chi2Test(data_component,"CHI2");
+      double chi=sum_component->Chi2Test(data_component,"CHI2/NDF");
       x[i]=(double)i/(double)steps;
       y[i]=chi;
 
