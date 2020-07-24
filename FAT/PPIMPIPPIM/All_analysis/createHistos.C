@@ -99,6 +99,7 @@ void createHistos::Loop(char* output)
   //Histograms for all stages of analysis
   TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identification cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identification cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH1F* miss_m_start=new TH1F("miss_m_start","missing mass;M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}",2000,0,2000);
   TH2F* miss_m_vs_pip_p_start=new TH2F("miss_m_vs_pip_p_start","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{p #pi^{+}};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi+ p}[MeV];N",90,500,1400,50,1100,1600);
   TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1450,200,250,700);
   TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
@@ -146,7 +147,9 @@ void createHistos::Loop(char* output)
 	  hMPPim_start->Fill(m_inv_p_pim);
 	  hMPipPim_start->Fill(m_inv_pip_pim);
 	  miss_m_vs_pip_p_start->Fill(miss_mass_kp,m_inv_p_pip);
+	  miss_m_start->Fill(miss_mass_kp);
 	  p_pim_vs_pip_pim_start->Fill(m_inv_p_pim,m_inv_pip_pim);
+	  
 	  //set 4-vectors
 	  const double D2R = 1.74532925199432955e-02;
 	  const double R2D = 57.2957795130823229;
@@ -369,6 +372,7 @@ void createHistos::Loop(char* output)
   hMPPim_start->Write();
   hMPipPim_start->Write();
   miss_m_vs_pip_p_start->Write();
+  miss_m_start->Write();
   p_pim_vs_pip_pim_start->Write();
   hMPPim_TMVA->Write();
   hMPipPim_TMVA->Write();
