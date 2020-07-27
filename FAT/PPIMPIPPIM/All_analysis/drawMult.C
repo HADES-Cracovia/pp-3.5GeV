@@ -43,11 +43,12 @@ int drawMult(void)
 
   //save results
   TFile* out =new TFile("mult_out.root","recreate");
+  cRes->Write();
   h_mult_poz->Write();
   h_mult_neg->Write();
   h_mult_sum->Write();
 
-  
+  out->Write();
   
   return 0;
 }
