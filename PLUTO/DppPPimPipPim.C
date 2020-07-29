@@ -1,12 +1,12 @@
 void DppPPimPipPim()
 {
-  TFile *out = new TFile("DppPPimPipPim.root","recreate");
-  TH1F * histo1 = new TH1F ("histo1","#Delta^{++}; M^{inv}_{#Delta^{++}} " ,400,0,2);
-  TH1F * histo2 = new TH1F ("histo2","#Lambda #pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#Lambda #pi^{+} #pi^{-}} " ,500,1,2);
-   makeDistributionManager();
+  //TFile *out = new TFile("output_Dpp.root","recreate");
+  //TH1F * histo1 = new TH1F ("histo1","#Delta^{++}; M^{inv}_{#Delta^{++}} " ,400,0,2);
+  //TH1F * histo2 = new TH1F ("histo2","#Lambda #pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#Lambda #pi^{+} #pi^{-}} " ,500,1,2);
+  makeDistributionManager();
   //gSystem->CompileMacro("PHadesAcc.C");
   //makeDistributionManager()->Disable("helicity_angles");
-  //makeDistributionManager()->Exec("elementary");
+  makeDistributionManager()->Exec("elementary");
 
 
   makeStaticData()->AddParticle(-1,"K0",0.497614);
@@ -66,7 +66,8 @@ void DppPPimPipPim()
   //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [pi+ pi- Lambda]", "ppLam", 0, 0, 1, 1);
   //out->cd();
   //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [rho0 [pi+ pi-] Lambda]", "ppK+L1520", 0, 0, 1, 1);
-  PReaction my_reaction1("_T1=3.5","p","p","D++ pi+ pi- p pi-", "DppPPipPimPim", 0, 0, 1, 1);
+  //PReaction my_reaction1("_T1=3.5","p","p","D++ [p pi+] pi+ pi- p pi-", "DppPPimPipPim", 0, 0, 1, 1);
+  PReaction my_reaction1("_T1=3.5","p","p","p pi+ pi+ pi- p pi-", "PPipPPimPipPim", 0, 0, 1, 1);
 
   /*PDecayManager *pdm = new PDecayManager;
   pdm->SetVerbose(1);          // Print really useful info
@@ -82,17 +83,17 @@ void DppPPimPipPim()
   pdm->loop(100000,0,"pK+L1520",0,0,1,1,1);
   */
   
-  my_reaction1.Do(histo1,"_dpp=[D++]; _x=(_dpp)->M();");
+  //my_reaction1.Do(histo1,"_p=[p];_pip=[pi+]; _x=(_p+_pip)->M();");
   //my_reaction1.Do(histo2,"_pip=[pi+]; _pim=[pi-]; _lambda=[Lambda]; q1=(_pip+_pim+_lambda); _x=(_pip+_pim+_lambda)->M();");
   
   //cout<<"II-cond reaction start"<<endl;
   //my_reaction2.Loop(10000);
   cout<<"I-st reaction start"<<endl;
-  my_reaction1.Loop(10000);
+  my_reaction1.Loop(200000);
   
   //out->cd();
-  histo1->Write();
+  //histo1->Write();
   //histo2->Write();
-  out->Write();
-  out->Close();
+  //out->Write();
+  //out->Close();
 }

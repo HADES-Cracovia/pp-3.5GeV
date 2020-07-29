@@ -62,6 +62,7 @@ void createHistos::Loop(char* output)
   const int nsignal=20;
   double sidebandmin=10;
   double sidebandmax=33;
+  double mlp_cut=0.55;
   TLine* line1=new TLine(1116-sidebandmax,0,1116-sidebandmax,120);
   TLine* line2=new TLine(1116-sidebandmin,0,1116-sidebandmin,120);
   TLine* line3=new TLine(1116+sidebandmin,0,1116+sidebandmin,120);
@@ -125,8 +126,7 @@ void createHistos::Loop(char* output)
   TCutG *graph_cut=0;
   cutFile->GetObject("CUTG",graph_cut);
   cutFile->Close();
-
-  double mlp_cut=0.57;
+  
   TFile *MyFile = new TFile(output,"recreate");
  
   Long64_t nentries = fChain->GetEntries();
