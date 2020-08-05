@@ -8,7 +8,7 @@ void DppPPimPipPim()
   //makeDistributionManager()->Disable("helicity_angles");
   makeDistributionManager()->Exec("elementary");
 
-
+  /*
   makeStaticData()->AddParticle(-1,"K0",0.497614);
   makeStaticData()->SetParticleMeson("K0");
   makeStaticData()->SetParticleTotalWidth("K0",0.05);
@@ -16,7 +16,7 @@ void DppPPimPipPim()
   makeStaticData()->AddParticle(-1,"K0bar",0.497614);
   makeStaticData()->SetParticleMeson("K0bar");
   makeStaticData()->SetParticleTotalWidth("K0bar",0.05);
-
+  */
 
   //Int_t pid_lambda1502 = makeStaticData()->AddParticle(-1,"Lambda1520", 1.5195);
   //makeStaticData()->AddAlias("Lambda1520","Lambda(1520)");

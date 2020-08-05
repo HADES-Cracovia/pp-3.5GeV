@@ -92,7 +92,8 @@ int main()
   //outFileData = new TFile("S1385pK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("SDppK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("LDppK0_Rafal_part2.root","recreate");
-  outFileData=new TFile("pp_pK0Lpip_ver2.root","recreate");
+  //outFileData=new TFile("pp_pK0Lpip_ver2.root","recreate");
+  outFileData=new TFile("DppPPimPipPim.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
