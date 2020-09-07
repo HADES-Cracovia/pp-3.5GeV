@@ -189,7 +189,7 @@ int draw_norm(void)
   TF1* fVoigt_bg=(TF1*)fileExp->Get("fVoigt_bg");
   TF1* fVoigt=(TF1*)fileExp->Get("fVoigt");
   TF1* fbg=(TF1*)fileExp->Get("fbg");
-  TF1 *voigt=new TF1("signal_voit","[0]*TMath::Voigt(x-[1],[2],[3],4)",1380,1750); //only for pure signal
+  TF1 *voigt=new TF1("signal_voit","[0]*TMath::Voigt(x-[1],[2],[3],4)",1400,1600); //only for pure signal
 
   TLine* line1=(TLine*)fileExp->Get("line1");
   TLine* line2=(TLine*)fileExp->Get("line2");

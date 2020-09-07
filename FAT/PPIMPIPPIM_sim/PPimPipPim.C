@@ -244,7 +244,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
   if (tree == 0)
     {
       TChain * chain = new TChain("PPimPipPim_ID","");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/DppPPimPipPim/sum.root");
+      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/PPipPPimPipPim/sum.root");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/DppPPimPipPim/sum.root");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim_ver2/all.root/PPimPipPim_ID");
