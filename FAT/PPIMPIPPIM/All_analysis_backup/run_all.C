@@ -16,6 +16,7 @@ int run_all(void)
     {
       cout<<"Load all files"<<endl;
       TFile* fexperiment=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_sigma.root","READ");
+      //TFile* fexperiment=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM/pp_fullstat_Rafal_poprawka.root","READ");
       TFile* fsim_SDppK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../SDppK0_Rafal_part2.root","READ");
       TFile* fsim_S1385pK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../S1385pK0_Rafal_part2.root","READ");
       TFile* fsim_LDppK0=new TFile("/lustre/nyx/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/../LDppK0_Rafal_part2.root","READ");
