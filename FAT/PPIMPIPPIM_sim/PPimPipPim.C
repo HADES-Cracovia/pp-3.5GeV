@@ -244,7 +244,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
   if (tree == 0)
     {
       TChain * chain = new TChain("PPimPipPim_ID","");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/PPipPPimPipPim/sum.root");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/PPipPPimPipPim/sum.root");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/DppPPimPipPim/sum.root");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/pK0Lpip/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pip_pim/all.root");
@@ -254,7 +254,7 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pi0pi0L/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pKm/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/nK0bar/hadron.root/PPimPipPim_ID");
-      //chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/pippimL_ver3_bis/sum_all.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SDppK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/hadron.root/PPimPipPim_ID");
@@ -322,7 +322,12 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   *gammapim2pip= *pim2 + *pip;
   *gammappim1pippim2=*pim1 +*pim2 + *pip + *p;
   *miss=*beam-*gammappim1pippim2;
-      
+
+  //sigma candidates
+  *gammappim1pim2= *p+*pim1+*pim2;
+  *gammappim1pip=*p+*pim1+*pip;
+  *gammappim2pip=*p+*pim2+*pip;
+
   //*ppim1 = *p + *pim1;
   //*p_delta = *p;
   //*pim1_delta = *pim1;
@@ -407,6 +412,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   int pim_no, pim_sim_id, pim_sim_parentid;
   Float_t m_inv_ppim;
   Float_t m_inv_pippim;
+  Float_t m_inv_ppimpim;
+  Float_t m_inv_ppimpip;
   Float_t dist_p_pim;
   Float_t dist_pip_pim;
   Float_t oa_lambda;
@@ -428,6 +435,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       pim_no=1;
       m_inv_ppim=m_inv_ppim1;
       m_inv_pippim=m_inv_pippim2;
+      m_inv_ppimpip=gammappim1pip->M();
+      m_inv_ppimpim=gammappim1pim2->M();
       dist_p_pim=dist_p_pim1;
       dist_pip_pim=dist_pip_pim2;
       oa_lambda=oa_lambda_1;
@@ -456,6 +465,8 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
       pim_no=2;
       m_inv_ppim=m_inv_ppim2;
       m_inv_pippim=m_inv_pippim1;
+      m_inv_ppimpip=gammappim2pip->M();
+      m_inv_ppimpim=gammappim1pim2->M();
       dist_p_pim=dist_p_pim2;
       dist_pip_pim=dist_pip_pim1;
       oa_lambda=oa_lambda_2;
@@ -650,6 +661,9 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["m_inv_p_pim2"] = m_inv_ppim2;
   (*n_out)["m_inv_p_pim"]=m_inv_ppim;
 
+  (*n_out)["m_inv_p_pim_pim"]=m_inv_ppimpim;
+  (*n_out)["m_inv_p_pim_pip"]=m_inv_ppimpip;
+  
   (*n_out)["m_inv_pip_pim1"] = m_inv_pippim1;
   (*n_out)["m_inv_pip_pim2"] = m_inv_pippim2;
   (*n_out)["m_inv_pip_pim"] = m_inv_pippim;

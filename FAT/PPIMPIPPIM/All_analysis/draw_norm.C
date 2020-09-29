@@ -173,7 +173,7 @@ int draw_norm(void)
   TFile *fileExp= new TFile("SB_experiment.root","READ");
   TFile *fileRho=new TFile("z_RHO.root","READ");
   TFile *fileBezRho=new TFile("bez_RHO.root","READ");
-
+  //TFile *fileINCLmodel=new TFile("Lambdahist.root","READ");
   
   TH1F *hexperiment_L=(TH1F*)fileExp->Get("hMPPim_TMVA_K0mass");
   TH1F *hexperiemnt_K0=(TH1F*)fileExp->Get("hMPipPim_TMVA_Lmass");
@@ -185,6 +185,8 @@ int draw_norm(void)
   TF1 *fL1116_experiment_sig=(TF1 *)fileExp->Get("L1116_signal");
   TH1F *hexperiment_SB_spectrum=(TH1F*)fileExp->Get("orginal_spectrum");
 
+  //TH1F* hLambda1520_INCL=(TH1F*)fileINCLmodel->Get("Lambda1520_2");
+  
   
   TF1* fVoigt_bg=(TF1*)fileExp->Get("fVoigt_bg");
   TF1* fVoigt=(TF1*)fileExp->Get("fVoigt");

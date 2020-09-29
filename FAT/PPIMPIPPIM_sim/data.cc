@@ -87,6 +87,9 @@ namespace PATData
   TLorentzVector *gammappip;
   TLorentzVector *gammappim1;
   TLorentzVector *gammappim2;
+  TLorentzVector *gammappim1pip;
+  TLorentzVector *gammappim2pip;
+  TLorentzVector *gammappim1pim2;
   TLorentzVector *gammapim1pip;
   TLorentzVector *gammapim2pip;
   TLorentzVector *gammappim1pippim2;

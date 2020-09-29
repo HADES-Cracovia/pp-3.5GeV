@@ -13,12 +13,13 @@ int fitDpp(void)
   TH1F* h_exp=(TH1F*)f_exp->Get("miss_m_start");
   h_exp->SetName("h_exp");
   TH1F* h_dpp_ideal=(TH1F*)f_ideal->Get("h2");
+  h_dpp_ideal->SetName("h_dpp_ideal");
   TH1F* h_DppPPimPipPim=(TH1F*)f_DppPPimPipPim->Get("miss_m_start");
   h_DppPPimPipPim->SetName("h_DppPPimPipPim");
   TH1F* h_PPipPPimPipPim=(TH1F*)f_PPipPPimPipPim->Get("histo");
   h_DppPPimPipPim->SetName("h_PPipPPimPipPim");
   
-  int rebin =8;
+  int rebin =10;
   h_dpp->Rebin(rebin);
   h_exp->Rebin(rebin);
   h_dpp_ideal->Rebin(rebin);
@@ -50,7 +51,7 @@ int fitDpp(void)
   h_DppPPimPipPim->Draw("same");
   h_DppPPimPipPim->SetLineColor(kGreen);
 
-  h_PPipPPimPipPim->Draw("same");
+  //h_PPipPPimPipPim->Draw("same");
   
   
   TCanvas* cScale=new TCanvas("cScale");

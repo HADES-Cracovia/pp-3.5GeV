@@ -80,6 +80,10 @@ int main()
   gammappim2 = new TLorentzVector(0,0,0,0);
   gammapim1pip = new TLorentzVector(0,0,0,0);
   gammapim2pip = new TLorentzVector(0,0,0,0);
+  gammappim1pip= new TLorentzVector(0,0,0,0);
+  gammappim2pip= new TLorentzVector(0,0,0,0);
+  //gammappimpip= new TLorentzVector(0,0,0,0);
+  gammappim1pim2=new TLorentzVector(0,0,0,0);
   gammappim1pippim2 = new TLorentzVector(0,0,0,0);
 
   ppi = new TLorentzVector(0,0,0,0);
@@ -92,9 +96,10 @@ int main()
   //outFileData = new TFile("S1385pK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("SDppK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("LDppK0_Rafal_part2.root","recreate");
+  outFileData=new TFile("pp_Lpippim_ver4_new_vertex.root","recreate");
   //outFileData=new TFile("pp_pK0Lpip_ver2.root","recreate");
   //outFileData=new TFile("DppPPimPipPim.root","recreate");
-  outFileData=new TFile("PPipPPimPipPim.root","recreate");
+  //outFileData=new TFile("PPipPPimPipPim.root","recreate");
   //ofstream myfile;
   //myfile.open ("raport.txt",ios::trunc);
   //outFileData = new TFile("ntuple_epem_656_C_gen1.root","recreate");
