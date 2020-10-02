@@ -327,20 +327,19 @@ void TMVAeval::Loop(char*  output)
       double ymean=(ymin+ymax)/2;
 
       gaus[k]->SetParameter(1,1116);
+      gaus[k]->SetParameter(2,2);
       
       p_pim_spectrum[k]->Fit(gaus[k]);
       
       sig[k]->SetParameter(0,gaus[k]->GetParameter(0));
-      sig[k]->SetParameter(1,gaus[k]->GetParameter(1));
-      sig[k]->SetParameter(2,gaus[k]->GetParameter(2));
+      sig[k]->SetParameter(1,1116);
+      sig[k]->SetParameter(2,2);
       //sig[k]->SetParameter(3,ymean-(ymax-ymin)/(xmax-xmin));
       //sig[k]->SetParameter(4,(ymax-ymin)/(xmax-xmin));
 
       p_pim_spectrum[k]->Fit(sig[k],"R");
 
-      p_pim_spectrum[k]->Fit(bg[k],"R");
-
-      p_pim_spectrum[k]->Fit(voigt_bg[k],"R");
+      //p_pim_spectrum[k]->Fit(bg[k],"R");
       
       sig_bg[k]->SetParameter(0,sig[k]->GetParameter(0));
       sig_bg[k]->SetParameter(1,sig[k]->GetParameter(1));
@@ -352,15 +351,46 @@ void TMVAeval::Loop(char*  output)
       //sig_bg[k]->SetParameter(6,bg[k]->GetParameter(3));
       //sig_bg[k]->SetParameter(7,bg[k]->GetParameter(4));
 
-      sig_bg[k]->SetRange(1105,1130);
-      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
-      sig_bg[k]->SetRange(1100,1135);
-      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
-      sig_bg[k]->SetRange(1080,1145);
-      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
-      //sig_bg[k]->SetRange(1080,1160);
-      p_pim_spectrum[k]->Fit(sig_bg[k],"R");
-
+      //other methode for parameters init.
+      if(k==0)
+	{
+	 sig_bg[k]->SetParameter(0,sig[k]->GetParameter(0));
+	 sig_bg[k]->SetParameter(1,sig[k]->GetParameter(1));
+	 sig_bg[k]->SetParameter(2,sig[k]->GetParameter(2));
+	 sig_bg[k]->SetParameter(3,sig[k]->GetParameter(3));
+	 sig_bg[k]->SetParameter(4,sig[k]->GetParameter(4));
+	}
+      else
+	{
+	  sig_bg[k]->SetParameter(0,sig_bg[k-1]->GetParameter(0));
+	  sig_bg[k]->SetParameter(1,sig_bg[k-1]->GetParameter(1));
+	  sig_bg[k]->SetParameter(2,sig_bg[k-1]->GetParameter(2));
+	  sig_bg[k]->SetParameter(3,sig_bg[k-1]->GetParameter(3));
+	  sig_bg[k]->SetParameter(4,sig_bg[k-1]->GetParameter(4));
+	  sig_bg[k]->SetParameter(5,sig_bg[k-1]->GetParameter(5));
+	  sig_bg[k]->SetParameter(6,sig_bg[k-1]->GetParameter(6));
+	  sig_bg[k]->SetParameter(7,sig_bg[k-1]->GetParameter(7));
+	  sig_bg[k]->SetParameter(8,sig_bg[k-1]->GetParameter(8));
+	}
+      
+      //end of the parameters init.
+      if(k==0)
+	{
+	  sig_bg[k]->SetRange(1105,1130);
+	  p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	  sig_bg[k]->SetRange(1100,1135);
+	  p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	  sig_bg[k]->SetRange(1080,1145);
+	  p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	  //sig_bg[k]->SetRange(1080,1160);
+	  p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	  //p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	}
+      else
+	{
+	  sig_bg[k]->SetRange(1080,1145);
+	  p_pim_spectrum[k]->Fit(sig_bg[k],"R");
+	}
       
       gaus[k]->SetParameters(sig_bg[k]->GetParameter(0),
 			    sig_bg[k]->GetParameter(1),
@@ -374,27 +404,41 @@ void TMVAeval::Loop(char*  output)
 			   //,sig_bg[k]->GetParameter(8)
 			   );
       //****Voigt fit****
-      voigt_bg[k]->SetParameter(0,sig_bg[k]->GetParameter(0));
+      /*voigt_bg[k]->SetParameter(0,sig_bg[k]->GetParameter(0));
       voigt_bg[k]->SetParameter(1,sig_bg[k]->GetParameter(1));
       voigt_bg[k]->SetParameter(2,sig_bg[k]->GetParameter(2));
       voigt_bg[k]->SetParameter(4,sig_bg[k]->GetParameter(3));
       voigt_bg[k]->SetParameter(5,sig_bg[k]->GetParameter(4));
 
-      
+      p_pim_spectrum[k]->Fit(voigt_bg[k],"R");
+      */    
       sig_int[k]=gaus[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);//divide by bin width
       bg_int[k]=bg[k]->Integral(1110,1120);///p_pim_spectrum[k]->GetBinWidth(10);
 
       cout<<"sig: "<<sig_int[k]<<endl;
       cout<<"bg: "<<bg_int[k]<<endl;
       
-      bg_eff[k]=bg_int[k]/bg_int[0];
-      sig_eff[k]=sig_int[k]/sig_int[0];
-      bg_rej[k]=1-bg_eff[k];
-      signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
-      cout<<"signif: "<<signif[k]<<endl;
-      
-      sig_to_bg[k]=sig_int[k]/bg_int[k];
-      sig2_to_bg[k]=(sig_int[k]*sig_int[k])/bg_int[k];
+      if(sig_int[k]>0 && bg_int[k]>0)
+	{
+	  bg_eff[k]=bg_int[k]/bg_int[0];
+	  sig_eff[k]=sig_int[k]/sig_int[0];
+	  bg_rej[k]=1-bg_eff[k];
+	  signif[k]=sig_int[k]/TMath::Sqrt(sig_int[k]+bg_int[k]);
+	  cout<<"signif: "<<signif[k]<<endl;
+	  sig_to_bg[k]=sig_int[k]/bg_int[k];
+	  sig2_to_bg[k]=(sig_int[k]*sig_int[k])/bg_int[k];
+	}
+      else
+	{
+	  bg_eff[k]=0;
+	  sig_eff[k]=0;
+	  bg_rej[k]=0;
+	  signif[k]=0;
+	  cout<<"FittingError!!! "<<endl;
+	  sig_to_bg[k]=0;
+	  sig2_to_bg[k]=0;
+
+	}
     }
   
   

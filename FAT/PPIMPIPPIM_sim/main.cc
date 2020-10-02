@@ -93,10 +93,11 @@ int main()
 
   //reader->BookMVA("kMLP","/lustre/nyx/hades/user/knowakow/PP/FAT/TMVA/weights/TMVAClassification_from_simplus_rec_cuts_kMLP_ce_600_n4_no_ev.weights.xml" );
   /************************************** O U T P U T   F I L E ******************************************/
+  outFileData=new TFile("L1520_thermal.root","recreate");
   //outFileData = new TFile("S1385pK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("SDppK0_Rafal_part2.root","recreate");
   //outFileData = new TFile("LDppK0_Rafal_part2.root","recreate");
-  outFileData=new TFile("pp_Lpippim_ver4_new_vertex.root","recreate");
+  //outFileData=new TFile("pp_Lpippim_ver4_new_vertex.root","recreate");
   //outFileData=new TFile("pp_pK0Lpip_ver2.root","recreate");
   //outFileData=new TFile("DppPPimPipPim.root","recreate");
   //outFileData=new TFile("PPipPPimPipPim.root","recreate");

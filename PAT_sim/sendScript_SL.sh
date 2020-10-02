@@ -50,7 +50,8 @@ resources="--mem=2000 --time=0-2:00:00"                        # runtime < 10h, 
 
 jobarrayFile="pion_pat_jobarray.dat"
 
-filelist=${currentDir}/PPipPPimPipPim.list
+filelist=${currentDir}/L1520_thermal.list
+#filelist=${currentDir}/PPipPPimPipPim.list
 #filelist=${currentDir}/DppPPimPipPim.list
 #filelist=${currentDir}/pK0Lpip.list
 #filelist=${currentDir}/LDppK0_Rafal_part2.list  # file list in local dir! not in submissiondir!!!
