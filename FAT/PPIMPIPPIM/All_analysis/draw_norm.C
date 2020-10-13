@@ -648,6 +648,7 @@ int draw_norm(void)
   cPt_signal->Divide(2);
   cPt_signal->cd(1);
   hexperiment_L1520_pt->Draw("e1");
+  hexperiment_L1520_pt->GetXaxis()->SetRangeUser(0,1500);
   hexperiment_L1520_pt_SB->Draw("samee1");
   hexperiment_L1520_pt_SB->SetLineColor(kRed);
   cPt_signal->cd(2);
@@ -681,6 +682,7 @@ int draw_norm(void)
 
   cW_signal->cd(2);
   hclean_w_experiment->Draw("e1");
+  hclean_w_experiment->GetXaxis()->SetRangeUser(0,1.4);
   setHistogramStyleData(hclean_w_experiment);
   hclean_w_L1520->Draw("samehist");
   hclean_w_L1520->SetLineColor(kGreen);
