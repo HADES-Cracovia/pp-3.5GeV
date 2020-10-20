@@ -330,10 +330,11 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../pp_Lpippim_ver3_new_vertex.root");
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../LDppK0_Rafal.root");
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../S1385pK0_Rafal.root");
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../SDppK0_Rafal.root");
+      //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../SDppK0_Rafal.root");
+      TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../L1520_thermal.root");
       if (!f || !f->IsOpen())
 	{
-	  f = new TFile("../SDppK0_Rafal.root");
+	  f = new TFile("../L1520_thermal.root");
 	}
       f->GetObject("ppimpippim",tree);
 
