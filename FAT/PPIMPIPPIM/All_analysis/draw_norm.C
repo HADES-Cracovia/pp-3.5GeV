@@ -1053,6 +1053,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cout<<(experiment_int-backgroud_int)/sig_int<<endl;
   cout<<"****************error estimation****************"<<endl;
   cout<<"error sum= "<<err_sum<<endl;
+  cout<<"statistical error value= "<<err_sum/(experiment_int-backgroud_int)*5.6*(experiment_int-backgroud_int)/sig_int<<" mu b";
   cout<<endl<<endl;
 
   int npx=300;

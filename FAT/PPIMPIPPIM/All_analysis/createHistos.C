@@ -63,6 +63,14 @@ void createHistos::Loop(char* output)
   double sidebandmin=10;
   double sidebandmax=27;
   double mlp_cut=0.59;
+  int dM=1;
+  int Lmin=1000;
+  int Lmax=1500;
+  double LdM=(Lmax-Lmin)/dM;
+  int Kmin=250;
+  int Kmax=950;
+  int KdM=(Kmax-Kmin)/dM;
+
   //double mlp_cut=0.10;
   TLine* line1=new TLine(1116-sidebandmax,0,1116-sidebandmax,120);
   TLine* line2=new TLine(1116-sidebandmin,0,1116-sidebandmin,120);
@@ -91,13 +99,7 @@ void createHistos::Loop(char* output)
   data->Sumw2();
   orginal_spectrum->Sumw2();
 
-  int dM=1;
-  int Lmin=1000;
-  int Lmax=1500;
-  int LdM=(Lmax-Lmin)/dM;
-  int Kmin=250;
-  int Kmax=950;
-  int KdM=(Kmax-Kmin)/dM;
+  
   //Histograms for all stages of analysis
   TH1F* hMPPim_start=new TH1F("hMPPim_start","M^{inv}_{p #pi^{-}} after identification cuts; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_start=new TH1F("hMPipPim_start","M^{inv}_{#pi^{+} #pi^{-}} after identification cuts; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
@@ -112,6 +114,12 @@ void createHistos::Loop(char* output)
   TH1F* hMPipPim_TMVA_Lmass=new TH1F("hMPipPim_TMVA_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   TH1F* hMPPim_TMVAMass=new TH1F("hMPPim_TMVAMass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_TMVAMass=new TH1F("hMPipPim_TMVAMass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  
+  //TH1F* hMPPim_K0mass=new TH1F("hMPPim_K0mass","M^{inv}_{p #pi^{-}} after MLP and a gate for K^{0}; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  //TH1F* hMPipPim_Lmass=new TH1F("hMPipPim_Lmass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a gate for #Lambda; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  TH1F* hMPPim_Mass=new TH1F("hMPPim_Mass","M^{inv}_{p #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPipPim_Mass=new TH1F("hMPipPim_Mass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
+  
 
   TH1F* hL1520_w=new TH1F("hL1520_w","Rapidity for #Lambda (1520) events; w",20,0,1.5);
   TH1F* hL1520_pt=new TH1F("hL1520_pt","p_{T} for #Lambda(1520) events;p_{t}[MeV]",30,0,1600);
@@ -168,7 +176,14 @@ void createHistos::Loop(char* output)
 	  pip.SetVectM( v3, 139.57018 );
 	  pim2.SetVectM( v4, 139.57018 );
 	  ppimpippim=p+pim1+pim2+pip;
+
 	  //end of 4-vectors
+	  if(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
+	    {
+	      hMPPim_Mass->Fill(m_inv_p_pim);
+	      hMPipPim_Mass->Fill(m_inv_pip_pim);
+	    }
+	  
 	  if(mlp_output>mlp_cut)
 	    {
 	      hMPPim_TMVA->Fill(m_inv_p_pim);
@@ -207,7 +222,7 @@ void createHistos::Loop(char* output)
 	 ||mlp_output<mlp_cut
 	 //||miss_mass_kp<1432 //replaced by graphical cut
 	 //||m_inv_pip_pim>410 //replaced by graphical cut
-	 ||dist_ver_to_ver<5
+	 ||dist_ver_to_ver<7
 	 ||(oa_lambda>20)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	 //||p_theta>20 //to clean up proton sample
@@ -368,6 +383,8 @@ void createHistos::Loop(char* output)
   styleTH1(hMPipPim_TMVA_Lmass);
   styleTH1(hMPPim_TMVAMass);
   styleTH1(hMPipPim_TMVAMass);
+  styleTH1(hMPPim_Mass);
+  styleTH1(hMPipPim_Mass);
  
   
   hMPPim_start->Write();
@@ -383,7 +400,10 @@ void createHistos::Loop(char* output)
   hMPipPim_TMVA_Lmass->Write();
   hMPPim_TMVAMass->Write();
   hMPipPim_TMVAMass->Write(); 
+  hMPPim_Mass->Write();
+  hMPipPim_Mass->Write(); 
 
+  
   K0_fit->Write();
   K0_signal->Write();
   L1116_fit->Write();
@@ -416,6 +436,10 @@ void createHistos::Loop(char* output)
   hMPipPim_TMVA_Lmass->Delete();
   hMPPim_TMVAMass->Delete();
   hMPipPim_TMVAMass->Delete();
+  //hMPPim_K0mass->Delete();
+  //hMPipPim_Lmass->Delete();
+  hMPPim_Mass->Delete();
+  hMPipPim_Mass->Delete();
 
   hL1520_w->Delete();
   hL1520_pt->Delete();
