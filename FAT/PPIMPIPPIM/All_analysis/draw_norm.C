@@ -430,14 +430,14 @@ int draw_norm(void)
      9.26/1000*scale/(nsim*downscale),//SDpp
      29.45/1000*scale/(nsim*downscale),//LDpp
      5.6/1000*scale/(100*100000*downscale),//L(1520)pK+->Lpi+pi-pK+
-     (2.57+14.05+9.26+29.45+5.0+3.5+2.3+14)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
+     (1.35 + 2.57 + 14.05 + 9.26 + 29.45 + 5.0 + 3.5 + 2.3)/1000*scale/(100*100000*downscale)*0.5//L K0 p pi+ (0.5 because of Ks i Kl)
     };
   double err[5]=
     {2.25/14.05,//S1385
      1.47/9.26,//SDpp
      2.55/29.45,//LDpp
      2/5.6,//L(1520)pK+->Lpi+pi-pK+
-     TMath::Sqrt(2.06*2.06+1.4*1.4+0.65*0.65+1.+1.+2.*2.+3.5*0.2*3.5*0.2)*0.5
+     TMath::Sqrt(1.5*1.5+2.06*2.06+0.65*0.65+2.0*2.0+1*1+1*1+3.5/5*3.5/5+2.3/5*2.3/5+1*1+1*1)*0.5
     };
   double cs_sig;
   // cs in \mu barns, have to me re-calculated to mb!!
@@ -1189,7 +1189,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   L_sim_bg->Draw("same");
 
   TLatex *printFormula4 = new TLatex();
-  double nuc_cs=(2.57+14.05+9.26+29.45+5.0+3.5+2.3+14)*0.5;
+  double nuc_cs=1.35 + 2.57 + 14.05 + 9.26 + 29.45 + 5.0 + 3.5 + 2.3; //poniwaz przekruj czynny przpeisany jest na inne jednostki
   double high4=0.85;
   double cs_L_sim,cs_L,cs_L_err;
   cs_L=hsigL_pure->IntegralAndError(hsigL_pure->FindBin(1100),hsigL_pure->FindBin(1130),cs_L_err);
@@ -1197,7 +1197,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   //cout<<cs_L_sim<<" "<<cs_L<<" "<<cs_L_err<<endl;
   char text15[10000];
   char text16[10000];
-  sprintf(text15, " #sigma_{simul} =%.0f #mu b",nuc_cs);
+  sprintf(text15, " #sigma_{simul} =%.0f  #pm  %.0f #mu b",nuc_cs,err[4]*2);
   sprintf(text16, "#sigma_{exp} = %.0f #pm %.0f #mu b",nuc_cs*cs_L/cs_L_sim,nuc_cs*cs_L_err/cs_L_sim);
   printFormula4->SetNDC();
   printFormula4->SetTextFont(32);
@@ -1229,7 +1229,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
 
   char text17[10000];
   char text18[10000];
-  sprintf(text17,  " #sigma_{simul} =%.0f  #mu b",nuc_cs);
+  sprintf(text17,   " #sigma_{simul} =%.0f  #pm  %.0f #mu b",nuc_cs,err[4]*2);
   sprintf(text18, "#sigma_{exp} = %.0f #pm %.0f #mu b",nuc_cs*cs_K0/cs_K0_sim,nuc_cs*cs_K0_err/cs_K0_sim);
   printFormula5->SetNDC();
   printFormula5->SetTextFont(32);
