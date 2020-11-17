@@ -76,7 +76,9 @@ public :
    Float_t         m_inv_pip_pim;
    Float_t         m_inv_pip_pim1;
    Float_t         m_inv_pip_pim2;
-   Float_t         miss_mass_kp;
+  Float_t         m_inv_p_pim_pip;
+  Float_t         m_inv_p_pim_pim;
+     Float_t         miss_mass_kp;
    Float_t         mlp_output;
    Float_t         mlp_response;
    Float_t         oa_lambda;
@@ -194,7 +196,9 @@ public :
    TBranch        *b_m_inv_pip_pim;   //!
    TBranch        *b_m_inv_pip_pim1;   //!
    TBranch        *b_m_inv_pip_pim2;   //!
-   TBranch        *b_miss_mass_kp;   //!
+  TBranch        *b_m_inv_p_pim_pip;   //!
+  TBranch        *b_m_inv_p_pim_pim;   //!
+     TBranch        *b_miss_mass_kp;   //!
    TBranch        *b_mlp_output;   //!
    TBranch        *b_mlp_response;   //!
    TBranch        *b_oa_lambda;   //!
@@ -377,6 +381,8 @@ void createHistos::Init(TTree *tree)
    fChain->SetBranchAddress("lambda_pt", &lambda_pt, &b_lambda_pt);
    fChain->SetBranchAddress("lambda_theta", &lambda_theta, &b_lambda_theta);
    fChain->SetBranchAddress("lambda_w", &lambda_w, &b_lambda_w);
+   fChain->SetBranchAddress("m_inv_p_pim_pip", &m_inv_p_pim_pip, &b_m_inv_p_pim_pip);
+   fChain->SetBranchAddress("m_inv_p_pim_pim", &m_inv_p_pim_pim, &b_m_inv_p_pim_pim);
    fChain->SetBranchAddress("m_inv_p_pim", &m_inv_p_pim, &b_m_inv_p_pim);
    fChain->SetBranchAddress("m_inv_p_pim1", &m_inv_p_pim1, &b_m_inv_p_pim1);
    fChain->SetBranchAddress("m_inv_p_pim2", &m_inv_p_pim2, &b_m_inv_p_pim2);

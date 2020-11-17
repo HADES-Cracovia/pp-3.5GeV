@@ -1,3 +1,19 @@
+#include "createHistos.h"
+#include <TCutG.h>
+#include <TH2.h>
+//#include <TSyle.h>
+#include <TCanvas.h>
+#include <TMath.h>
+#include <TGraphErrors.h>
+#include <TH1F.h>
+#include <TFile.h>
+#include <iostream>
+#include <TF1.h>
+#include <TLine.h>
+#include <TLorentzVector.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 void set_Y_name(TH1* hist)
 {
   char name[10000]; // enough to hold all numbers up to 64-bits
@@ -387,6 +403,83 @@ int draw_norm(void)
   TH1F *hclean_w_experiment_sum=(TH1F*)hSDpp_L1520_w_SB->Clone("hclean_w_experiment");
   TH1F *hclean_pt_experiment_sum=(TH1F*)hSDpp_L1520_pt_SB->Clone("hclean_pt_experiment");
   //pt and w the end
+
+  //***Dalitz plot and 3-particle final states
+  //LDpp
+  TH1F *hMPPimPip_LDppK0=(TH1F*)fileLDpp->Get("hMPPimPip");
+  hMPPimPip_LDppK0->SetName("hMPPimPip_LDppK0");
+  TH1F *hMPPimPim_LDppK0=(TH1F*)fileLDpp->Get("hMPPimPim");
+  hMPPimPim_LDppK0->SetName("hMPPimPim_LDppK0");
+  TH2F *h2MPPimPip_MPPimPim_LDppK0=(TH2F*)fileLDpp->Get("h2MPPimPip_MPPimPim");
+  h2MPPimPip_MPPimPim_LDppK0->SetName("h2MPPimPip_MPPimPim_SDppK0");
+
+  TH1F *hMPPimPip_LDppK0_SB=(TH1F*)fileLDpp->Get("hMPPimPip_SB");
+  hMPPimPip_LDppK0_SB->SetName("hMPPimPip_LDppK0_SB");
+  TH1F *hMPPimPim_LDppK0_SB=(TH1F*)fileLDpp->Get("hMPPimPim_SB");
+  hMPPimPim_LDppK0_SB->SetName("hMPPimPim_LDppK0_SB");
+  TH2F *h2MPPimPip_MPPimPim_LDppK0_SB=(TH2F*)fileLDpp->Get("h2MPPimPip_MPPimPim_SB");
+  h2MPPimPip_MPPimPim_LDppK0_SB->SetName("h2MPPimPip_MPPimPim_SDppK0_SB");
+  
+  //End of LDpp
+  //S Dpp
+  TH1F *hMPPimPip_SDppK0=(TH1F*)fileSDpp->Get("hMPPimPip");
+  hMPPimPip_SDppK0->SetName("hMPPimPip_SDppK0");
+  TH1F *hMPPimPim_SDppK0=(TH1F*)fileSDpp->Get("hMPPimPim");
+  hMPPimPim_SDppK0->SetName("hMPPimPim_SDppK0");
+  TH2F *h2MPPimPip_MPPimPim_SDppK0=(TH2F*)fileSDpp->Get("h2MPPimPip_MPPimPim");
+  h2MPPimPip_MPPimPim_SDppK0->SetName("h2MPPimPip_MPPimPim_SDppK0");
+
+  TH1F *hMPPimPip_SDppK0_SB=(TH1F*)fileSDpp->Get("hMPPimPip_SB");
+  hMPPimPip_SDppK0_SB->SetName("hMPPimPip_SDppK0_SB");
+  TH1F *hMPPimPim_SDppK0_SB=(TH1F*)fileSDpp->Get("hMPPimPim_SB");
+  hMPPimPim_SDppK0_SB->SetName("hMPPimPim_SDppK0_SB");
+  TH2F *h2MPPimPip_MPPimPim_SDppK0_SB=(TH2F*)fileSDpp->Get("h2MPPimPip_MPPimPim_SB");
+  h2MPPimPip_MPPimPim_SDppK0_SB->SetName("h2MPPimPip_MPPimPim_SDppK0_SB");
+  //End of SDpp
+  //Sigma 1385pK0
+  TH1F *hMPPimPip_S1385pK0=(TH1F*)fileS1385->Get("hMPPimPip");
+  hMPPimPip_S1385pK0->SetName("hMPPimPip_S1385pK0");
+  TH1F *hMPPimPim_S1385pK0=(TH1F*)fileS1385->Get("hMPPimPim");
+  hMPPimPim_S1385pK0->SetName("hMPPimPim_S1385pK0");
+  TH2F *h2MPPimPip_MPPimPim_S1385pK0=(TH2F*)fileS1385->Get("h2MPPimPip_MPPimPim");
+  h2MPPimPip_MPPimPim_S1385pK0->SetName("h2MPPimPip_MPPimPim_S1385pK0");
+
+  TH1F *hMPPimPip_S1385pK0_SB=(TH1F*)fileS1385->Get("hMPPimPip_SB");
+  hMPPimPip_S1385pK0_SB->SetName("hMPPimPip_S1385pK0_SB");
+  TH1F *hMPPimPim_S1385pK0_SB=(TH1F*)fileS1385->Get("hMPPimPim_SB");
+  hMPPimPim_S1385pK0_SB->SetName("hMPPimPim_S1385pK0_SB");
+  TH2F *h2MPPimPip_MPPimPim_S1385pK0_SB=(TH2F*)fileS1385->Get("h2MPPimPip_MPPimPim_SB");
+  h2MPPimPip_MPPimPim_S1385pK0_SB->SetName("h2MPPimPip_MPPimPim_S1385pK0_SB");
+  
+  //End of Sigma 1385pK0
+  //Lambda 1520
+  TH1F *hMPPimPip_L1520pippim=(TH1F*)fileL1520->Get("hMPPimPip");
+  hMPPimPip_L1520pippim->SetName("hMPPimPip_L1520pippim");
+  TH1F *hMPPimPim_L1520pippim=(TH1F*)fileL1520->Get("hMPPimPim");
+  hMPPimPim_L1520pippim->SetName("hMPPimPim_L1520pippim");
+  TH2F *h2MPPimPip_MPPimPim_L1520pippim=(TH2F*)fileL1520->Get("h2MPPimPip_MPPimPim");
+  h2MPPimPip_MPPimPim_L1520pippim->SetName("h2MPPimPip_MPPimPim_L1520pippim");
+
+  TH1F *hMPPimPip_L1520pippim_SB=(TH1F*)fileL1520->Get("hMPPimPip_SB");
+  hMPPimPip_L1520pippim_SB->SetName("hMPPimPip_L1520pippim_SB");
+  TH1F *hMPPimPim_L1520pippim_SB=(TH1F*)fileL1520->Get("hMPPimPim_SB");
+  hMPPimPim_L1520pippim_SB->SetName("hMPPimPim_L1520pippim_SB");
+  TH2F *h2MPPimPip_MPPimPim_L1520pippim_SB=(TH2F*)fileL1520->Get("h2MPPimPip_MPPimPim_SB");
+  h2MPPimPip_MPPimPim_L1520pippim_SB->SetName("h2MPPimPip_MPPimPim_L1520pippim_SB");
+  
+  //End of Lambda 1520
+  //Eksperyment
+  TH1F *hMPPimPip=(TH1F*)fileExp->Get("hMPPimPip");
+  TH1F *hMPPimPim=(TH1F*)fileExp->Get("hMPPimPim");
+  TH2F *h2MPPimPip_MPPimPim=(TH2F*)fileExp->Get("h2MPPimPip_MPPimPim");
+
+  TH1F *hMPPimPip_SB=(TH1F*)fileExp->Get("hMPPimPip_SB");
+  TH1F *hMPPimPim_SB=(TH1F*)fileExp->Get("hMPPimPim_SB");
+  TH2F *h2MPPimPip_MPPimPim_SB=(TH2F*)fileExp->Get("h2MPPimPip_MPPimPim_SB");
+  
+  //***The end of Dalitz plot and 3-particle final states
+
+
   
   hsum_background->Reset();
   hclean_background->Reset();
@@ -578,7 +671,7 @@ int draw_norm(void)
 
   //scale signal to difference between signal and background
   double int_min=1430;
-  double int_max=1560;
+  double int_max=1590;
   double err_sum;
   
   double sig_int=hclean_L1520->Integral(hclean_L1520->FindBin(int_min),hclean_L1520->FindBin(int_max));
@@ -590,6 +683,8 @@ int draw_norm(void)
   hclean_pt_L1520->Scale((experiment_int-backgroud_int)/sig_int);
   hclean_w_L1520->Scale((experiment_int-backgroud_int)/sig_int);
 
+  double sig_int_ren=hclean_L1520_ren->Integral(hclean_L1520_ren->FindBin(int_min),hclean_L1520_ren->FindBin(int_max));
+  
   hclean_sum_ren->Add(hclean_L1520_ren,1);
   hclean_sum_ren->Add(hclean_background,1);
 
@@ -1045,6 +1140,10 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cout<<hclean_L1520->Integral()<<endl;
   cout<<"Integral for inclusive L(1520) production:"<<endl;
   cout<<hclean_L1520_ren->Integral()<<endl;
+  cout<<"Integral for background channels in range "<<int_min<<" MeV to "<<int_max<<" MeV"<<endl;
+  cout<<backgroud_int<<endl;
+  cout<<"Integral for signal channels in range "<<int_min<<" MeV to "<<int_max<<" MeV"<<endl;
+  cout<<sig_int_ren<<endl; 
   cout<<"C-S for pp->pK0L(1520):"<<endl;
   cout<<"5.6 \mu b:"<<endl;
   cout<<"inclusive L(1520) production C-S:"<<endl;
@@ -1061,6 +1160,7 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   TF1* L_sim_bg=new TF1("L_sim_bg","pol1(0)",1095,1135);
   TF1* L_sim_sig_bg=new TF1("L_sim_sig_bg","[0]*TMath::Voigt(x-[1],[2],[3])+pol1(4)",1095,1135);
   TF1* fL1116_experiment_fit_bg=new TF1("fL1116_experiment_fit_bg","pol2(0)",1095,1135);
+
   fL1116_experiment_fit_bg->SetParameters(fL1116_experiment_fit->GetParameter(4),fL1116_experiment_fit->GetParameter(5),fL1116_experiment_fit->GetParameter(6));
   L_sim_sig_bg->SetParameters(1494,1115,0.0004,5.4,47.3,-0.033);
   hexperiment_L->SetAxisRange(1080,1200);
@@ -1243,7 +1343,35 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   
   
   //save all
-  TFile* output=new TFile("final_output.root","recreate");
+  double sidebandmin;
+  double sidebandmax;
+  double mlp_cut;
+  double oa_cut;
+  double dist_cut;
+  // reading a file eith a list of cuts
+  FILE *in_file;
+  if((in_file=fopen("cuts.tex","r")) != NULL)
+    {
+      cout<<"file with cuts open sucessfully!"<<endl;
+      fscanf(in_file,"%lf %lf %lf %lf %lf", &sidebandmin ,&sidebandmax ,&mlp_cut ,&oa_cut ,&dist_cut);
+      fclose(in_file);
+    }
+  else
+    {
+      cout<<"Cann't open a file with cuts!"<<endl;
+    }
+  cout<<endl;
+  cout<<"Cuts values:"<<endl;
+  cout<<"sidebandmin: "<<sidebandmin<<endl;
+  cout<<"sidebandmax: "<<sidebandmax<<endl;
+  cout<<"mlp_cut: "<<mlp_cut<<endl;
+  cout<<"oa_cut: "<<oa_cut<<endl;
+  cout<<"dist_cut: "<<dist_cut<<endl;
+  cout<<endl;
+  
+  char output_name[1000];
+  sprintf(output_name,"final_output_%.0lf_%.0lf_%.2lf_%.1lf_%.1lf.root", sidebandmin ,sidebandmax ,mlp_cut ,oa_cut ,dist_cut);
+  TFile* output=new TFile(output_name,"recreate");
 
   hS1385_data->Write();
   hSDpp_data->Write();
@@ -1352,6 +1480,8 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cW_simul->Write();
   cPt_signal->Write();
   cW_signal->Write();
+
+  return 0;
 }
 
 
