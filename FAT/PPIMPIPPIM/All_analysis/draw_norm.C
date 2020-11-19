@@ -435,6 +435,10 @@ int draw_norm(void)
   hMPPimPim_SDppK0_SB->SetName("hMPPimPim_SDppK0_SB");
   TH2F *h2MPPimPip_MPPimPim_SDppK0_SB=(TH2F*)fileSDpp->Get("h2MPPimPip_MPPimPim_SB");
   h2MPPimPip_MPPimPim_SDppK0_SB->SetName("h2MPPimPip_MPPimPim_SDppK0_SB");
+
+  TH1F *hMPPimPip_SDppK0_clean=(TH1F*)hMPPimPip_SDppK0->Clone("hMPPimPip_SDppK0_clean");
+  TH1F *hMPPimPim_SDppK0_clean=(TH1F*)hMPPimPim_SDppK0->Clone("hMPPimPim_SDppK0_clean");
+  TH2F *h2MPPimPip_MPPimPim_SDppK0_clean=(TH2F*)h2MPPimPip_MPPimPim_SDppK0->Clone("h2MPPimPip_MPPimPim_SDppK0_clean");
   //End of SDpp
   //Sigma 1385pK0
   TH1F *hMPPimPip_S1385pK0=(TH1F*)fileS1385->Get("hMPPimPip");
@@ -450,7 +454,10 @@ int draw_norm(void)
   hMPPimPim_S1385pK0_SB->SetName("hMPPimPim_S1385pK0_SB");
   TH2F *h2MPPimPip_MPPimPim_S1385pK0_SB=(TH2F*)fileS1385->Get("h2MPPimPip_MPPimPim_SB");
   h2MPPimPip_MPPimPim_S1385pK0_SB->SetName("h2MPPimPip_MPPimPim_S1385pK0_SB");
-  
+
+  TH1F *hMPPimPip_S1385pK0_clean=(TH1F*)hMPPimPip_S1385pK0->Clone("hMPPimPip_S1385pK0_clean");
+  TH1F *hMPPimPim_S1385pK0_clean=(TH1F*)hMPPimPim_S1385pK0->Clone("hMPPimPim_S1385pK0_clean");
+  TH2F *h2MPPimPip_MPPimPim_S1385pK0_clean=(TH2F*)h2MPPimPip_MPPimPim_S1385pK0->Clone("h2MPPimPip_MPPimPim_S1385pK0_clean");
   //End of Sigma 1385pK0
   //Lambda 1520
   TH1F *hMPPimPip_L1520pippim=(TH1F*)fileL1520->Get("hMPPimPip");
@@ -466,7 +473,10 @@ int draw_norm(void)
   hMPPimPim_L1520pippim_SB->SetName("hMPPimPim_L1520pippim_SB");
   TH2F *h2MPPimPip_MPPimPim_L1520pippim_SB=(TH2F*)fileL1520->Get("h2MPPimPip_MPPimPim_SB");
   h2MPPimPip_MPPimPim_L1520pippim_SB->SetName("h2MPPimPip_MPPimPim_L1520pippim_SB");
-  
+
+  TH1F *hMPPimPip_L1520pippim_clean=(TH1F*)hMPPimPip_L1520pippim->Clone("hMPPimPip_L1520pippim_clean");
+  TH1F *hMPPimPim_L1520pippim_clean=(TH1F*)hMPPimPim_L1520pippim->Clone("hMPPimPim_L1520pippim_clean");
+  TH2F *h2MPPimPip_MPPimPim_L1520pippim_clean=(TH2F*)h2MPPimPip_MPPimPim_L1520pippim->Clone("h2MPPimPip_MPPimPim_L1520pippim_clean");
   //End of Lambda 1520
   //Eksperyment
   TH1F *hMPPimPip=(TH1F*)fileExp->Get("hMPPimPip");
@@ -476,7 +486,10 @@ int draw_norm(void)
   TH1F *hMPPimPip_SB=(TH1F*)fileExp->Get("hMPPimPip_SB");
   TH1F *hMPPimPim_SB=(TH1F*)fileExp->Get("hMPPimPim_SB");
   TH2F *h2MPPimPip_MPPimPim_SB=(TH2F*)fileExp->Get("h2MPPimPip_MPPimPim_SB");
-  
+
+  TH1F *hMPPimPip_clean=(TH1F*)hMPPimPip->Clone("hMPPimPip_clean");
+  TH1F *hMPPimPim_clean=(TH1F*)hMPPimPim->Clone("hMPPimPim_clean");
+  TH2F *h2MPPimPip_MPPimPim_clean=(TH2F*)h2MPPimPip_MPPimPim->Clone("h2MPPimPip_MPPimPim_clean");
   //***The end of Dalitz plot and 3-particle final states
 
 

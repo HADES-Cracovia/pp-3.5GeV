@@ -1,6 +1,6 @@
 void pluto_gen()
 {
-  TFile *out = new TFile("bez_RHO.root","recreate");
+  TFile *out = new TFile("L1520pKp.root","recreate");
   TH1F * histo1 = new TH1F ("histo1","#pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#pi^{+} #pi^{-}} " ,120,0,0.6);
   TH1F * histo2 = new TH1F ("histo2","#Lambda #pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#Lambda #pi^{+} #pi^{-}} " ,500,1,2);
    makeDistributionManager();
@@ -32,7 +32,7 @@ void pluto_gen()
   //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Sigma", "Lambda1520", "pi0, pi0, Sigma0", 0.009);
   //cout<<"load Sigma decay channel"<<endl;
   makeStaticData()->AddDecay("Lambda(1520) -->  pi + pi + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
-  makeStaticData()->AddDecay("Lambda(1520) -->  rho0 + Lambda", "Lambda1520", "rho0, Lambda", 0.066);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  rho0 + Lambda", "Lambda1520", "rho0, Lambda", 0.066);
   cout<<"load pion decays channels"<<endl;
   //makeStaticData()->AddDecay("Lambda(1520) -->  gamma + Lambda", "Lambda1520", "g, Lambda", 0.0085);
   //makeStaticData()->AddDecay("Lambda(1520) -->  Lambda + dilepton", "Lambda1520", "Lambda, dilepton", 0.0085 / 137. );
