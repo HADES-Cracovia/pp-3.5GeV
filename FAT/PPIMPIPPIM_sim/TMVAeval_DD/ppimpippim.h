@@ -331,14 +331,14 @@ ppimpippim::ppimpippim(TTree *tree) : fChain(0)
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../LDppK0_Rafal.root");
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../S1385pK0_Rafal.root");
       //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("../SDppK0_Rafal.root");
-      //TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../L1520_thermal.root");
+      TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../L1520_thermal.root");
       //TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../L1520K0_thermal.root");
-      TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../SsPimKz_thermal.root");
+      //TFile *f=(TFile*)gROOT->GetListOfFiles()->FindObject("../SsPimKz_thermal.root");
       if (!f || !f->IsOpen())
 	{
-	  //f = new TFile("../L1520_thermal.root");
+	  f = new TFile("../L1520_thermal.root");
 	  //f = new TFile("../L1520K0_thermal.root");
-	  f = new TFile("../SsPimKz_thermal.root");
+	  //f = new TFile("../SsPimKz_thermal.root");
 	}
       f->GetObject("ppimpippim",tree);
 

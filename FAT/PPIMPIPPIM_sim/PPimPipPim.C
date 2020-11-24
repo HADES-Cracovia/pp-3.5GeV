@@ -258,9 +258,9 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SDppK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/hadron.root/PPimPipPim_ID");
-      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal/sum.root/PPimPipPim_ID");
+      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal/sum.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520K0_thermal/sum.root/PPimPipPim_ID");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal/sum.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal/sum.root/PPimPipPim_ID");
       
       tree = chain;
     }
@@ -582,7 +582,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["p_sim_vertex_x"]=s.p_sim_vertexx;
   (*n_out)["p_sim_vertex_y"]=s.p_sim_vertexy;
   (*n_out)["p_sim_vertex_z"]=s.p_sim_vertexz;
-	  
+  (*n_out)["p_shw_sum0"]=s.p_shw_sum0;
+  (*n_out)["p_shw_sum1"]=s.p_shw_sum1;
+  (*n_out)["p_shw_sum2"]=s.p_shw_sum2;
+
+  
   (*n_out)["pip_p"]=s.pip_p;
   (*n_out)["pip_theta"] = s.pip_theta;
   (*n_out)["pip_phi"] = s.pip_phi;
@@ -597,6 +601,9 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["pip_sim_vertex_x"]=s.pip_sim_vertexx;
   (*n_out)["pip_sim_vertex_y"]=s.pip_sim_vertexy;
   (*n_out)["pip_sim_vertex_z"]=s.pip_sim_vertexz;
+  (*n_out)["pip_shw_sum0"]=s.pip_shw_sum0;
+  (*n_out)["pip_shw_sum1"]=s.pip_shw_sum1;
+  (*n_out)["pip_shw_sum2"]=s.pip_shw_sum2;
 	  
 	  
   (*n_out)["pim1_p"]=s.pim1_p;
@@ -613,6 +620,9 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["pim1_sim_vertex_x"]=s.pim1_sim_vertexx;
   (*n_out)["pim1_sim_vertex_y"]=s.pim1_sim_vertexy;
   (*n_out)["pim1_sim_vertex_z"]=s.pim1_sim_vertexz;
+  (*n_out)["pim1_shw_sum0"]=s.pim1_shw_sum0;
+  (*n_out)["pim1_shw_sum1"]=s.pim1_shw_sum1;
+  (*n_out)["pim1_shw_sum2"]=s.pim1_shw_sum2;
 	  
 	  
   (*n_out)["pim2_p"]=s.pim2_p;
@@ -629,7 +639,11 @@ void PPimPipPim::filler( const PPimPipPim_ID_buffer& s,int event_mult, double WE
   (*n_out)["pim2_sim_vertex_x"]=s.pim2_sim_vertexx;
   (*n_out)["pim2_sim_vertex_y"]=s.pim2_sim_vertexy;
   (*n_out)["pim2_sim_vertex_z"]=s.pim2_sim_vertexz;
-	  	  
+  (*n_out)["pim2_shw_sum0"]=s.pim2_shw_sum0;
+  (*n_out)["pim2_shw_sum1"]=s.pim2_shw_sum1;
+  (*n_out)["pim2_shw_sum2"]=s.pim2_shw_sum2;
+
+  
   (*n_out)["pim_sim_id"]=pim_sim_id;
   (*n_out)["pim_sim_parentid"]=pim_sim_parentid;
 
@@ -824,7 +838,6 @@ void PPimPipPim::Init(TTree *tree)
   fChain->SetBranchAddress("p_tof_new", &p_tof_new, &b_p_tof_new);
   fChain->SetBranchAddress("p_tofino_mult", &p_tofino_mult, &b_p_tofino_mult);
   fChain->SetBranchAddress("p_track_length", &p_track_length, &b_p_track_length);
-  fChain->SetBranchAddress("p_z", &p_z, &b_p_z);
   fChain->SetBranchAddress("pim1_beta", &pim1_beta, &b_pim1_beta);
   fChain->SetBranchAddress("pim1_beta_new", &pim1_beta_new, &b_pim1_beta_new);
   fChain->SetBranchAddress("pim1_dedx_in", &pim1_dedx_in, &b_pim1_dedx_in);
@@ -900,9 +913,6 @@ void PPimPipPim::Init(TTree *tree)
   fChain->SetBranchAddress("pim2_resolution", &pim2_resolution, &b_pim2_resolution);
   fChain->SetBranchAddress("pim2_rkchi2", &pim2_rkchi2, &b_pim2_rkchi2);
   fChain->SetBranchAddress("pim2_sector", &pim2_sector, &b_pim2_sector);
-  fChain->SetBranchAddress("pim2_shw_sum0", &pim2_shw_sum0, &b_pim2_shw_sum0);
-  fChain->SetBranchAddress("pim2_shw_sum1", &pim2_shw_sum1, &b_pim2_shw_sum1);
-  fChain->SetBranchAddress("pim2_shw_sum2", &pim2_shw_sum2, &b_pim2_shw_sum2);
   fChain->SetBranchAddress("pim2_sim_corrflag", &pim2_sim_corrflag, &b_pim2_sim_corrflag);
   fChain->SetBranchAddress("pim2_sim_geninfo", &pim2_sim_geninfo, &b_pim2_sim_geninfo);
   fChain->SetBranchAddress("pim2_sim_geninfo1", &pim2_sim_geninfo1, &b_pim2_sim_geninfo1);
@@ -929,6 +939,9 @@ void PPimPipPim::Init(TTree *tree)
   fChain->SetBranchAddress("pim2_tofino_mult", &pim2_tofino_mult, &b_pim2_tofino_mult);
   fChain->SetBranchAddress("pim2_track_length", &pim2_track_length, &b_pim2_track_length);
   fChain->SetBranchAddress("pim2_z", &pim2_z, &b_pim2_z);
+  fChain->SetBranchAddress("pim2_shw_sum0", &pim2_shw_sum0, &b_pim2_shw_sum0);
+  fChain->SetBranchAddress("pim2_shw_sum1", &pim2_shw_sum1, &b_pim2_shw_sum1);
+  fChain->SetBranchAddress("pim2_shw_sum2", &pim2_shw_sum2, &b_pim2_shw_sum2);
   fChain->SetBranchAddress("pip_beta", &pip_beta, &b_pip_beta);
   fChain->SetBranchAddress("pip_beta_new", &pip_beta_new, &b_pip_beta_new);
   fChain->SetBranchAddress("pip_dedx_in", &pip_dedx_in, &b_pip_dedx_in);

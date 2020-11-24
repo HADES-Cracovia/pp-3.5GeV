@@ -419,7 +419,10 @@ int draw_norm(void)
   hMPPimPim_LDppK0_SB->SetName("hMPPimPim_LDppK0_SB");
   TH2F *h2MPPimPip_MPPimPim_LDppK0_SB=(TH2F*)fileLDpp->Get("h2MPPimPip_MPPimPim_SB");
   h2MPPimPip_MPPimPim_LDppK0_SB->SetName("h2MPPimPip_MPPimPim_SDppK0_SB");
-  
+
+  TH1F *hMPPimPip_LDppK0_clean=(TH1F*)hMPPimPip_LDppK0->Clone("hMPPimPip_LDppK0_clean");
+  TH1F *hMPPimPim_LDppK0_clean=(TH1F*)hMPPimPim_LDppK0->Clone("hMPPimPim_LDppK0_clean");
+  TH2F *h2MPPimPip_MPPimPim_LDppK0_clean=(TH2F*)h2MPPimPip_MPPimPim_LDppK0->Clone("h2MPPimPip_MPPimPim_LDppK0_clean");
   //End of LDpp
   //S Dpp
   TH1F *hMPPimPip_SDppK0=(TH1F*)fileSDpp->Get("hMPPimPip");
@@ -626,7 +629,47 @@ int draw_norm(void)
   scale_error(hSDpp_L1520_w,err[1]);
   scale_error(hLDpp_L1520_w,err[2]);
   scale_error(hL1520_L1520_w,err[3]);
+
   
+  hMPPimPip_L1520pippim->Scale(cs[3]);
+  hMPPimPim_L1520pippim->Scale(cs[3]);
+  h2MPPimPip_MPPimPim_L1520pippim->Scale(cs[3]);
+  hMPPimPip_L1520pippim_SB->Scale(cs[3]);
+  hMPPimPim_L1520pippim_SB->Scale(cs[3]);
+  h2MPPimPip_MPPimPim_L1520pippim_SB->Scale(cs[3]);
+  hMPPimPip_L1520pippim_clean->Scale(cs[3]);
+  hMPPimPim_L1520pippim_clean->Scale(cs[3]);
+  h2MPPimPip_MPPimPim_L1520pippim_clean->Scale(cs[3]);
+
+  hMPPimPip_S1385pK0->Scale(cs[0]);
+  hMPPimPim_S1385pK0->Scale(cs[0]);
+  h2MPPimPip_MPPimPim_S1385pK0->Scale(cs[0]);
+  hMPPimPip_S1385pK0_SB->Scale(cs[0]);
+  hMPPimPim_S1385pK0_SB->Scale(cs[0]);
+  h2MPPimPip_MPPimPim_S1385pK0_SB->Scale(cs[0]);
+  hMPPimPip_S1385pK0_clean->Scale(cs[0]);
+  hMPPimPim_S1385pK0_clean->Scale(cs[0]);
+  h2MPPimPip_MPPimPim_S1385pK0_clean->Scale(cs[0]);
+
+  hMPPimPip_LDppK0->Scale(cs[2]);
+  hMPPimPim_LDppK0->Scale(cs[2]);
+  h2MPPimPip_MPPimPim_LDppK0->Scale(cs[2]);
+  hMPPimPip_LDppK0_SB->Scale(cs[2]);
+  hMPPimPim_LDppK0_SB->Scale(cs[2]);
+  h2MPPimPip_MPPimPim_LDppK0_SB->Scale(cs[2]);
+  hMPPimPip_LDppK0_clean->Scale(cs[2]);
+  hMPPimPim_LDppK0_clean->Scale(cs[2]);
+  h2MPPimPip_MPPimPim_LDppK0_clean->Scale(cs[2]);
+
+  hMPPimPip_SDppK0->Scale(cs[1]);
+  hMPPimPim_SDppK0->Scale(cs[1]);
+  h2MPPimPip_MPPimPim_SDppK0->Scale(cs[1]);
+  hMPPimPip_SDppK0_SB->Scale(cs[1]);
+  hMPPimPim_SDppK0_SB->Scale(cs[1]);
+  h2MPPimPip_MPPimPim_SDppK0_SB->Scale(cs[1]);
+  hMPPimPip_SDppK0_clean->Scale(cs[1]);
+  hMPPimPim_SDppK0_clean->Scale(cs[1]);
+  h2MPPimPip_MPPimPim_SDppK0_clean->Scale(cs[1]);
 
   
   hsum_background->Add(hS1385_background);
@@ -678,6 +721,22 @@ int draw_norm(void)
   hclean_pt_experiment->Add(hexperiment_L1520_pt,hexperiment_L1520_pt_SB,1,-1);
   hclean_w_experiment->Add(hexperiment_L1520_w,hexperiment_L1520_w_SB,1,-1);
 
+  hMPPimPip_L1520pippim_clean->Add(hMPPimPip_L1520pippim_SB,-1);
+  hMPPimPim_L1520pippim_clean->Add(hMPPimPim_L1520pippim_SB,-1);
+  h2MPPimPip_MPPimPim_L1520pippim_clean->Add(h2MPPimPip_MPPimPim_L1520pippim_SB,-1);
+
+  hMPPimPip_S1385pK0_clean->Add(hMPPimPip_S1385pK0_SB,-1);
+  hMPPimPim_S1385pK0_clean->Add(hMPPimPim_S1385pK0_SB,-1);
+  h2MPPimPip_MPPimPim_S1385pK0_clean->Add(h2MPPimPip_MPPimPim_S1385pK0_SB,-1);
+
+  hMPPimPip_LDppK0_clean->Add(hMPPimPip_LDppK0_SB,-1);
+  hMPPimPim_LDppK0_clean->Add(hMPPimPim_LDppK0_SB,-1);
+  h2MPPimPip_MPPimPim_LDppK0_clean->Add(h2MPPimPip_MPPimPim_LDppK0_SB,-1);
+
+  hMPPimPip_SDppK0_clean->Add(hMPPimPip_SDppK0_SB,-1);
+  hMPPimPim_SDppK0_clean->Add(hMPPimPim_SDppK0_SB,-1);
+  h2MPPimPip_MPPimPim_SDppK0_clean->Add(h2MPPimPip_MPPimPim_SDppK0_SB,-1);
+    
   //cs_sig=1/(hclean_L1520->Integral())*20;
   //hclean_L1520->Scale(cs_sig);
 
@@ -709,6 +768,61 @@ int draw_norm(void)
   hclean_sum_ren_PipPim->Add(hclean_L1520_ren_PipPim,1);
   hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
 
+  TCanvas *cPPimPip=new TCanvas("cPPimPip","cPPimPip");
+  cPPimPip->Divide(2,2);
+  cPPimPip->cd(1);
+  hMPPimPip_L1520pippim->Draw("e1");
+  hMPPimPip_L1520pippim_clean->Draw("samee1");
+  hMPPimPip_L1520pippim_clean->SetLineColor(kGreen);
+  hMPPimPip_L1520pippim_SB->Draw("samee1");
+  hMPPimPip_L1520pippim_SB->SetLineColor(kRed);
+  cPPimPip->cd(2);
+  hMPPimPip_S1385pK0->Draw("e1");
+  hMPPimPip_S1385pK0_clean->Draw("samee1");
+  hMPPimPip_S1385pK0_clean->SetLineColor(kGreen);
+  hMPPimPip_S1385pK0_SB->Draw("samee1");
+  hMPPimPip_S1385pK0_SB->SetLineColor(kRed);
+  cPPimPip->cd(3);
+  hMPPimPip_LDppK0->Draw("e1");
+  hMPPimPip_LDppK0_clean->Draw("samee1");
+  hMPPimPip_LDppK0_clean->SetLineColor(kGreen);
+  hMPPimPip_LDppK0_SB->Draw("samee1");
+  hMPPimPip_LDppK0_SB->SetLineColor(kRed);
+  cPPimPip->cd(4);
+  hMPPimPip_SDppK0->Draw("e1");
+  hMPPimPip_SDppK0_clean->Draw("samee1");
+  hMPPimPip_SDppK0_clean->SetLineColor(kGreen);
+  hMPPimPip_SDppK0_SB->Draw("samee1");
+  hMPPimPip_SDppK0_SB->SetLineColor(kRed);
+
+  TCanvas *cPPimPim=new TCanvas("cPPimPim","cPPimPim");
+  cPPimPim->Divide(2,2);
+  cPPimPim->cd(1);
+  hMPPimPim_L1520pippim->Draw("e1");
+  hMPPimPim_L1520pippim_clean->Draw("samee1");
+  hMPPimPim_L1520pippim_clean->SetLineColor(kGreen);
+  hMPPimPim_L1520pippim_SB->Draw("samee1");
+  hMPPimPim_L1520pippim_SB->SetLineColor(kRed);
+  cPPimPim->cd(2);
+  hMPPimPim_S1385pK0->Draw("e1");
+  hMPPimPim_S1385pK0_clean->Draw("samee1");
+  hMPPimPim_S1385pK0_clean->SetLineColor(kGreen);
+  hMPPimPim_S1385pK0_SB->Draw("samee1");
+  hMPPimPim_S1385pK0_SB->SetLineColor(kRed);
+  cPPimPim->cd(3);
+  hMPPimPim_LDppK0->Draw("e1");
+  hMPPimPim_LDppK0_clean->Draw("samee1");
+  hMPPimPim_LDppK0_clean->SetLineColor(kGreen);
+  hMPPimPim_LDppK0_SB->Draw("samee1");
+  hMPPimPim_LDppK0_SB->SetLineColor(kRed);
+  cPPimPim->cd(4);
+  hMPPimPim_SDppK0->Draw("e1");
+  hMPPimPim_SDppK0_clean->Draw("samee1");
+  hMPPimPim_SDppK0_clean->SetLineColor(kGreen);
+  hMPPimPim_SDppK0_SB->Draw("samee1");
+  hMPPimPim_SDppK0_SB->SetLineColor(kRed);
+  
+  
   TCanvas *cPt_simul=new TCanvas("cPt_simul","transver momentum for simulated channels");
   cPt_simul->Divide(2,2);
   cPt_simul->cd(1);
@@ -1460,6 +1574,46 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   hclean_pt_L1520->Write();
   hclean_w_experiment->Write();
   hclean_pt_experiment->Write();
+
+  hMPPimPip_L1520pippim_clean->Write();
+  hMPPimPip_L1520pippim_SB->Write();
+  hMPPimPim_L1520pippim_clean->Write();
+  hMPPimPim_L1520pippim_SB->Write();
+  h2MPPimPip_MPPimPim_L1520pippim_clean->Write();
+  h2MPPimPip_MPPimPim_L1520pippim_SB->Write();
+  hMPPimPip_L1520pippim->Write();
+  hMPPimPim_L1520pippim->Write();
+  h2MPPimPip_MPPimPim_L1520pippim->Write();
+
+  hMPPimPip_S1385pK0_clean->Write();
+  hMPPimPip_S1385pK0_SB->Write();
+  hMPPimPim_S1385pK0_clean->Write();
+  hMPPimPim_S1385pK0_SB->Write();
+  h2MPPimPip_MPPimPim_S1385pK0->Write();
+  hMPPimPip_S1385pK0->Write();
+  hMPPimPim_S1385pK0_clean->Write();
+  h2MPPimPip_MPPimPim_S1385pK0->Write();
+
+  hMPPimPip_LDppK0_clean->Write();
+  hMPPimPip_LDppK0_SB->Write();
+  hMPPimPim_LDppK0_clean->Write();
+  hMPPimPim_LDppK0_SB->Write();
+  h2MPPimPip_MPPimPim_LDppK0->Write();
+  hMPPimPip_LDppK0->Write();
+  hMPPimPim_LDppK0->Write();
+  h2MPPimPip_MPPimPim_LDppK0->Write();
+  
+  hMPPimPip_SDppK0_clean->Write();
+  hMPPimPip_SDppK0_SB->Write();
+  hMPPimPim_SDppK0_clean->Write();
+  hMPPimPim_SDppK0_SB->Write();
+  h2MPPimPip_MPPimPim_SDppK0_clean->Write();
+  h2MPPimPip_MPPimPim_SDppK0_SB->Write();
+  h2MPPimPip_MPPimPim_SDppK0->Write();
+  hMPPimPip_SDppK0->Write();
+  hMPPimPim_SDppK0->Write();
+  h2MPPimPip_MPPimPim_SDppK0->Write();
+  
   
   
   fK0_experiment_fit->Write();
@@ -1493,7 +1647,9 @@ hclean_experiment->GetXaxis()->SetRangeUser(1360,1780);
   cW_simul->Write();
   cPt_signal->Write();
   cW_signal->Write();
-
+  cPPimPim->Write();
+  cPPimPip->Write();
+  
   return 0;
 }
 

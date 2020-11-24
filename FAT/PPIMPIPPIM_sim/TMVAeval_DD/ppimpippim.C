@@ -40,9 +40,9 @@ void ppimpippim::Loop()
   Long64_t nentries = fChain->GetEntriesFast();
 
   //TFile* outFileData = new TFile("pp_after_TMVA_DD.root","recreate");
-  //TFile* outFileData = new TFile("pp_after_TMVA_DD_6_n+4_pNb_newVertex_L1520_thermal.root","recreate");
+  TFile* outFileData = new TFile("pp_after_TMVA_DD_6_n+4_pNb_newVertex_L1520_thermal.root","recreate");
   //TFile* outFileData = new TFile("pp_after_TMVA_DD_6_n+4_pNb_newVertex_L1520K0_thermal.root","recreate");
-  TFile* outFileData = new TFile("pp_after_TMVA_DD_6_n+4_pNb_newVertex_SsPimKz_thermal.root","recreate");
+  //TFile* outFileData = new TFile("pp_after_TMVA_DD_6_n+4_pNb_newVertex_SsPimKz_thermal.root","recreate");
   HNtuple *n_out = new HNtuple("ppimpippim","ppimpippim_after TMVA");
   n_out->setFile( outFileData );
 
