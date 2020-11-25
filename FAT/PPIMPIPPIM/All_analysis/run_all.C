@@ -10,7 +10,7 @@ using namespace std;
 int run_all(void)
 {
   bool experiment=1;//czy brac pod uwage pliki z eksperymentu
-  bool b_TMVAeval=1;//czy uruchamiac przeliczenie sieci na nowo
+  bool b_TMVAeval=0;//czy uruchamiac przeliczenie sieci na nowo
 
   if(b_TMVAeval)
     {

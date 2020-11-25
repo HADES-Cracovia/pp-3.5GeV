@@ -744,10 +744,12 @@ int draw_norm(void)
   TH1F* hMPPimPip_clean_sum_bg=hMPPimPip_SDppK0_clean->Clone("hMPPimPip_clean_sum_bg");
   hMPPimPip_clean_sum_bg->Add(hMPPimPip_LDppK0_clean,1);
   hMPPimPip_clean_sum_bg->Add(hMPPimPip_S1385pK0_clean,1);
+  TH1F* hMPPimPip_clean_sum_bg_ren=hMPPimPip_clean_sum_bg->Clone("hMPPimPip_clean_sum_bg_ren");
+
   TH1F* hMPPimPim_clean_sum_bg=hMPPimPim_SDppK0_clean->Clone("hMPPimPim_clean_sum_bg");
   hMPPimPim_clean_sum_bg->Add(hMPPimPim_LDppK0_clean,1);
   hMPPimPim_clean_sum_bg->Add(hMPPimPim_S1385pK0_clean,1);
-  
+  TH1F* hMPPimPim_clean_sum_bg_ren=hMPPimPim_clean_sum_bg->Clone("hMPPimPim_clean_sum_bg_ren");
   //cs_sig=1/(hclean_L1520->Integral())*20;
   //hclean_L1520->Scale(cs_sig);
 
@@ -776,7 +778,9 @@ int draw_norm(void)
   hMPPimPim_L1520pippim_clean->Scale((experiment_int-backgroud_int)/sig_int);
   h2MPPimPip_MPPimPim_L1520pippim_clean->Scale((experiment_int-backgroud_int)/sig_int);
 
-
+  hMPPimPip_clean_sum_bg_ren->Add(hMPPimPip_L1520pippim_clean,1);
+  hMPPimPim_clean_sum_bg_ren->Add(hMPPimPim_L1520pippim_clean,1);
+  
   
   double sig_int_ren=hclean_L1520_ren->Integral(hclean_L1520_ren->FindBin(int_min),hclean_L1520_ren->FindBin(int_max));
   
@@ -791,7 +795,7 @@ int draw_norm(void)
   hclean_sum_ren_PipPim->Add(hclean_L1520_ren_PipPim,1);
   hclean_sum_ren_PipPim->Add(hclean_background_PipPim,1);
 
-  int rebin3=10;
+  int rebin3=15;
   TCanvas *cPPimPip=new TCanvas("cPPimPip","cPPimPip");
   cPPimPip->Divide(2,2);
   cPPimPip->cd(1);
@@ -875,35 +879,62 @@ int draw_norm(void)
   cPPimPim_data->cd(1);
   hMPPimPim->Draw("e1");
   hMPPimPim->Rebin(rebin3);
+  hMPPimPim->SetLineColor(kBlue);
   hMPPimPim_clean->Draw("samee1");
   hMPPimPim_clean->SetLineColor(kGreen);
   hMPPimPim_clean->Rebin(rebin3);
   hMPPimPim_SB->Draw("samee1");
   hMPPimPim_SB->Rebin(rebin3);
   hMPPimPim_SB->SetLineColor(kRed);
+
+  
   cPPimPim_data->cd(2);
   hMPPimPim_clean->Draw("samee1");
-  hMPPimPim_L1520pippim_clean->Draw("samee1");
-  hMPPimPim_clean_sum_bg->Draw("samee1");
+  setHistogramStyleData(hMPPimPim_clean);
+  hMPPimPim_L1520pippim_clean->Draw("samehist");
+  hMPPimPim_L1520pippim_clean->SetLineColor(kGreen-1);
+  setHistogramStyleSimul(hMPPimPim_L1520pippim_clean);
+  hMPPimPim_L1520pippim_clean->SetFillStyle(0);
+  hMPPimPim_clean_sum_bg->Draw("samehist");
   hMPPimPim_clean_sum_bg->Rebin(rebin3);
-
+  hMPPimPim_clean_sum_bg->SetLineColor(kRed);
+  setHistogramStyleSimul(hMPPimPim_clean_sum_bg);
+  hMPPimPim_clean_sum_bg->SetFillStyle(0);
+  hMPPimPim_clean_sum_bg_ren->Draw("samehist");
+  hMPPimPim_clean_sum_bg_ren->SetLineColor(kMagenta);
+  hMPPimPim_clean_sum_bg_ren->Rebin(rebin3);
+  setHistogramStyleSimul(hMPPimPim_clean_sum_bg_ren);
+  hMPPimPim_clean_sum_bg_ren->SetFillStyle(0);
+  
   TCanvas *cPPimPip_data=new TCanvas("cPPimPip_data","cPPimPip_data");
   cPPimPip_data->Divide(2);
   cPPimPip_data->cd(1);
   hMPPimPip->Draw("e1");
   hMPPimPip->Rebin(rebin3);
-  hMPPimPip_clean->Draw("samee1");
+  hMPPimPip_clean->Draw("same");
   hMPPimPip_clean->SetLineColor(kGreen);
   hMPPimPip_clean->Rebin(rebin3);
-  hMPPimPip_SB->Draw("samee1");
+  hMPPimPip_SB->Draw("same");
   hMPPimPip_SB->Rebin(rebin3);
   hMPPimPip_SB->SetLineColor(kRed);
+
   cPPimPip_data->cd(2);
   hMPPimPip_clean->Draw("samee1");
-  hMPPimPip_L1520pippim_clean->Draw("samee1");
-  hMPPimPip_clean_sum_bg->Draw("samee1");
+  setHistogramStyleData(hMPPimPip_clean);
+  hMPPimPip_L1520pippim_clean->Draw("samehist");
+  hMPPimPip_L1520pippim_clean->SetLineColor(kGreen-1);
+  setHistogramStyleSimul(hMPPimPip_L1520pippim_clean);
+  hMPPimPip_L1520pippim_clean->SetFillStyle(0);
+  hMPPimPip_clean_sum_bg->Draw("samehist");
   hMPPimPip_clean_sum_bg->Rebin(rebin3);
-  
+  hMPPimPip_clean_sum_bg->SetLineColor(kRed);
+  setHistogramStyleSimul(hMPPimPip_clean_sum_bg);
+  hMPPimPip_clean_sum_bg->SetFillStyle(0);
+  hMPPimPip_clean_sum_bg_ren->Draw("samehist");
+  hMPPimPip_clean_sum_bg_ren->SetLineColor(kMagenta);
+  hMPPimPip_clean_sum_bg_ren->Rebin(rebin3);
+  setHistogramStyleSimul(hMPPimPip_clean_sum_bg_ren);
+  hMPPimPip_clean_sum_bg_ren->SetFillStyle(0);
   
   TCanvas *cPt_simul=new TCanvas("cPt_simul","transver momentum for simulated channels");
   cPt_simul->Divide(2,2);
@@ -1709,7 +1740,8 @@ int draw_norm(void)
 
   hMPPimPip_clean_sum_bg->Write();
   hMPPimPim_clean_sum_bg->Write();
-  
+  hMPPimPim_clean_sum_bg_ren->Write();
+  hMPPimPip_clean_sum_bg_ren->Write();
   
   fK0_experiment_fit->Write();
   fK0_experiment_sig->Write();
