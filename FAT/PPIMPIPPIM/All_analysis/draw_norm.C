@@ -27,22 +27,23 @@ void setHistogramStyleData(TH1* hist)
   hist->SetLineWidth(2);
   
   hist->SetMarkerColor(hist->GetLineColor());
-  hist->SetMarkerSize(2);
+  hist->SetMarkerSize(1.5);
   hist->SetMarkerStyle(8);
   set_Y_name(hist);
 
+  
   //hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetNdivisions(508);
-  //hist->GetXaxis()->SetLabelSize(0.05);
-  // hist->GetXaxis()->SetTitleSize(0.05);
+  hist->GetXaxis()->SetLabelSize(0.05);
+  hist->GetXaxis()->SetTitleSize(0.05);//ois osi!!
   //hist->GetXaxis()->SetTitleOffset(1.1);
   //hist->GetXaxis()->SetTitleFont(42);
 
   hist->GetYaxis()->SetNdivisions(508);
   //hist->GetYaxis()->SetLabelFont(42);
-  //hist->GetYaxis()->SetLabelSize(0.05);
+  hist->GetYaxis()->SetLabelSize(0.05);
   //hist->GetYaxis()->SetTitleOffset(0.8);
-  //hist->GetYaxis()->SetTitleSize(0.05);
+  hist->GetYaxis()->SetTitleSize(0.05);//podpis osi!!!
   //hist->GetYaxis()->SetTitleFont(42);  
   
 }
@@ -52,7 +53,7 @@ void setHistogramStyleSimul(TH1* hist)
   hist->SetLineWidth(3);
 
   hist->SetMarkerColor(hist->GetLineColor());
-  hist->SetMarkerSize(2);
+  hist->SetMarkerSize(1.5);
   hist->SetMarkerStyle(8);
   hist->SetFillColor(hist->GetLineColor());
   //hist->SetFillStyle(3145);
@@ -60,16 +61,16 @@ void setHistogramStyleSimul(TH1* hist)
 
   //hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetNdivisions(508);
-  //hist->GetXaxis()->SetLabelSize(0.05);
-  //hist->GetXaxis()->SetTitleSize(0.05);
+  hist->GetXaxis()->SetLabelSize(0.05);
+  hist->GetXaxis()->SetTitleSize(0.05); //opis osi!!
   //hist->GetXaxis()->SetTitleOffset(1.1);
   //hist->GetXaxis()->SetTitleFont(42);
 
   hist->GetYaxis()->SetNdivisions(508);
   //hist->GetYaxis()->SetLabelFont(42);
-  //hist->GetYaxis()->SetLabelSize(0.05);
+  hist->GetYaxis()->SetLabelSize(0.05);
   //hist->GetYaxis()->SetTitleOffset(0.8);
-  //hist->GetYaxis()->SetTitleSize(0.05);
+  hist->GetYaxis()->SetTitleSize(0.05); //podpis osi!!!
   //hist->GetYaxis()->SetTitleFont(42);  
   
 }
@@ -935,6 +936,41 @@ int draw_norm(void)
   hMPPimPip_clean_sum_bg_ren->Rebin(rebin3);
   setHistogramStyleSimul(hMPPimPip_clean_sum_bg_ren);
   hMPPimPip_clean_sum_bg_ren->SetFillStyle(0);
+
+  TCanvas *cPPimPip_data_thesis=new TCanvas("cPPimPip_data_thesis","cPPimPip_data_thesis");
+  hMPPimPip_clean->Draw("samee1");
+  hMPPimPip_clean->GetXaxis()->SetRangeUser(1200,1500);
+  setHistogramStyleData(hMPPimPip_clean);
+  hMPPimPip_L1520pippim_clean->Draw("samehist");
+  hMPPimPip_L1520pippim_clean->SetLineColor(kGreen-1);
+  setHistogramStyleSimul(hMPPimPip_L1520pippim_clean);
+  hMPPimPip_L1520pippim_clean->SetFillStyle(0);
+  hMPPimPip_clean_sum_bg->Draw("samehist");
+  hMPPimPip_clean_sum_bg->SetLineColor(kRed);
+  setHistogramStyleSimul(hMPPimPip_clean_sum_bg);
+  hMPPimPip_clean_sum_bg->SetFillStyle(0);
+  hMPPimPip_clean_sum_bg_ren->Draw("samehist");
+  hMPPimPip_clean_sum_bg_ren->SetLineColor(kMagenta);
+  setHistogramStyleSimul(hMPPimPip_clean_sum_bg_ren);
+  hMPPimPip_clean_sum_bg_ren->SetFillStyle(0);
+
+  TCanvas *cPPimPim_data_thesis=new TCanvas("cPPimPim_data_thesis","cPPimPim_data_thesis");
+  hMPPimPim_clean->Draw("samee1");
+  hMPPimPim_clean->GetXaxis()->SetRangeUser(1200,1500);
+  setHistogramStyleData(hMPPimPim_clean);
+  hMPPimPim_L1520pippim_clean->Draw("samehist");
+  hMPPimPim_L1520pippim_clean->SetLineColor(kGreen-1);
+  setHistogramStyleSimul(hMPPimPim_L1520pippim_clean);
+  hMPPimPim_L1520pippim_clean->SetFillStyle(0);
+  hMPPimPim_clean_sum_bg->Draw("samehist");
+  hMPPimPim_clean_sum_bg->SetLineColor(kRed);
+  setHistogramStyleSimul(hMPPimPim_clean_sum_bg);
+  hMPPimPim_clean_sum_bg->SetFillStyle(0);
+  hMPPimPim_clean_sum_bg_ren->Draw("samehist");
+  hMPPimPim_clean_sum_bg_ren->SetLineColor(kMagenta);
+  setHistogramStyleSimul(hMPPimPim_clean_sum_bg_ren);
+  hMPPimPim_clean_sum_bg_ren->SetFillStyle(0);
+  
   
   TCanvas *cPt_simul=new TCanvas("cPt_simul","transver momentum for simulated channels");
   cPt_simul->Divide(2,2);
@@ -1032,7 +1068,44 @@ int draw_norm(void)
   hclean_w_experiment_sum->SetLineColor(kMagenta);
   setHistogramStyleSimul(hclean_w_experiment_sum);
   line_Wmean->Draw();
-  
+
+  TCanvas *cPtW_thesis=new TCanvas("cPtW_thesis","cPtW_thesis");
+  cPtW_thesis->Divide(2);
+  cPtW_thesis->cd(1);
+  hclean_pt_experiment->Draw("e1");
+  hclean_pt_experiment->SetAxisRange(0,800);
+  setHistogramStyleData(hclean_pt_experiment);
+  hclean_pt_L1520->Draw("samehist");
+  hclean_pt_L1520->SetLineColor(kGreen);
+  hclean_pt_L1520->SetFillStyle(0);
+  setHistogramStyleSimul(hclean_pt_L1520);
+  hclean_pt_background->Draw("samehist");
+  hclean_pt_background->SetLineColor(kRed);
+  hclean_pt_background->SetFillStyle(0);
+  setHistogramStyleSimul(hclean_pt_background);
+  hclean_pt_experiment_sum->Draw("samehist");
+  hclean_pt_experiment_sum->SetLineColor(kMagenta);
+  hclean_pt_experiment_sum->SetFillStyle(0);
+  setHistogramStyleSimul(hclean_pt_experiment_sum);
+  line_Ptmean->Draw("same");
+
+  cPtW_thesis->cd(2);
+  hclean_w_experiment->Draw("e1");
+  hclean_w_experiment->GetXaxis()->SetRangeUser(0.4,1.4);
+  setHistogramStyleData(hclean_w_experiment);
+  hclean_w_L1520->Draw("samehist");
+  hclean_w_L1520->SetLineColor(kGreen);
+  hclean_w_L1520->SetFillStyle(0);
+  setHistogramStyleSimul(hclean_w_L1520);
+  hclean_w_background->Draw("samehist");
+  hclean_w_background->SetLineColor(kRed);
+  hclean_w_background->SetFillStyle(0);
+  setHistogramStyleSimul(hclean_w_background);
+  hclean_w_experiment_sum->Draw("samehist");
+  hclean_w_experiment_sum->SetFillStyle(0);
+  hclean_w_experiment_sum->SetLineColor(kMagenta);
+  setHistogramStyleSimul(hclean_w_experiment_sum);
+  line_Wmean->Draw();
   
   int rebin_res=2;  
   TCanvas *cRes=new TCanvas("cRes","cRes");
@@ -1138,6 +1211,17 @@ int draw_norm(void)
   setHistogramStyleSimul(hsum_background);
   hsum_background->Draw("samee1");
 
+  TCanvas *cSum_thesis=new TCanvas("cSum_thesis","cSum_thesis");  
+  hexperiment_data->Draw("e1");
+  hexperiment_data->Rebin(2);
+  hexperiment_data->SetAxisRange(1350,1800);
+  setHistogramStyleData(hexperiment_data);
+
+  hexperiment_background->SetLineColor(kRed);
+  hexperiment_background->Draw("samee1");
+  hexperiment_background->Rebin(2);
+  setHistogramStyleData(hexperiment_background);
+
   TCanvas *cSum_PipPim=new TCanvas("cSum_PipPim","cSumPipPim");  
   hexperiment_hMPipPim_signal->Rebin(rebin2);
   hexperiment_hMPipPim_signal->SetAxisRange(250,450);
@@ -1194,23 +1278,24 @@ int draw_norm(void)
   setHistogramStyleData(hclean_experiment_PipPim);
   
   hclean_background_PipPim->SetLineColor(kRed);
-  hclean_background_PipPim->SetFillColor(kRed);
+  //hclean_background_PipPim->SetFillColor(kRed);
   hclean_background_PipPim->Rebin(rebin_pippim);
-  hclean_background_PipPim->Draw("samee2");
   setHistogramStyleSimul(hclean_background_PipPim);
+  hclean_background_PipPim->Draw("samehist");
+  hclean_background_PipPim->SetFillStyle(0);
   
   hclean_L1520_PipPim->SetLineColor(kGreen+3);
   hclean_L1520_PipPim->Rebin(rebin_pippim);
-  hclean_L1520_PipPim->Draw("samee2");
-  hclean_L1520_PipPim->SetFillStyle(3154);
   setHistogramStyleSimul(hclean_L1520_PipPim);
+  hclean_L1520_PipPim->Draw("samehist");
+  hclean_L1520_PipPim->SetFillStyle(0);
   
   hclean_sum_PipPim->Rebin(rebin_pippim);
   hclean_sum_PipPim->SetLineColor(kMagenta);
-  hclean_sum_PipPim->SetFillStyle(3145);
-  hclean_sum_PipPim->Draw("samee2");
+  hclean_sum_PipPim->SetFillStyle(0);
   setHistogramStyleSimul(hclean_sum_PipPim);
-
+  hclean_sum_PipPim->Draw("samehist");
+  
   
   TCanvas *cClean_ren=new TCanvas("cClean_ren","cClean_ren");
   TH1F *hclean_background_ren=(TH1F*)hclean_background->Clone("hclean_background_ren");
@@ -1285,23 +1370,22 @@ int draw_norm(void)
   //hclean_experiment->Rebin(rebin_pippim);
   //hclean_background->SetLineColor(kRed);
   //hclean_background->Rebin(rebin_pippim);
-  hclean_background_PipPim->Draw("samee2");
+  hclean_background_PipPim->Draw("samehist");
   setHistogramStyleSimul(hclean_background_PipPim);
-  hclean_background_PipPim->SetFillStyle(3125);
+  hclean_background_PipPim->SetFillStyle(0);
   
   hclean_L1520_ren_PipPim->SetLineColor(kGreen+3);
   hclean_L1520_ren_PipPim->Rebin(rebin_pippim);
   setHistogramStyleSimul(hclean_L1520_ren_PipPim);
-  hclean_L1520_ren_PipPim->SetFillStyle(3154);
-  hclean_L1520_ren_PipPim->Draw("samee2");
+  hclean_L1520_ren_PipPim->SetFillStyle(0);
+  hclean_L1520_ren_PipPim->Draw("samehist");
   
 
   hclean_sum_ren_PipPim->Rebin(rebin_pippim);
   hclean_sum_ren_PipPim->SetLineColor(kMagenta);
-  hclean_sum_ren_PipPim->SetFillColor(kMagenta);
   setHistogramStyleSimul(hclean_sum_ren_PipPim);
-  hclean_sum_ren_PipPim->SetFillStyle(3145);
-  hclean_sum_ren_PipPim->Draw("samee2");
+  hclean_sum_ren_PipPim->SetFillStyle(0);
+  hclean_sum_ren_PipPim->Draw("samehist");
 
   TCanvas *cClean_ren_PipPim_rho=new TCanvas("cClean_ren_PipPim_rho","cClean_ren_PipPim_rho");
   hclean_experiment_PipPim->Draw("e1");
@@ -1548,7 +1632,8 @@ int draw_norm(void)
   printFormula4->DrawLatex(0.38,high4-printFormula->GetTextSize()*2, text16);
 
   cLK0->cd(2);
-  hexperiemnt_K0->SetAxisRange(300,650);
+  hexperiemnt_K0->SetAxisRange(350,600);
+  hexperiemnt_K0->SetAxisRange(0,300,"Y");
   hexperiemnt_K0->SetMinimum(0);
   hexperiemnt_K0->Draw("e1");
   hsim_K0->Draw("samehist");
@@ -1766,6 +1851,7 @@ int draw_norm(void)
   cClean_PipPim->Write();
   cClean_ren_PipPim_rho->Write();
   cSum->Write();
+  cSum_thesis->Write();
   cSB->Write();
   cLK0->Write();
   cK0->Write();
@@ -1774,10 +1860,13 @@ int draw_norm(void)
   cW_simul->Write();
   cPt_signal->Write();
   cW_signal->Write();
+  cPtW_thesis->Write();
   cPPimPim->Write();
   cPPimPip->Write();
   cPPimPim_data->Write();
   cPPimPip_data->Write();
+  cPPimPim_data_thesis->Write();
+  cPPimPip_data_thesis->Write();
   
   return 0;
 }
