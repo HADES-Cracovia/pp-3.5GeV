@@ -16,8 +16,8 @@ ROOTLIBS += -lTMVA
 
 
 
-CPPFLAGS+=-g -L/u/przygoda/HNTUPLE64 -L/u/przygoda/HFILTER64 -L/u/przygoda/PLUTO64/ -L/lustre/nyx/hades/user/kempter/svn/hydra_BT/lib  -Wl,--no-as-needed
-FFLAGS+=-g -I/u/przygoda/HNTUPLE64 -I/u/przygoda/HFILTER64 -I/u/przygoda/PLUTO64/src -I/lustre/nyx/hades/user/kempter/svn/hydra_BT/include
+CPPFLAGS+=-g -L/u/knowakow/HNTUPLE64 -L/u/knowakow/HFILTER64 -L/u/knowakow/PLUTO64/ -L/lustre/nyx/hades/user/kempter/svn/hydra_BT/lib  -Wl,--no-as-needed
+FFLAGS+=-g -I/u/knowakow/HNTUPLE64 -I/u/knowakow/HFILTER64 -I/u/knowakow/PLUTO64/src -I/lustre/nyx/hades/user/kempter/svn/hydra_BT/include
 #FFLAGS+=-g -pg -fprofile-arcs
 #CPPFLAGS+=-g 
 

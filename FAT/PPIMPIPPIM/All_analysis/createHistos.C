@@ -70,14 +70,14 @@ void createHistos::Loop(char* output)
 
   if (fChain == 0) return;
 
-  TLorentzVector p,pim1,pim2,pip,ppimpippim;
+  TLorentzVector p,pim1,pim2,pip,ppimpippim, wrongL1116;
   const int bin=200;
   const int xmin=1000;
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
   double sidebandmax=27;
-  double mlp_cut=0.45;
+  double mlp_cut=0.59;
   double oa_cut=20;
   double dist_cut=5;
   int dM=1;
@@ -117,6 +117,7 @@ void createHistos::Loop(char* output)
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* orginal_spectrum=new TH1F("orginal_spectrum","orginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
+  TH1F* hwrongL1116=new TH1F("hwrongL1116","A #Lambda(1116) for wrongly assigned p #pi^{-} ;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
   TH1F* hMPipPim_signal=new TH1F("hMPipPim_signal","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV]",120,0,600);
   TH1F* hMPipPim_background=new TH1F("hMPipPim_background","M^{inv}_{#pi^{+} #pi^{-}} from #Lambda(1520);M^{inv}_{#pi^{+} #pi^{-}}[MeV]",120,0,600);
   
@@ -223,7 +224,11 @@ void createHistos::Loop(char* output)
 	  pip.SetVectM( v3, 139.57018 );
 	  pim2.SetVectM( v4, 139.57018 );
 	  ppimpippim=p+pim1+pim2+pip;
-
+	  if(hypothesis==1)
+	    wrongL1116=p+pim2;
+	  if(hypothesis==2)
+	    wrongL1116=p+pim1;
+	  
 	  //end of 4-vectors
 	  if(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
 	    {
@@ -279,7 +284,9 @@ void createHistos::Loop(char* output)
 	 //||dist_ver_to_ver<14
 	 )
 	continue;
+      
       orginal_spectrum->Fill(m_inv_p_pim);
+      hwrongL1116->Fill(wrongL1116.M());
       
       if(m_inv_p_pim<1116+sidebandmin && m_inv_p_pim>1116-sidebandmin)
 	{
@@ -473,7 +480,7 @@ void createHistos::Loop(char* output)
   hMPipPim_TMVAMass->Write(); 
   hMPPim_Mass->Write();
   hMPipPim_Mass->Write(); 
-
+  hwrongL1116->Write();
   
   K0_fit->Write();
   K0_signal->Write();

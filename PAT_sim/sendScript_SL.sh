@@ -33,10 +33,13 @@ currentDir=../$currentDir
 
 submmissionbase=/lustre/nyx/hades/user/knowakow/PP
 submissiondir=${submmissionbase}/PAT_sim
- nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
-    jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
-    outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal/    # outputdir for files AND logFiles
-    #outputdir=/lustre/nyx/hades/user/przygoda/PAT2/out/sim/PI0/800     # outputdir for files AND logFiles
+nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
+jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
+outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian
+#outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520K0_thermal_125_600/
+#outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/SsPipKz_thermal_125_600
+#outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal_125_600/    # outputdir for files AND logFiles
+#outputdir=/lustre/nyx/hades/user/przygoda/PAT2/out/sim/PI0/800     # outputdir for files AND logFiles
 pathoutputlog=${outputdir}/out                    # protocol from batch farm for each file
      filename=testrun                           # filename of log file if nFilesPerJob > 1 (partnumber will be appended)
 par1=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/set64_1.sh  # gen8a optional par1 : environment script
@@ -50,7 +53,12 @@ resources="--mem=2000 --time=0-2:00:00"                        # runtime < 10h, 
 
 jobarrayFile="pion_pat_jobarray.dat"
 
-filelist=${currentDir}/SsPimKz_thermal.list
+filelist=${currentDir}/urqmd_christian.list
+#filelist=${currentDir}/urqmd_udai.list
+#filelist=${currentDir}/L1520K0_thermal_125_600.list
+#filelist=${currentDir}/SsPipKz_thermal_125_600.list
+#filelist=${currentDir}/L1520_thermal_125_600.list
+#filelist=${currentDir}/SsPimKz_thermal.list
 #filelist=${currentDir}/PPipPPimPipPim.list
 #filelist=${currentDir}/DppPPimPipPim.list
 #filelist=${currentDir}/pK0Lpip.list
@@ -250,7 +258,7 @@ else
         ((stop=$start+$rest))
      fi
 
-     command="--array=${start}-${stop} ${resources} -D ${submissiondir}  --output=${pathoutputlog}/slurm-%A_%a.out ${jobscript} ${submissiondir}/${jobarrayFile} ${pathoutputlog}"
+     command="--array=${start}-${stop} ${resources} -D ${submissiondir}  --output=${pathoutputlog}/slurm-%A_%a.out -- ${jobscript} ${submissiondir}/${jobarrayFile} ${pathoutputlog}"
      #echo $command
      sbatch $command
 

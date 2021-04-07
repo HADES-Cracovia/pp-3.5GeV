@@ -258,10 +258,15 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/S1385pK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SDppK0_Rafal/hadron.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/LDppK0_Rafal/hadron.root/PPimPipPim_ID");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal/sum.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal/sum.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520K0_thermal/sum.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal/sum.root/PPimPipPim_ID");
-      
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal_125_600/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal_125_600/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPipKz_thermal_125_600/all.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_udai/urqmd_pnb_10000000evnt121_dstwithsec_par_wtrg_hadron_out.root/PPimPipPim_ID");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_udai/urqmd_pnb_10000000evnt121_dstwithsec_par_wtrg_1_hadron_out.root/PPimPipPim_ID");
+      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/sum.root");
       tree = chain;
     }
 

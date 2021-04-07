@@ -77,6 +77,7 @@ void PPimEpEm_drowing::Loop()
   TH1F* hMinv_ep_em_SB=new TH1F("hMinv_ep_em_SB","Di-lepton mass for #Lambda^{0};M^{inv}_{e^{+}e^{-}}[MeV];counts",i_epem_n,i_epem_min,i_epem_max);
   TH1F* hMinv_ep_em_SB_scale=new TH1F("hMinv_ep_em_SB_scale","Di-lepton mass for #Lambda^{0};M^{inv}_{e^{+}e^{-}}[MeV];#frac{d #sigma}{d m} #left[#frac{#mu b}{MeV}#right]",i_epem_n,i_epem_min,i_epem_max);
   TH1F* hMinv_ep_em_clean_scale=new TH1F("hMinv_ep_em_clean_scale","Di-lepton mass for #Lambda^{0};M^{inv}_{e^{+}e^{-}}[MeV];#frac{d #sigma}{d m} #left[#frac{#mu b}{MeV}#right]",i_epem_n,i_epem_min,i_epem_max);
+  TH1F* hMinv_ep_em_clean_scale_extrapolated=new TH1F("hMinv_ep_em_clean_scale_extrapolated","Di-lepton mass for #Lambda^{0};M^{inv}_{e^{+}e^{-}}[MeV];#frac{d #sigma}{d m} #left[#frac{#mu b}{MeV}#right]",i_epem_n,i_epem_min,i_epem_max);
   TH1F* hMinv_ep_em_clean=new TH1F("hMinv_ep_em_clean","Di-lepton mass for #Lambda^{0};M^{inv}_{e^{+}e^{-}}[MeV];counts",i_epem_n,i_epem_min,i_epem_max);
   TH1F* hMinv_p_pim_ep_em_cut=new TH1F("hMinv_p_pim_ep_em_cut","Di-lepton + #Lambda^{0};M^{inv}_{p #pi^{-} e^{+}e^{-}}[MeV];counts",i_ppimepem_n,i_ppimepem_min,i_ppimepem_max);
   TH1F* hMinv_p_pim_ep_em_cut_scale=new TH1F("hMinv_p_pim_ep_em_cut_scale","Di-lepton + #Lambda^{0};M^{inv}_{p #pi^{-} e^{+}e^{-}}[MeV];#frac{d #sigma}{d m} #left[#frac{#mu b}{MeV}#right]",i_ppimepem_n,i_ppimepem_min,i_ppimepem_max);
@@ -109,8 +110,8 @@ TH1F* hMinv_p_pim_ep_em_clean=new TH1F("hMinv_p_pim_ep_em_clean","Di-lepton + #L
    
   TH2F* hEp_dPhi_p=new TH2F("hEp_dTheta_p","#Delta #Theta vs. p for Ep;#Delta #Theta [#circle];p[MeV]",100,-40,40,100,0,1000);
 
-  double sim_adjust=1./0.312;
-  //double sim_adjust=1;
+  //double sim_adjust=1./0.312;
+  double sim_adjust=1;
   double lum=3.13*TMath::Power(10,8);
   double scale=1/lum *1000*sim_adjust;//to get #mu b from mb
    
@@ -311,6 +312,13 @@ TH1F* hMinv_p_pim_ep_em_clean=new TH1F("hMinv_p_pim_ep_em_clean","Di-lepton + #L
   hMinv_ep_em_clean_scale=(TH1F*)hMinv_ep_em_cut_scale->Clone("hMinv_ep_em_clean_scale");
   hMinv_ep_em_clean_scale->Add(hMinv_ep_em_SB_scale,-1);
   hMinv_ep_em_clean_scale->Draw();
+
+  TCanvas* cExtrapolated=new TCanvas("cExtrapolated");
+  hMinv_ep_em_clean_scale_extrapolated=(TH1F*)hMinv_ep_em_clean_scale->Clone("hMinv_ep_em_clean_scale_extrapolated");
+  double scale_1=69/10;
+  hMinv_ep_em_clean_scale_extrapolated->Scale(scale_1);
+  hMinv_ep_em_clean_scale_extrapolated->Draw();
+  hMinv_ep_em_clean_scale->Draw("same");
   
   cCS->Write();
   cCounts->Write();
@@ -321,6 +329,7 @@ TH1F* hMinv_p_pim_ep_em_clean=new TH1F("hMinv_p_pim_ep_em_clean","Di-lepton + #L
   cPPimEpEm->Write();
   cPPimEpEmClean->Write();
   cEpEmClean->Write();
+  cExtrapolated->Write();
   
   out2->Write();
   //out2->Close();
