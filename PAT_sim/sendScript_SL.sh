@@ -35,7 +35,8 @@ submmissionbase=/lustre/nyx/hades/user/knowakow/PP
 submissiondir=${submmissionbase}/PAT_sim
 nFilesPerJob=1                               # number of files to be analyzed by 1 job (default==1)
 jobscript=${submissiondir}/jobScript_SL.sh     # exec script (full path, call without dot, set it executable!)
-outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian
+outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520_Spi_Lpipi/
+#outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/
 #outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520K0_thermal_125_600/
 #outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/SsPipKz_thermal_125_600
 #outputdir=/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520_thermal_125_600/    # outputdir for files AND logFiles
@@ -52,8 +53,8 @@ par7="no"                                                      # optional par7
 resources="--mem=2000 --time=0-2:00:00"                        # runtime < 10h, mem < 2GB
 
 jobarrayFile="pion_pat_jobarray.dat"
-
-filelist=${currentDir}/urqmd_christian.list
+filelist=${currentDir}/L1520_Spi_Lpipi.list
+#filelist=${currentDir}/urqmd_christian.list
 #filelist=${currentDir}/urqmd_udai.list
 #filelist=${currentDir}/L1520K0_thermal_125_600.list
 #filelist=${currentDir}/SsPipKz_thermal_125_600.list

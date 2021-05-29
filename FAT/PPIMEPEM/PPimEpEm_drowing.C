@@ -111,9 +111,15 @@ TH1F* hMinv_p_pim_ep_em_clean=new TH1F("hMinv_p_pim_ep_em_clean","Di-lepton + #L
   TH2F* hEp_dPhi_p=new TH2F("hEp_dTheta_p","#Delta #Theta vs. p for Ep;#Delta #Theta [#circle];p[MeV]",100,-40,40,100,0,1000);
 
   //double sim_adjust=1./0.312;
+#if FORSIMUL==1
+  //double sim_adjust=3.5;//sigma pp@3.5/sigma pp@4.5 for L(1520)
+  double sim_adjust=1.87;//sigma pp@3.5/sigma pp@4.5 for L(1116)
+  
+#else
   double sim_adjust=1;
+#endif
   double lum=3.13*TMath::Power(10,8);
-  double scale=1/lum *1000*sim_adjust;//to get #mu b from mb
+  double scale=1/lum *1000*sim_adjust /0.64;//to get #mu b from mb *L1116 BR
    
   Long64_t nbytes = 0, nb = 0;
   for (Long64_t jentry=0; jentry<nentries;jentry++)
@@ -149,16 +155,23 @@ TH1F* hMinv_p_pim_ep_em_clean=new TH1F("hMinv_p_pim_ep_em_clean","Di-lepton + #L
 	{
 	  hMinv_ep_em_cut->Fill(m_inv_ep_em);
 	  hMinv_ep_em_cut_scale->Fill(m_inv_ep_em);
-	  hMinv_p_pim_ep_em_cut->Fill(m_inv_p_pim_ep_em);
-	  hMinv_p_pim_ep_em_cut_scale->Fill(m_inv_p_pim_ep_em);
+	  if(m_inv_ep_em>140)
+	    {
+	      hMinv_p_pim_ep_em_cut->Fill(m_inv_p_pim_ep_em);
+	      hMinv_p_pim_ep_em_cut_scale->Fill(m_inv_p_pim_ep_em);
+	    }
 	}
+      
       if(((m_inv_p_pim > 1116+SBmin) && (m_inv_p_pim < 1116+SBmax*SBasymetry))
 	 ||((m_inv_p_pim < 1116-SBmin) && (m_inv_p_pim > 1116-SBmax)))
 	{
 	  hMinv_ep_em_SB->Fill(m_inv_ep_em);
 	  hMinv_ep_em_SB_scale->Fill(m_inv_ep_em);
-	  hMinv_p_pim_ep_em_SB->Fill(m_inv_p_pim_ep_em);
-	  hMinv_p_pim_ep_em_SB_scale->Fill(m_inv_p_pim_ep_em);
+	  if(m_inv_ep_em>140)
+	    {
+	      hMinv_p_pim_ep_em_SB->Fill(m_inv_p_pim_ep_em);
+	      hMinv_p_pim_ep_em_SB_scale->Fill(m_inv_p_pim_ep_em);
+	    }
 	}
     }
 

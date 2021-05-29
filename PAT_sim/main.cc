@@ -56,8 +56,8 @@ int main(Int_t argc, Char_t **argv)
     inputDir=inputFile;
     inputDir.Resize(inputFile.Last('/')+1);
     inputFile=inputFile(inputFile.Last('/')+1,inputFile.Length()-inputFile.Last('/')-1);
-
-    TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/";
+    TString output_Dir="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520_Spi_Lpipi/";
+    //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520K0_thermal_125_600/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/SsPipKz_thermal_125_600/";
     //TString output_Dir  ="/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/SsPimKz_thermal_125_600/";

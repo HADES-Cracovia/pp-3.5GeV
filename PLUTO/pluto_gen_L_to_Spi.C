@@ -1,0 +1,133 @@
+void pluto_gen_L_to_Spi()
+{
+  TFile *out = new TFile("L1520pKp_SigmaPion.root","recreate");
+  TH1F * histo1 = new TH1F ("histo1","#pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#pi^{+} #pi^{-}} " ,120,0,0.6);
+  TH1F * histo2 = new TH1F ("histo2","#Lambda #pi^{+} #pi^{-} invariant mass from #rho decay; M^{inv}_{#Lambda #pi^{+} #pi^{-}} " ,500,1,2);
+  makeDistributionManager();
+  gSystem->CompileMacro("PHadesAcc.C");
+  //makeDistributionManager()->Disable("helicity_angles");
+  //makeDistributionManager()->Exec("elementary");
+
+
+  makeStaticData()->AddParticle(-1,"K0",0.497614);
+  makeStaticData()->SetParticleMeson("K0");
+  makeStaticData()->SetParticleTotalWidth("K0",0.05);
+
+  makeStaticData()->AddParticle(-1,"K0bar",0.497614);
+  makeStaticData()->SetParticleMeson("K0bar");
+  makeStaticData()->SetParticleTotalWidth("K0bar",0.05);
+
+  
+  Int_t pid_lambda1502 = makeStaticData()->AddParticle(-1,"Lambda1520", 1.5195);
+  makeStaticData()->AddAlias("Lambda1520","Lambda(1520)");
+  makeStaticData()->SetParticleTotalWidth("Lambda1520", 0.0156);
+  makeStaticData()->SetParticleBaryon("Lambda1520", 1);
+  makeStaticData()->SetParticleSpin("Lambda1520", 3);
+  makeStaticData()->SetParticleParity("Lambda1520", 1);
+  
+  Int_t pid_sigma1385p = makeStaticData()->AddParticle(-1,"Sigma1385p", 1.382);
+  cout<<"1111"<<endl;
+  makeStaticData()->AddAlias("Sigma1385p","Sigma(1385)+");
+  cout<<"2222"<<endl;
+  makeStaticData()->SetParticleTotalWidth("Sigma1385p", 0.036);
+  cout<<"3333"<<endl;
+  makeStaticData()->SetParticleBaryon("Sigma1385p", 1);
+  //makeStaticData()->SetParticleSpin("Lambda1520", 3);
+  makeStaticData()->SetParticleParity("Sigma1385p", 1);
+
+  Int_t pid_sigma1385m = makeStaticData()->AddParticle(-1,"Sigma1385m", 1.387);
+  makeStaticData()->AddAlias("Sigma1385m","Sigma(1385)-");
+  makeStaticData()->SetParticleTotalWidth("Sigma1385m", 0.036);
+  makeStaticData()->SetParticleBaryon("Sigma1385m", 1);
+  //makeStaticData()->SetParticleSpin("Lambda1520", 3);
+  makeStaticData()->SetParticleParity("Sigma1385m", 1);
+
+
+  
+  //makeStaticData()->AddDecay("Lambda(1520) -->  n + K0bar", "Lambda1520", "n, K0bar", 0.216);//EPJ A47 47F. Wielandet  al
+  //makeStaticData()->AddDecay("Lambda(1520) -->  p + K-", "Lambda1520", "p, K-", 0.234);//EPJ A47 47F. Wielandet  al
+  //cout<<"load n antiK0 and p K+ decay channels"<<endl;
+  makeStaticData()->AddDecay("Lambda(1520) -->  pi- + Sigma1385p", "Lambda1520", "pi-, Sigma1385p", 0.5);
+  makeStaticData()->AddDecay("Lambda(1520) -->  pi+ + Sigma1385m", "Lambda1520", "pi+, Sigma1385m", 0.5);
+  makeStaticData()->AddDecay("Sigma1385p --> pi+ + Lambda","Sigma1385p","pi+,Lambda",1.);
+  makeStaticData()->AddDecay("Sigma1385m --> pi- + Lambda","Sigma1385m","pi-,Lambda",1.);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  pi0 + pi0 + Sigma", "Lambda1520", "pi0, pi0, Sigma0", 0.009);
+  //cout<<"load Sigma decay channel"<<endl;
+  //makeStaticData()->AddDecay("Lambda(1520) -->  pi + pi + Lambda", "Lambda1520", "pi+, pi-, Lambda", 0.066);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  rho0 + Lambda", "Lambda1520", "rho0, Lambda", 0.066);
+  cout<<"load pion decays channels"<<endl;
+  //makeStaticData()->AddDecay("Lambda(1520) -->  gamma + Lambda", "Lambda1520", "g, Lambda", 0.0085);
+  //makeStaticData()->AddDecay("Lambda(1520) -->  Lambda + dilepton", "Lambda1520", "Lambda, dilepton", 0.0085 / 137. );
+  //cout<<"load all decay channels"<<endl;
+
+  //makeStaticData()->AddDecay("Xi- -->  Lambda + pi", "Xi-", "Lambda, pi-", 1.);
+  //newmodel = new PResonanceDalitz("Lambda1520_dalitz@Lambda1520_to_Lambda_dilepton","dgdm from Zetenyi/Wolf", -1);
+  //newmodel->setGm(0.719);
+  //makeDistributionManager()->Add(newmodel);
+
+  /*                                                                                                                                                                                                        
+  //============this block sets up the angular distribution of L1520 particle============                                                                                                                   
+  PAngularDistribution *angL1520 = new PAngularDistribution("angL1520","angL1520 distribution");                                                                                                            
+  TF1 *dNdOL1520 = new TF1("dNdOL1520","([0]*x*x+[1])/([0]+[1])",-1,1);                                                                                                                                     
+  //TF1 *dNdOL1520_fake = new TF1("dNdOL1520","0",-1,1);                                                                                                                                                    
+  dNdOL1520->SetParameters(2.57, 2.88);                                                                                                                                                                     
+  angL1520->Add("q,parent,reference");                                                                                                                                                                      
+  angL1520->Add("p,daughter");                                                                                                                                                                              
+  angL1520->Add("K+,daughter");                                                                                                                                                                             
+  angL1520->Add("Lambda1520,daughter,primary");                                                                                                                                                             
+  angL1520->SetAngleFunction(dNdOL1520);                                                                                                                                                                    
+  angL1520->Print();//TODO remove                                                                                                                                                                           
+  angL1520->Draw();//TODO remove                                                                                                                                                                            
+  makeDistributionManager()->Add(angL1520);                                                                                                                                                                 
+                                                                                                                                                                                                            
+  //=================================================================                                                                                                                                       
+  */
+
+  //proton beam has optimal properties at 5 GeV of kinetic energy. It corresponds to 5.86 GeV of momentum
+  //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520", "ppLam", 1, 0, 1, 1);
+  //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [pi+ pi- Lambda]", "ppLam", 0, 0, 1, 1);
+  out->cd();
+  //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [rho0 [pi+ pi-] Lambda]", "ppK+L1520", 0, 0, 1, 1);
+  //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [Sigma1385m [Lambda pi-] pi+]", "pp_L_Spip", 0, 0, 1, 1);
+  PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520 [Sigma1385p [Lambda pi+] pi-]", "pp_L_Spim", 0, 0, 1, 1);
+ 
+  //PReaction my_reaction1("_T1=3.5","p","p","p K+ Lambda1520", "pp_L_Spi", 0, 0, 1, 1);
+
+  /*PDecayManager *pdm = new PDecayManager;
+  pdm->SetVerbose(1);          // Print really useful info
+  pdm->SetDefault("Lambda1520");
+  PParticle *p = new PParticle("p",3.5);  // proton beam
+  PParticle *t = new PParticle("p");      // proton target
+  PParticle *s = new PParticle(*p +*t);  // composite quasiparticle
+
+  c = new PDecayChannel;
+  c->AddChannel(1,"p","K+","Lambda1520");
+  
+  pdm->InitReaction(s,c);
+  pdm->loop(100000,0,"pK+L1520",0,0,1,1,1);
+  */
+  
+  my_reaction1.Do(histo1,"_pip=[pi+]; _pim=[pi-];q1=(_pip+_pim); _x=(_pip+_pim)->M();");
+  my_reaction1.Do(histo2,"_pip=[pi+]; _pim=[pi-]; _lambda=[Lambda]; q1=(_pip+_pim+_lambda); _x=(_pip+_pim+_lambda)->M();");
+  //my_reaction2.Do(histo3,"_pip=[pi+]; _pim=[pi-];q1=(_pip+_pim); _x=(_pip+_pim)->M();");
+  //my_reaction2.Do(histo4,"_pip=[pi+]; _pim=[pi-]; _lambda=[Lambda]; q1=(_pip+_pim+_lambda); _x=(_pip+_pim+_lambda)->M();");
+
+  //cout<<"II-cond reaction start"<<endl;
+  //my_reaction2.Loop(10000);
+  //cout<<"II-cond reaction start"<<endl;
+  //my_reaction1.Loop(1000);
+
+  cout<<"I-st reaction start"<<endl;
+  //my_reaction1.Loop(10000);
+  my_reaction1.Loop(50*100000);
+
+  cout<<"end of all reactions"<<endl;
+  
+  out->cd();
+  histo1->Write();
+  histo2->Write();
+  //out->Write();
+  out->Close();
+}
+
+

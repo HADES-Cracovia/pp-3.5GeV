@@ -377,7 +377,7 @@ void PPimEpEm_drowing::Show(Long64_t entry)
    if (!fChain) return;
    fChain->Show(entry);
 }
-#define FORSIMUL 1
+#define FORSIMUL 0
 Int_t PPimEpEm_drowing::Cut(Long64_t entry)
 {
 // This function may be called from Loop.

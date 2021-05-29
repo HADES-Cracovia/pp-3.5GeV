@@ -266,7 +266,8 @@ PPimPipPim::PPimPipPim(TTree *tree)
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/SsPipKz_thermal_125_600/all.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_udai/urqmd_pnb_10000000evnt121_dstwithsec_par_wtrg_hadron_out.root/PPimPipPim_ID");
       //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_udai/urqmd_pnb_10000000evnt121_dstwithsec_par_wtrg_1_hadron_out.root/PPimPipPim_ID");
-      chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/sum.root");
+      //chain->Add("/lustre/hades/user/knowakow/PP/PAT_sim/FILES/urqmd_christian/sum.root");
+      chain->Add("/lustre/nyx/hades/user/knowakow/PP/PAT_sim/FILES/L1520_Spi_Lpipi/*.root/PPimPipPim_ID");
       tree = chain;
     }
 
