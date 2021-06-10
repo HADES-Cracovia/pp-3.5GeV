@@ -1546,7 +1546,8 @@ int draw_norm(void)
 
   
   err_sum=hist_error(hpure_signal,int_min,int_max);
-  
+
+  cout<<"***part for L(1520) with SB substraction***"<<endl;
   cout<<"Integral for pK0L(1520) (CS from Laura paper):"<<endl;
   cout<<hclean_L1520->Integral()<<endl;
   cout<<"Integral for inclusive L(1520) production:"<<endl;
@@ -1565,6 +1566,12 @@ int draw_norm(void)
   cout<<"error sum= "<<err_sum<<endl;
   cout<<"statistical error value= "<<err_sum/(experiment_int-backgroud_int)*5.6*(experiment_int-backgroud_int)/sig_int<<" mu b";
   cout<<endl<<endl;
+  
+  double proper_bg=hexperiment_background->Integral(hexperiment_background->FindBin(int_min),hexperiment_background->FindBin(int_max));
+  double proper_sig=hexperiment_data->Integral(hexperiment_data->FindBin(int_min),hexperiment_data->FindBin(int_max));
+  cout<<"***Proper S/B and signif calculation***"<<endl;
+  cout<<"Signal: "<<proper_sig-proper_bg<<endl;
+  cout<<"Background: "<<proper_bg<<endl;
 
   int npx=300;
   TCanvas* cL=new TCanvas("cL", "Signal for final state p #pi^{+} #L^{0} K^{0}");
@@ -1608,17 +1615,24 @@ int draw_norm(void)
   char text9[10000];
   char text10[10000];
   char text11[10000];
+  char text111[10000];
+  char text112[10000];
   sprintf(text9, "I_{exp}=#int_{1095}^{1135} S_{exp} = %.1f",fL1116_experiment_sig->Integral(1095,1135)/hsim_L->GetBinWidth(3));
   sprintf(text10, "I_{simul}=#int_{1095}^{1135} S_{simul} = %.1f",(L_sim_sig_bg->Integral(1095,1135)-L_sim_bg->Integral(1095,1135))/hsim_L->GetBinWidth(3));
   sprintf(text11, "I_{exp}/I_{simul} = %.2f",fL1116_experiment_sig->Integral(1095,1135)/(L_sim_sig_bg->Integral(1095,1135)-L_sim_bg->Integral(1095,1135)));
+  sprintf(text111, "#bar{M_{#Lambda(1116)}^{exp}} = %.1f #sigma^{exp}= %.2f #Gamma^{exp}= %.2f",fL1116_experiment_sig->GetParameter(1),fL1116_experiment_sig->GetParameter(2),fL1116_experiment_sig->GetParameter(3));
+  sprintf(text112, "#bar{M_{#Lambda(1116)}^{sim}} = %.1f #sigma^{exp}= %.2f #Gamma^{exp}= %.2f",L_sim_sig_bg->GetParameter(1),L_sim_sig_bg->GetParameter(2),L_sim_sig_bg->GetParameter(3));
+  
   printFormula2->SetNDC();
   printFormula2->SetTextFont(32);
   printFormula2->SetTextColor(1);
-  printFormula2->SetTextSize(0.05);
+  printFormula2->SetTextSize(0.03);
   printFormula2->SetTextAlign(13);
   printFormula2->DrawLatex(0.6,high2, text9);
   printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*4, text10);
   printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*8 , text11);
+  printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*10, text111);
+  printFormula2->DrawLatex(0.6,high2-printFormula->GetTextSize()*12, text112);
 
   
   TCanvas* cK0=new TCanvas("cK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
@@ -1662,17 +1676,24 @@ int draw_norm(void)
   char text12[10000];
   char text13[10000];
   char text14[10000];
+  char text141[10000];
+  char text142[10000];
   sprintf(text12, "I_{exp}=#int_{450}^{550} S_{exp} = %.1f",fK0_experiment_sig->Integral(450,550)/hsim_K0->GetBinWidth(3));
   sprintf(text13, "I_{simul}=#int_{450}^{550} S_{simul} = %.1f",(K0_sim_sig_bg->Integral(450,550)-K0_sim_bg->Integral(450,550))/hsim_L->GetBinWidth(3));
   sprintf(text14, "I_{exp}/I_{simul} = %.2f",fK0_experiment_sig->Integral(450,550)/(K0_sim_sig_bg->Integral(450,550)-K0_sim_bg->Integral(450,550)));
+  sprintf(text141, "#bar{M_{K0}^{exp}} = %.2f #sigma^{exp}= %.2f #Gamma^{exp}= %.2f",fK0_experiment_sig->GetParameter(1),fK0_experiment_sig->GetParameter(2),fK0_experiment_sig->GetParameter(3));
+  sprintf(text142, "#bar{M_{K0}^{sim}} = %.2f #sigma^{sim}= %.2f #Gamma^{sim}= %.2f",K0_sim_sig_bg->GetParameter(1),K0_sim_sig_bg->GetParameter(2),K0_sim_sig_bg->GetParameter(3));
+
   printFormula3->SetNDC();
   printFormula3->SetTextFont(32);
   printFormula3->SetTextColor(1);
-  printFormula3->SetTextSize(0.05);
+  printFormula3->SetTextSize(0.03);
   printFormula3->SetTextAlign(13);
   printFormula3->DrawLatex(0.6,high2, text12);
   printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*4, text13);
   printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*8 , text14);
+  printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*10, text141);
+  printFormula3->DrawLatex(0.6,high2-printFormula->GetTextSize()*12 , text142);
 
   TCanvas* cLK0=new TCanvas("cLK0", "Signal for final state p #pi^{+} #L^{0} K^{0}");
   TH1F* hsigL_pure=(TH1F*)hexperiment_L->Clone("hsigL_pure");
