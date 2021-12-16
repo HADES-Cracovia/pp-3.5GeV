@@ -70,13 +70,16 @@ void createHistos::Loop(char* output)
 
   if (fChain == 0) return;
 
-  TLorentzVector p,pim1,pim2,pip,ppimpippim, wrongL1116;
+  TLorentzVector p,pim1,pim2,pip,ppimpippim,ppimpippim_CM, wrongL1116, beam, target, cm;
+  target.SetPxPyPzE(0,0,0,938.27);//in MeV
+  beam.SetPxPyPzE(0,0,TMath::Sqrt(3500*3500+2*3500*938.27),938.27+3500);//in MeV
+  cm=target+beam;
   const int bin=200;
   const int xmin=1000;
   const int xmax=2000;
   const int nsignal=20;
   double sidebandmin=10;
-  double sidebandmax=27;
+  double sidebandmax=25;
   double mlp_cut=0.59;
   double oa_cut=20;
   double dist_cut=5;
@@ -114,6 +117,9 @@ void createHistos::Loop(char* output)
   
   int step;
   TH1F* signal=new TH1F("signal","signal simulated from gaus",bin,xmin,xmax);
+  TH1F* hMPPimPipPim_TMVA=new TH1F("hMPPimPipPim_TMVA","M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} after TMVA;M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} [MeV]",bin,xmin,xmax);
+  TH1F* hMPPimPipPim_TMVA_missM=new TH1F("hMPPimPipPim_TMVA_missM","M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} after TMVA and M^{miss};M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} [MeV]",bin,xmin,xmax);
+  TH1F* hMPPimPipPim_TMVA_missM_PPip=new TH1F("hMPPimPipPim_TMVA_missM_PPip","M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} after TMVA and M^{miss} and M^{inv}_{p #pi^{+}};M^{inv}_{p #pi^{-} #pi^{+} #pi^{-}} [MeV]",bin,xmin,xmax);
   TH1F* background=new TH1F("background","background from side-band;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* data=new TH1F("data","data from experiment;M^{inv}_{p #pi- #pi+ #pi-}[MeV]",bin,xmin,xmax);
   TH1F* orginal_spectrum=new TH1F("orginal_spectrum","orginal spectrum for side-band;M^{inv}_{p #pi-}[MeV]",bin*2,xmin,xmax);
@@ -144,7 +150,7 @@ void createHistos::Loop(char* output)
   TH2F* miss_m_vs_pip_p_start=new TH2F("miss_m_vs_pip_p_start","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{p #pi^{+}};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi+ p}[MeV];N",90,500,1400,50,1100,1600);
   TH2F* p_pim_vs_pip_pim_start=new TH2F("p_pim_vs_pip_pim_start","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1450,200,250,700);
   TH1F* hMPPim_TMVA=new TH1F("hMPPim_TMVA","M^{inv}_{p #pi^{-}} after MLP; M^{inv}_{p #pi^{-}} [MeV];N",LdM,Lmin,Lmax);
-  TH1F* hMPPip_TMVA=new TH1F("hMPPip_TMVA","M^{inv}_{p #pi^{+}} after MLP; M^{inv}_{p #pi^{+p} [MeV];N",LdM,Lmin,Lmax);
+  TH1F* hMPPip_TMVA=new TH1F("hMPPip_TMVA","M^{inv}_{p #pi^{+}} after MLP; M^{inv}_{p #pi^{+}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_TMVA=new TH1F("hMPipPim_TMVA","M^{inv}_{#pi^{+} #pi^{-}} after MLP; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   TH2F* miss_m_vs_pip_p_TMVA=new TH2F("miss_m_vs_pip_p_TMVA","M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}} vs. M_{#pi^{+} p};M^{miss}_{p #pi^{-} #pi^{+} #pi^{-}}[MeV];M^{inv}_{#pi^{+} p}[MeV];N",90,500,1400,50,1100,1600);
   TH2F* p_pim_vs_pip_pim_TMVA=new TH2F("p_pim_vs_pip_pim_TMVA","M_{p #pi-} vs. M_{#pi+ #pi-};M^{inv}_{p #pi^{-}}[MeV];M^{inv}_{#pi+ #pi-}[MeV];N",200,1050,1400,200,250,700);
@@ -160,11 +166,16 @@ void createHistos::Loop(char* output)
   TH1F* hMPPip_Mass=new TH1F("hMPPip_Mass","M^{inv}_{p #pi^{+}} after MLP and a #Delta^{++} mass cut; M^{inv}_{p #pi^{+}} [MeV];N",LdM,Lmin,Lmax);
   TH1F* hMPipPim_Mass=new TH1F("hMPipPim_Mass","M^{inv}_{#pi^{+} #pi^{-}} after MLP and a #Delta^{++} mass cut; M^{inv}_{#pi^{+} #pi^{-}} [MeV];N",KdM,Kmin,Kmax);
   
-
-  TH1F* hL1520_w=new TH1F("hL1520_w","Rapidity for #Lambda (1520) events; w",20,0,1.5);
-  TH1F* hL1520_pt=new TH1F("hL1520_pt","p_{T} for #Lambda(1520) events;p_{t}[MeV]",30,0,1600);
-  TH1F* hL1520_w_SB=new TH1F("hL1520_w_SB","Rapidity for SB events; w",20,0,1.5);
-  TH1F* hL1520_pt_SB=new TH1F("hL1520_pt_SB","p_{T} for SB events;p_{t}[MeV]",30,0,1600);
+  TH1F* hL1520_p=new TH1F("hL1520_p","|#vec{p}| for #Lambda (1520);|#vec{p}|[MeV]",10,500,3000);
+  TH1F* hL1520_p_SB=new TH1F("hL1520_p_SB","|#vec{p}| for #Lambda (1520) from SB;|#vec{p}|[MeV]",10,500,3000);
+  TH1F* hL1520_theta=new TH1F("hL1520_theta","#theta for #Lambda (1520);#theta [rad]",20,0,4);
+  TH1F* hL1520_theta_SB=new TH1F("hL1520_theta_SB","#theta for #Lambda (1520) from SB;#theta[rad]",20,0,4);
+  TH1F* hL1520_cos_theta=new TH1F("hL1520_cos_theta","cos(#theta) for #Lambda (1520);#theta [rad]",20,-1,1);
+  TH1F* hL1520_cos_theta_SB=new TH1F("hL1520_cos_theta_SB","cos(#theta) for #Lambda (1520) from SB;#theta[rad]",20,-1,1);
+  TH1F* hL1520_w=new TH1F("hL1520_w","Rapidity for #Lambda (1520) events; w",15,0,1.5);
+  TH1F* hL1520_pt=new TH1F("hL1520_pt","p_{T} for #Lambda(1520) events;p_{t}[MeV]",20,0,1600);
+  TH1F* hL1520_w_SB=new TH1F("hL1520_w_SB","Rapidity for SB events; w",15,0,1.5);
+  TH1F* hL1520_pt_SB=new TH1F("hL1520_pt_SB","p_{T} for SB events;p_{t}[MeV]",20,0,1600);
   
   hMPPim_TMVA_K0mass->Sumw2();
   hMPipPim_TMVA_Lmass->Sumw2();
@@ -184,6 +195,11 @@ void createHistos::Loop(char* output)
   TH1F* hBetaGamma_SB=new TH1F("hBetaGamma_SB","#beta #gamma for SB events",100,0,3);
   TH2F* h2BetaGamma_MPPimPipPim=new TH2F("h2BetaGamma_MPPimPipPim","#beta #gamma vs M^{inv}_{p #pi^{-}#pi^{+}#pi^{-}};#beta #gamma;M^{inv}_{p #pi^{-}#pi^{+}#pi^{-}}",100,0,2,125,1000,2000);
   TH2F* h2BetaGamma_MPPimPipPim_SB=new TH2F("h2BetaGamma_MPPimPipPim_SB","#beta #gamma vs M^{inv}_{p #pi^{-}#pi^{+}#pi^{-}};#beta #gamma;M^{inv}_{p #pi^{-}#pi^{+}#pi^{-}}",100,0,2,125,1000,2000);
+
+  TH1F* hP_pip_fromL1520=new TH1F("hP_pip_fromL1520","|p| for #pi^{+} from #Lambda(1520);p[MeV]",30,0,600);
+  TH1F* hP_pip_fromL1520_SB=new TH1F("hP_pip_fromL1520_SB","|p| for #pi^{+} from #Lambda(1520);p[MeV]",30,0,600);
+  TH1F* hP_pim_fromL1520=new TH1F("hP_pim_fromL1520","|p| for #pi^{-} from #Lambda(1520);p[MeV]",30,0,600);
+  TH1F* hP_pim_fromL1520_SB=new TH1F("hP_pim_fromL1520_SB","|p| for #pi^{-} from #Lambda(1520);p[MeV]",30,0,600);
   
   TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_mass_vs_pip_pim.root","READ");
   //TFile *cutFile=new TFile("/lustre/hades/user/knowakow/PP/FAT/PPIMPIPPIM_sim/TMVAeval_DD/cut_miss_pip_pim_tight.root","READ");
@@ -232,6 +248,9 @@ void createHistos::Loop(char* output)
 	  pip.SetVectM( v3, 139.57018 );
 	  pim2.SetVectM( v4, 139.57018 );
 	  ppimpippim=p+pim1+pim2+pip;
+	  ppimpippim_CM=p+pim1+pim2+pip;
+	  ppimpippim_CM.Boost(0,0,-cm.Beta());
+
 	  if(hypothesis==1)
 	    wrongL1116=p+pim2;
 	  if(hypothesis==2)
@@ -252,6 +271,7 @@ void createHistos::Loop(char* output)
 	      hMPipPim_TMVA->Fill(m_inv_pip_pim);
 	      miss_m_vs_pip_p_TMVA->Fill(miss_mass_kp,m_inv_p_pip);
 	      p_pim_vs_pip_pim_TMVA->Fill(m_inv_p_pim,m_inv_pip_pim);
+	      hMPPimPipPim_TMVA->Fill(m_inv_p_pim_pip_pim);
 	      if(m_inv_p_pim<1120 && m_inv_p_pim>1110 && miss_mass_kp>1077)
 		hMPipPim_TMVA_Lmass->Fill(m_inv_pip_pim);
 	      if(m_inv_pip_pim<500 && m_inv_pip_pim>480 && miss_mass_kp>1077)
@@ -261,6 +281,7 @@ void createHistos::Loop(char* output)
 		  hMPPim_TMVAMass->Fill(m_inv_p_pim);
 		  hMPPip_TMVAMass->Fill(m_inv_p_pip);
 		  hMPipPim_TMVAMass->Fill(m_inv_pip_pim);
+		  hMPPimPipPim_TMVA_missM->Fill(m_inv_p_pim_pip_pim);
 		}
 	    }
 	}
@@ -288,6 +309,7 @@ void createHistos::Loop(char* output)
 	 ||dist_ver_to_ver<dist_cut
 	 ||(oa_lambda>oa_cut)
 	 ||!(graph_cut->IsInside(miss_mass_kp,m_inv_pip_pim))
+	 ||m_inv_p_pip>1200
 	 //||p_theta>20 //to clean up proton sample
 	 //||dist_pip_pim>5
 	 //||dist_pip_pim>150
@@ -314,8 +336,17 @@ void createHistos::Loop(char* output)
 	      hMPPimPim->Fill(m_inv_p_pim_pim);
 	      hMPPimPip->Fill(m_inv_p_pim_pip);
 	      h2MPPimPip_MPPimPim->Fill(m_inv_p_pim_pip,m_inv_p_pim_pim);
-
+	      if(hypothesis==1)
+		hP_pim_fromL1520->Fill(pim2.P());
+	      else
+		hP_pim_fromL1520->Fill(pim1.P());
+	      hP_pip_fromL1520->Fill(pip.P());
+	      
 	      hBetaGamma->Fill(ppimpippim.P()/ppimpippim.M());
+	      hL1520_p->Fill(ppimpippim.P());
+	      hL1520_theta->Fill(ppimpippim_CM.Theta());
+	      hL1520_cos_theta->Fill(TMath::Cos(ppimpippim_CM.Theta()));
+	   
 	    }
 	}
 
@@ -333,9 +364,20 @@ void createHistos::Loop(char* output)
 	      hMPPimPim_SB->Fill(m_inv_p_pim_pim);
 	      hMPPimPip_SB->Fill(m_inv_p_pim_pip);
 	      h2MPPimPip_MPPimPim_SB->Fill(m_inv_p_pim_pip,m_inv_p_pim_pim);
+	      hL1520_cos_theta_SB->Fill(TMath::Cos(ppimpippim_CM.Theta()));
+	   
+	      
+	      if(hypothesis==1)
+		hP_pim_fromL1520_SB->Fill(pim2.P());
+	      else
+		hP_pim_fromL1520_SB->Fill(pim1.P());
+	      hP_pip_fromL1520_SB->Fill(pip.P());
+	      
 
 	      hBetaGamma_SB->Fill(ppimpippim.P()/ppimpippim.M());
 
+	      hL1520_p_SB->Fill(ppimpippim.P());
+	      hL1520_theta_SB->Fill(ppimpippim_CM.Theta());
 	    }
 	}
       if(m_inv_p_pim>1116.+sidebandmin && m_inv_p_pim<1116.+sidebandmax)
@@ -353,8 +395,18 @@ void createHistos::Loop(char* output)
 	      hMPPimPip_SB->Fill(m_inv_p_pim_pip);
 	      h2MPPimPip_MPPimPim_SB->Fill(m_inv_p_pim_pip,m_inv_p_pim_pim);
 
+	      if(hypothesis==1)
+		hP_pim_fromL1520_SB->Fill(pim2.P());
+	      else
+		hP_pim_fromL1520_SB->Fill(pim1.P());
+	      hP_pip_fromL1520_SB->Fill(pip.P());
+	      
+	      
 	      hBetaGamma_SB->Fill(ppimpippim.P()/ppimpippim.M());
-
+	      hL1520_p_SB->Fill(ppimpippim.P());
+	      hL1520_theta_SB->Fill(ppimpippim_CM.Theta());
+	      hL1520_cos_theta_SB->Fill(TMath::Cos(ppimpippim_CM.Theta()));
+	   
 	    }
 	}
     }
@@ -367,11 +419,15 @@ void createHistos::Loop(char* output)
   TF1* fVoigt= new TF1("fVoigt","[0]*TMath::Voigt(x-[1],[2],[3])",1090.00,1156.67);
   TF1* fbg= new TF1("fbg","pol5(0)",1090.00,1156.67);
 
-  fVoigt_bg->SetParameters(527.3,1114,2.73,1,-9266,1.7,0.0061,5.51379e-6,1.23803e-9,-5.64175e-12);
-  fVoigt_bg->SetParLimits(3,0,2);
+  //fVoigt_bg->SetParameters(527.3,1114,2.73,1,-9266,1.7,0.0061,5.51379e-6,1.23803e-9,-5.64175e-12);
+  //fVoigt_bg->SetParameters(400,1115.4,4.4,1.24e-8,-3318,0.549,0.002116454,2.01e-6,4.9e-10,-2.0e-12);
+  fVoigt_bg->SetParameters(409.9,1115.0,2.97,0,-907.3,1.59,5.84e-3,5.35e-6,1.2e-9,-5.36e-12);
+  fVoigt_bg->SetParLimits(3,0,1);
+  fVoigt_bg->SetParLimits(2,0,5);
+  fVoigt_bg->SetParLimits(0,0,1000);
   fVoigt_bg->SetParLimits(1,1112,1117);
-  fVoigt_bg->SetRange(1106,1121);
-  orginal_spectrum->Fit(fVoigt_bg,"R");
+  //fVoigt_bg->SetRange(1106,1121);
+  //orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1100,1126);
   orginal_spectrum->Fit(fVoigt_bg,"R");
   fVoigt_bg->SetRange(1092,1137);
@@ -408,6 +464,12 @@ void createHistos::Loop(char* output)
   scale(hBetaGamma_SB,intB/intsideband);
   scale(h2BetaGamma_MPPimPipPim_SB,intB/intsideband);     
   scale(hMPPip_signal_SB,intB/intsideband);
+  scale(hL1520_theta_SB,intB/intsideband);
+  scale(hL1520_cos_theta_SB,intB/intsideband);
+  scale(hL1520_p_SB,intB/intsideband);
+  scale(hP_pip_fromL1520_SB,intB/intsideband);
+  scale(hP_pim_fromL1520_SB,intB/intsideband);
+ 
   //Fill random signal
   //TF1* L1520Spectral=new TF1("L1520Spectral","100*exp(-0.5*((x-1520)/16)**2)",xmin,xmax);
   TF1* L1520Spectral=new TF1("L1520Spectral","TMath::BreitWigner(x,1519.5,15.6)",xmin,xmax);
@@ -532,6 +594,23 @@ void createHistos::Loop(char* output)
   hBetaGamma->Write();
   hBetaGamma_SB->Write(); 
 
+  hL1520_p->Write();
+  hL1520_p_SB->Write();
+  hL1520_theta->Write();
+  hL1520_theta_SB->Write();
+
+  hL1520_cos_theta_SB->Write();
+  hL1520_cos_theta->Write();
+  
+  hMPPimPipPim_TMVA->Write();
+  hMPPimPipPim_TMVA_missM->Write();
+  hMPPimPipPim_TMVA_missM_PPip->Write();
+
+  hP_pim_fromL1520_SB->Write();
+  hP_pim_fromL1520->Write();
+  hP_pip_fromL1520->Write();
+  hP_pip_fromL1520_SB->Write();
+
   cout<<"Delate old stuff"<<endl;
   
   line1->Delete();
@@ -599,6 +678,24 @@ void createHistos::Loop(char* output)
      
   hBetaGamma->Delete();
   hBetaGamma_SB->Delete(); 
+
+  hL1520_p->Delete();
+  hL1520_p_SB->Delete();
+  hL1520_theta->Delete();
+  hL1520_theta_SB->Delete();
+
+  hMPPimPipPim_TMVA->Delete();
+  hMPPimPipPim_TMVA_missM->Delete();
+  hMPPimPipPim_TMVA_missM_PPip->Delete();
+
+  hP_pim_fromL1520_SB->Delete();
+  hP_pim_fromL1520->Delete();
+  hP_pip_fromL1520->Delete();
+  hP_pip_fromL1520_SB->Delete();
+
+  hL1520_cos_theta_SB->Delete();
+  hL1520_cos_theta->Delete();
+  
   
   MyFile->Close();
 }

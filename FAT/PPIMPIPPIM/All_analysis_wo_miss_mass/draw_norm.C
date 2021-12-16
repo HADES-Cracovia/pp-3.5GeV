@@ -418,6 +418,38 @@ int draw_norm(void)
   TH1F *hS1385_L1520_theta_SB=(TH1F*)fileExp->Get("hL1520_theta_SB");
   hS1385_L1520_theta_SB->SetName("hS1385_L1520_theta_SB");
   hS1385_L1520_theta_SB->Sumw2(kFALSE);
+
+  TH1F *hexperiment_L1520_cos_theta=(TH1F*)fileExp->Get("hL1520_cos_theta");
+  hexperiment_L1520_cos_theta->SetName("hexperiment_L1520_cos_theta");
+  hexperiment_L1520_cos_theta->Sumw2();
+  TH1F *hL1520_L1520_cos_theta=(TH1F*)fileL1520->Get("hL1520_cos_theta");
+  hL1520_L1520_cos_theta->SetName("hL1520_L1520_cos_theta");
+  hL1520_L1520_cos_theta->Sumw2(kFALSE);
+  TH1F *hLDpp_L1520_cos_theta=(TH1F*)fileExp->Get("hL1520_cos_theta");
+  hLDpp_L1520_cos_theta->SetName("hLDpp_L1520_cos_theta");
+  hLDpp_L1520_cos_theta->Sumw2(kFALSE);
+  TH1F *hSDpp_L1520_cos_theta=(TH1F*)fileExp->Get("hL1520_cos_theta");
+  hSDpp_L1520_cos_theta->SetName("hSDpp_L1520_cos_theta");
+  hSDpp_L1520_cos_theta->Sumw2(kFALSE);
+  TH1F *hS1385_L1520_cos_theta=(TH1F*)fileExp->Get("hL1520_cos_theta");
+  hS1385_L1520_cos_theta->SetName("hS1385_L1520_cos_theta");
+  hS1385_L1520_cos_theta->Sumw2(kFALSE);
+
+  TH1F *hexperiment_L1520_cos_theta_SB=(TH1F*)fileExp->Get("hL1520_cos_theta_SB");
+  hexperiment_L1520_cos_theta_SB->SetName("hexperiment_L1520_cos_theta_SB");
+  hexperiment_L1520_cos_theta_SB->Sumw2();
+  TH1F *hL1520_L1520_cos_theta_SB=(TH1F*)fileL1520->Get("hL1520_cos_theta_SB");
+  hL1520_L1520_cos_theta_SB->SetName("hL1520_L1520_cos_theta_SB");
+  hL1520_L1520_cos_theta_SB->Sumw2(kFALSE);
+  TH1F *hLDpp_L1520_cos_theta_SB=(TH1F*)fileExp->Get("hL1520_cos_theta_SB");
+  hLDpp_L1520_cos_theta_SB->SetName("hLDpp_L1520_cos_theta_SB");
+  hLDpp_L1520_cos_theta_SB->Sumw2(kFALSE);
+  TH1F *hSDpp_L1520_cos_theta_SB=(TH1F*)fileExp->Get("hL1520_cos_theta_SB");
+  hSDpp_L1520_cos_theta_SB->SetName("hSDpp_L1520_cos_theta_SB");
+  hSDpp_L1520_cos_theta_SB->Sumw2(kFALSE);
+  TH1F *hS1385_L1520_cos_theta_SB=(TH1F*)fileExp->Get("hL1520_cos_theta_SB");
+  hS1385_L1520_cos_theta_SB->SetName("hS1385_L1520_cos_theta_SB");
+  hS1385_L1520_cos_theta_SB->Sumw2(kFALSE);
   //end of p and theta in CM
 
   
@@ -474,9 +506,11 @@ int draw_norm(void)
   //pt and w the end
   //p and theta CM
   TH1F *hsum_theta_background=(TH1F*)hSDpp_L1520_theta_SB->Clone("hsum_theta_background");
+  TH1F *hsum_cos_theta_background=(TH1F*)hSDpp_L1520_cos_theta_SB->Clone("hsum_cos_theta_background");
   TH1F *hsum_p_background=(TH1F*)hSDpp_L1520_p_SB->Clone("hsum_p_background");
   
   TH1F *hsum_theta_background_SB=(TH1F*)hSDpp_L1520_theta_SB->Clone("hsum_theta_background_SB");
+  TH1F *hsum_cos_theta_background_SB=(TH1F*)hSDpp_L1520_cos_theta_SB->Clone("hsum_cos_theta_background");
   TH1F *hsum_p_background_SB=(TH1F*)hSDpp_L1520_p_SB->Clone("hsum_p_background_SB");
 
   TH1F *hclean_theta_background=(TH1F*)hSDpp_L1520_theta_SB->Clone("hclean_theta_background");
@@ -484,6 +518,9 @@ int draw_norm(void)
   TH1F *hclean_theta_L1520=(TH1F*)hSDpp_L1520_theta_SB->Clone("hclean_theta_L1520");
   TH1F *hclean_p_L1520=(TH1F*)hSDpp_L1520_p_SB->Clone("hclean_p_L1520");
   TH1F *hclean_theta_experiment=(TH1F*)hSDpp_L1520_theta_SB->Clone("hclean_theta_experiment");
+  TH1F *hclean_cos_theta_experiment=(TH1F*)hSDpp_L1520_cos_theta_SB->Clone("hclean_cos_theta_experiment");
+  TH1F *hclean_theta_experiment=(TH1F*)hSDpp_L1520_theta_SB->Clone("hclean_theta_experiment");
+ 
   TH1F *hclean_p_experiment=(TH1F*)hSDpp_L1520_p_SB->Clone("hclean_p_experiment");
   TH1F *hclean_theta_experiment_sum=(TH1F*)hSDpp_L1520_theta_SB->Clone("hclean_theta_experiment");
   TH1F *hclean_p_experiment_sum=(TH1F*)hSDpp_L1520_p_SB->Clone("hclean_p_experiment");
@@ -669,6 +706,7 @@ int draw_norm(void)
   hclean_theta_L1520->Reset();
   hclean_p_L1520->Reset();
   hclean_theta_experiment->Reset();
+  hclean_cos_theta_experiment->Reset();
   hclean_p_experiment->Reset();
   hclean_theta_experiment_sum->Reset();
   hclean_p_experiment_sum->Reset();
@@ -940,6 +978,7 @@ int draw_norm(void)
   hclean_p_L1520->Add(hL1520_L1520_p,hL1520_L1520_p_SB,1,-1);
   hclean_p_experiment->Add(hexperiment_L1520_p,hexperiment_L1520_p_SB,1,-1);
   hclean_theta_experiment->Add(hexperiment_L1520_theta,hexperiment_L1520_theta_SB,1,-1);
+  hclean_cos_theta_experiment->Add(hexperiment_L1520_cos_theta,hexperiment_L1520_cos_theta_SB,1,-1);
 
   
   hclean_hexperiment_MPPip->Add(hexperiment_MPPip_SB,-1);
@@ -1354,6 +1393,7 @@ int draw_norm(void)
   setHistogramStyleSimul(hclean_w_experiment_sum);
   line_Wmean->Draw();
 
+  
   TLine* line_Pmean=new TLine(hclean_p_experiment->GetMean(),0,hclean_p_experiment->GetMean(),50);
   TLine* line_THETAmean=new TLine(hclean_theta_experiment->GetMean(),0,hclean_theta_experiment->GetMean(),50);
   
@@ -2170,6 +2210,9 @@ int draw_norm(void)
   hclean_pt_L1520->Write();
   hclean_w_experiment->Write();
   hclean_pt_experiment->Write();
+  hclean_theta_experiment->Write();
+  hclean_cos_theta_experiment->Write();
+  hclean_p_experiment->Write();
 
   hMPPimPip_L1520pippim_clean->Write();
   hMPPimPip_L1520pippim_SB->Write();
